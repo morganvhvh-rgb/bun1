@@ -1,26 +1,9 @@
 
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Extended Sprite definitions from Scroll.atlas
-const SPRITES = {
-    Ghost: { x: 419, y: 230, w: 16, h: 16 },
-    Bat: { x: 92, y: 20, w: 16, h: 16 },
-    Skeleton: { x: 182, y: 74, w: 16, h: 16 },
-    Spider: { x: 419, y: 122, w: 16, h: 16 },
-    Rat: { x: 401, y: 194, w: 16, h: 16 },
-    Goblin: { x: 416, y: 86, w: 16, h: 16 },
-    Cyclops: { x: 2, y: 74, w: 16, h: 16 },
-    Dragon: { x: 128, y: 74, w: 16, h: 16 },
-    Lion: { x: 200, y: 38, w: 16, h: 16 },
-    Orc: { x: 365, y: 158, w: 16, h: 16 },
-    Snake: { x: 20, y: 20, w: 16, h: 16 },
-    Wolf: { x: 254, y: 14, w: 16, h: 16 },
-    Knight: { x: 2, y: 38, w: 16, h: 16 },
-    Archer: { x: 272, y: 50, w: 16, h: 16 },
-    Lunatic: { x: 272, y: 14, w: 16, h: 16 },
-    Necromancer: { x: 146, y: 20, w: 16, h: 16 },
-} as const;
+import { SPRITES } from './SPRITES';
 
 type SpriteName = keyof typeof SPRITES;
 // Helper for random selection
@@ -30,14 +13,18 @@ interface SpriteProps {
     name: SpriteName;
     className?: string;
     scale?: number;
+    onClick?: () => void;
 }
 
-function Sprite({ name, className, scale = 4 }: SpriteProps) {
-    const { x, y, w, h } = SPRITES[name];
+function Sprite({ name, className, scale = 4, onClick }: SpriteProps) {
+    const sprite = SPRITES[name];
+    if (!sprite) return null;
+    const { x, y, w, h } = sprite;
 
     return (
         <div
-            className={cn("inline-block overflow-hidden relative", className)}
+            onClick={onClick}
+            className={cn("inline-block overflow-hidden relative select-none", onClick && "cursor-pointer active:scale-95 transition-transform", className)}
             style={{
                 width: w * scale,
                 height: h * scale,
@@ -59,13 +46,23 @@ function Sprite({ name, className, scale = 4 }: SpriteProps) {
     );
 }
 
-export default function DailyRogueUI() {
-    const [gridSprites, setGridSprites] = useState<SpriteName[]>([]);
+interface GridItem {
+    id: string;
+    name: SpriteName;
+}
 
-    function generateRandomSprites() {
+export default function DailyRogueUI() {
+    const [gridSprites, setGridSprites] = useState<GridItem[]>([]);
+    const [spinKey, setSpinKey] = useState(0);
+    const [selectedSprite, setSelectedSprite] = useState<SpriteName | null>(null);
+
+    function generateRandomSprites(): GridItem[] {
         return Array.from({ length: 12 }, () => {
             const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
-            return SPRITE_KEYS[randomIndex];
+            return {
+                id: crypto.randomUUID(),
+                name: SPRITE_KEYS[randomIndex]
+            };
         });
     }
 
@@ -75,6 +72,7 @@ export default function DailyRogueUI() {
 
     const handleSpin = () => {
         setGridSprites(generateRandomSprites());
+        setSpinKey(prev => prev + 1);
     };
 
     const handleVary = () => {
@@ -89,6 +87,21 @@ export default function DailyRogueUI() {
         });
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.05
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, scale: 0.5 },
+        show: { opacity: 1, scale: 1 }
+    };
+
     return (
         <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
             {/* Top Bar - adjusted for single row and padding */}
@@ -101,8 +114,8 @@ export default function DailyRogueUI() {
             <main className="flex-1 flex flex-col relative h-full">
                 {/* Top Half - Smaller (40%) */}
                 <section className="h-[40%] flex items-center justify-center gap-12 bg-zinc-900/50 relative">
-                    <Sprite name="Ghost" scale={4} />
-                    <Sprite name="Bat" scale={4} />
+                    <Sprite name="Creature_Ghost_U" scale={4} />
+                    <Sprite name="Creature_Bat_U" scale={4} />
 
                     {/* Subtle grid pattern for texture */}
                     <div className="absolute inset-0 opacity-5 pointer-events-none"
@@ -114,30 +127,72 @@ export default function DailyRogueUI() {
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex items-center justify-between bg-zinc-950 px-6 py-8">
-                    {/* Grid Section - Pushed Left */}
-                    <div className="grid grid-cols-4 grid-rows-3 gap-2 place-items-center">
-                        {gridSprites.map((spriteName, index) => (
-                            <Sprite key={index} name={spriteName} scale={3} />
-                        ))}
-                    </div>
+                {/* Bottom Half - Larger (60%) */}
+                <section className="h-[60%] flex items-center justify-center bg-zinc-950 px-6 py-8">
+                    {/* Centered Wrapper for Grid and Buttons - Ensures same height */}
+                    <div className="relative flex gap-4 h-min">
 
-                    {/* Controls Section - Right Side */}
-                    <div className="flex flex-col gap-4 justify-center">
-                        <button
-                            onClick={handleSpin}
-                            className="w-[72px] h-[72px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-colors active:scale-95 group"
+                        {/* Name Display - Absolute above wrapper */}
+                        <div className="absolute -top-8 left-0 w-full text-center h-6 flex items-center justify-center pointer-events-none">
+                            <AnimatePresence mode="wait">
+                                {selectedSprite && (
+                                    <motion.div
+                                        key="name"
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -5 }}
+                                        className="text-sm font-medium tracking-widest text-zinc-400 uppercase"
+                                    >
+                                        {selectedSprite.replace(/_/g, ' ')}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Grid Section */}
+                        <motion.div
+                            key={spinKey}
+                            className="grid grid-cols-4 grid-rows-3 gap-2 place-items-center"
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="show"
                         >
-                            <span className="text-2xl mb-1 group-hover:rotate-180 transition-transform duration-500">↻</span>
-                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Spin</span>
-                        </button>
-                        <button
-                            onClick={handleVary}
-                            className="w-[72px] h-[72px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-colors active:scale-95"
-                        >
-                            <span className="text-2xl mb-1">⤮</span>
-                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Vary</span>
-                        </button>
+                            <AnimatePresence mode='popLayout'>
+                                {gridSprites.map((item) => (
+                                    <motion.div
+                                        key={item.id}
+                                        layout
+                                        variants={itemVariants}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <Sprite
+                                            name={item.name}
+                                            scale={3}
+                                            onClick={() => setSelectedSprite(item.name)}
+                                            className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
+                                        />
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        {/* Controls Section - Right Side */}
+                        <div className="flex flex-col gap-2 w-24">
+                            <button
+                                onClick={handleSpin}
+                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:scale-95 shadow-lg group"
+                            >
+                                <span className="text-3xl mb-1 text-indigo-400">↻</span>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">Spin</span>
+                            </button>
+                            <button
+                                onClick={handleVary}
+                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:scale-95 shadow-lg group"
+                            >
+                                <span className="text-3xl mb-1 text-emerald-400">⤮</span>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">Vary</span>
+                            </button>
+                        </div>
                     </div>
                 </section>
             </main>
