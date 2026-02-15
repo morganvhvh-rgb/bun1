@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RotateCw, Shuffle, Sparkles } from 'lucide-react';
 
 import { SPRITES } from './SPRITES';
 
@@ -115,9 +116,12 @@ export default function DailyRogueUI() {
         show: { opacity: 1, scale: 1 }
     };
 
+    const controlButtonClass =
+        "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-10 h-10";
+
     return (
         <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
-            {/* Top Bar - adjusted for single row and padding */}
+            {/* Top Bar */}
             <header className="h-14 flex items-center justify-between px-6 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
                 <h1 className="text-base font-bold tracking-wider text-zinc-100 uppercase">Daily Rogue</h1>
                 <div className="text-xs text-zinc-400">Sunday February 15th 2026</div>
@@ -125,11 +129,11 @@ export default function DailyRogueUI() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col relative h-full">
-                {/* Top Half - Split into Left (30%) and Right */}
+                {/* Top Half */}
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
                     <div className="w-[30%] border-r border-zinc-800 flex items-center justify-center">
-                        {/* Placeholder or future content */}
+                        {/* Placeholder */}
                     </div>
 
                     {/* Right Section */}
@@ -138,7 +142,7 @@ export default function DailyRogueUI() {
                         <Sprite name="Creature_Bat_U" scale={4} />
                     </div>
 
-                    {/* Subtle grid pattern for texture */}
+                    {/* Subtle grid pattern */}
                     <div className="absolute inset-0 opacity-5 pointer-events-none"
                         style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }}
                     />
@@ -147,113 +151,132 @@ export default function DailyRogueUI() {
                 {/* Divider */}
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
-                {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 px-6 py-4 relative gap-4">
+                {/* Bottom Half */}
+                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-8">
 
-                    {/* Kept Sprites Row - Centered between top line and grid */}
-                    <div className="w-full flex justify-center items-center shrink-0 mb-2">
-                        {/* Use fixed width container to prevent layout shifts */}
-                        <div className="flex gap-2 w-[280px] justify-start h-12 items-center">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <div key={i} className="shrink-0 w-10 h-10 flex items-center justify-center">
-                                    {keptSprites[i] && (
-                                        <Sprite name={keptSprites[i]} scale={2.5} />
+                    {/* Kept Sprites Row */}
+                    <div className="w-full flex justify-center items-center shrink-0 mb-6">
+                        <div className="flex gap-2 min-h-[3rem] items-center">
+                            {keptSprites.length > 0 ? keptSprites.map((name, i) => (
+                                <Sprite key={i} name={name} scale={2.5} />
+                            )) : <div className="text-zinc-800 text-xs tracking-widest uppercase">No items kept</div>}
+                        </div>
+                    </div>
+
+                    {/* Main Layout: Spacer - Grid - Buttons */}
+                    <div className="w-full flex items-start justify-center flex-1">
+
+                        {/* Left Spacer */}
+                        <div className="flex-1" />
+
+
+                        {/* Center Column: Grid + Text */}
+                        <div className="flex flex-col items-center gap-6">
+                            <motion.div
+                                key={spinKey}
+                                className="grid grid-cols-4 grid-rows-3 gap-2"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="show"
+                            >
+                                <AnimatePresence mode='popLayout'>
+                                    {gridSprites.map((item, index) => (
+                                        <motion.div
+                                            key={item?.id ?? `empty-${index}`}
+                                            layout
+                                            variants={itemVariants}
+                                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                            className="w-10 h-10 flex items-center justify-center" // Enforce cell size
+                                        >
+                                            {item ? (
+                                                <Sprite
+                                                    name={item.name}
+                                                    scale={2.5}
+                                                    onClick={() => handleSpriteClick(item)}
+                                                    className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
+                                                />
+                                            ) : (
+                                                <div className="w-10 h-10 border border-zinc-900/50 rounded-sm" />
+                                            )}
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </motion.div>
+
+                            {/* Info Text */}
+                            <div className="h-16 flex items-start justify-center text-center">
+                                <AnimatePresence mode="wait">
+                                    {selectedSprite ? (
+                                        <motion.div
+                                            key="name"
+                                            initial={{ opacity: 0, y: -5 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 5 }}
+                                            className="flex flex-col items-center justify-start gap-1"
+                                        >
+                                            <div className="text-xs font-medium tracking-widest text-zinc-400 uppercase">
+                                                {selectedSprite.replace(/_/g, ' ')}
+                                            </div>
+                                            <div className="text-[10px] font-medium tracking-wider text-green-400/80 uppercase">
+                                                +3 Stat
+                                            </div>
+                                            <div className="text-[10px] font-medium tracking-wider uppercase text-zinc-500">
+                                                Adds X to Y
+                                            </div>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="empty"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="text-[10px] text-zinc-600 uppercase tracking-widest mt-1"
+                                        >
+                                            Select a sprite
+                                        </motion.div>
                                     )}
-                                </div>
-                            ))}
+                                </AnimatePresence>
+                            </div>
                         </div>
+
+                        {/* Right Section: Buttons Centered in Gutter */}
+                        <div className="flex-1 flex justify-center">
+                            <div className="flex flex-col gap-2">
+                                {/* Row 1: Spin */}
+                                <motion.button
+                                    onClick={handleSpin}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={controlButtonClass}
+                                    title="Spin"
+                                >
+                                    <RotateCw size={18} className="text-zinc-400" />
+                                </motion.button>
+
+                                {/* Row 2: Vary */}
+                                <motion.button
+                                    onClick={handleVary}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={controlButtonClass}
+                                    title="Shuffle"
+                                >
+                                    <Shuffle size={18} className="text-zinc-400" />
+                                </motion.button>
+
+                                {/* Row 3: Fate */}
+                                <motion.button
+                                    whileTap={{ scale: 0.95 }}
+                                    className={controlButtonClass}
+                                    title="Fate"
+                                >
+                                    <Sparkles size={18} className="text-zinc-400" />
+                                </motion.button>
+                            </div>
+                        </div>
+
                     </div>
 
-                    {/* Centered Wrapper for Grid and Buttons - Ensures same height */}
-                    <div className="relative grid grid-cols-[max-content_max-content] gap-x-4 gap-y-2 h-min z-10">
-                        {/* Grid Section */}
-                        <motion.div
-                            key={spinKey}
-                            className="grid grid-cols-4 grid-rows-3 gap-2 place-items-center"
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="show"
-                        >
-                            <AnimatePresence mode='popLayout'>
-                                {gridSprites.map((item, index) => (
-                                    <motion.div
-                                        key={item?.id ?? `empty-${index}`} // Use stable ID for reordering animation
-                                        layout
-                                        variants={itemVariants}
-                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                    >
-                                        {item ? (
-                                            <Sprite
-                                                name={item.name}
-                                                scale={2.5}
-                                                onClick={() => handleSpriteClick(item)}
-                                                className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
-                                            />
-                                        ) : (
-                                            <div style={{ width: 40, height: 40 }} />
-                                        )}
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </motion.div>
-
-                        {/* Controls Section - Right Side */}
-                        <div className="flex flex-col gap-2 w-20 col-start-2 row-start-1 translate-x-6">
-                            <motion.button
-                                onClick={handleSpin}
-                                whileTap={{ y: 1 }}
-                                transition={{ type: 'tween', duration: 0.08 }}
-                                className="w-20 h-20 bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none"
-                            >
-                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">↻</span>
-                            </motion.button>
-                            <motion.button
-                                onClick={handleVary}
-                                whileTap={{ y: 1 }}
-                                transition={{ type: 'tween', duration: 0.08 }}
-                                className="w-20 h-20 bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none"
-                            >
-                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">⤮</span>
-                            </motion.button>
-                        </div>
-
-                        {/* Fate Button - New Row */}
-                        <div className="col-start-2 row-start-2 translate-x-6">
-                            <motion.button
-                                whileTap={{ y: 1 }}
-                                transition={{ type: 'tween', duration: 0.08 }}
-                                className="bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none w-20 h-20"
-                            >
-                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">✦</span>
-                            </motion.button>
-                        </div>
-
-                        {/* Name Display - Directly under Grid */}
-
-                        <div className="w-full text-center h-full flex items-center justify-center pointer-events-none col-start-1 row-start-2 min-h-[4rem]">
-                            <AnimatePresence mode="wait">
-                                {selectedSprite && (
-                                    <motion.div
-                                        key="name"
-                                        initial={{ opacity: 0, y: -5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 5 }}
-                                        className="flex flex-col items-center justify-center"
-                                    >
-                                        <div className="text-xs font-medium tracking-widest text-zinc-400 uppercase">
-                                            {selectedSprite.replace(/_/g, ' ')}
-                                        </div>
-                                        <div className="text-[10px] font-medium tracking-wider text-green-400/80 uppercase mt-0.5">
-                                            +3 Stat
-                                        </div>
-                                        <div className="text-[10px] font-medium tracking-wider uppercase text-zinc-500">
-                                            Adds X to Y
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    </div>
+                    {/* Context Info Overlay - REMOVED (now integrated above) */}
+                    <div className="hidden" />
 
                 </section>
             </main>
