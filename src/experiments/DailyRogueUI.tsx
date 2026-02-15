@@ -62,15 +62,32 @@ function Sprite({ name, className, scale = 4 }: SpriteProps) {
 export default function DailyRogueUI() {
     const [gridSprites, setGridSprites] = useState<SpriteName[]>([]);
 
-    useEffect(() => {
-        // Generate 12 random sprites for the 4x3 grid
-        // We use a simple loop. In a real game, this might come from seed.
-        const randomSprites = Array.from({ length: 12 }, () => {
+    function generateRandomSprites() {
+        return Array.from({ length: 12 }, () => {
             const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
             return SPRITE_KEYS[randomIndex];
         });
-        setGridSprites(randomSprites);
+    }
+
+    useEffect(() => {
+        setGridSprites(generateRandomSprites());
     }, []);
+
+    const handleSpin = () => {
+        setGridSprites(generateRandomSprites());
+    };
+
+    const handleVary = () => {
+        setGridSprites(prev => {
+            const newArr = [...prev];
+            // Fisher-Yates shuffle
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        });
+    };
 
     return (
         <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
@@ -97,13 +114,30 @@ export default function DailyRogueUI() {
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex items-center justify-center bg-zinc-950 p-4">
+                <section className="h-[60%] flex items-center justify-between bg-zinc-950 px-6 py-8">
+                    {/* Grid Section - Pushed Left */}
                     <div className="grid grid-cols-4 grid-rows-3 gap-2 place-items-center">
                         {gridSprites.map((spriteName, index) => (
-                            <div key={index} className="flex items-center justify-center bg-zinc-900/40 rounded-lg p-1 border border-zinc-800/50 w-16 h-16">
-                                <Sprite name={spriteName} scale={3} />
-                            </div>
+                            <Sprite key={index} name={spriteName} scale={3} />
                         ))}
+                    </div>
+
+                    {/* Controls Section - Right Side */}
+                    <div className="flex flex-col gap-4 justify-center">
+                        <button
+                            onClick={handleSpin}
+                            className="w-[72px] h-[72px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-colors active:scale-95 group"
+                        >
+                            <span className="text-2xl mb-1 group-hover:rotate-180 transition-transform duration-500">↻</span>
+                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Spin</span>
+                        </button>
+                        <button
+                            onClick={handleVary}
+                            className="w-[72px] h-[72px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-colors active:scale-95"
+                        >
+                            <span className="text-2xl mb-1">⤮</span>
+                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Vary</span>
+                        </button>
                     </div>
                 </section>
             </main>
