@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* THE MOBILE HARD RESET */
+:root {
+  /* Prevents the "bounce" effect when scrolling past the edge */
+  overscroll-behavior: none;
+
+  /* Disables the 300ms tap delay on mobile */
+  touch-action: manipulation;
+
+  /* Prevents long-press text selection */
+  -webkit-user-select: none;
+  user-select: none;
+
+  /* Removes the blue highlight box when tapping buttons on Android/iOS */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  /* Locks the body to the screen, preventing accidental scrolling */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  /* Prevents white flashes during load */
+}
+
+/* Allow text selection only on specific inputs if you have them */
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
