@@ -6,7 +6,7 @@ import { SPRITES } from './SPRITES';
 
 type SpriteName = keyof typeof SPRITES;
 // Helper for random selection
-const SPRITE_KEYS = Object.keys(SPRITES) as SpriteName[];
+const SPRITE_KEYS = (Object.keys(SPRITES) as SpriteName[]).filter(key => !key.startsWith('Creature_'));
 
 interface SpriteProps {
     name: SpriteName;
@@ -148,16 +148,16 @@ export default function DailyRogueUI() {
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 px-6 py-8 relative gap-4">
+                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 px-6 py-4 relative gap-4">
 
                     {/* Kept Sprites Row - Centered between top line and grid */}
                     <div className="w-full flex justify-center items-center shrink-0 mb-2">
                         {/* Use fixed width container to prevent layout shifts */}
-                        <div className="flex gap-2 w-[328px] justify-start h-12 items-center">
+                        <div className="flex gap-2 w-[280px] justify-start h-12 items-center">
                             {Array.from({ length: 6 }).map((_, i) => (
-                                <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
+                                <div key={i} className="shrink-0 w-10 h-10 flex items-center justify-center">
                                     {keptSprites[i] && (
-                                        <Sprite name={keptSprites[i]} scale={3} />
+                                        <Sprite name={keptSprites[i]} scale={2.5} />
                                     )}
                                 </div>
                             ))}
@@ -185,12 +185,12 @@ export default function DailyRogueUI() {
                                         {item ? (
                                             <Sprite
                                                 name={item.name}
-                                                scale={3}
+                                                scale={2.5}
                                                 onClick={() => handleSpriteClick(item)}
                                                 className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
                                             />
                                         ) : (
-                                            <div style={{ width: 48, height: 48 }} />
+                                            <div style={{ width: 40, height: 40 }} />
                                         )}
                                     </motion.div>
                                 ))}
@@ -198,25 +198,34 @@ export default function DailyRogueUI() {
                         </motion.div>
 
                         {/* Controls Section - Right Side */}
-                        <div className="flex flex-col gap-2 w-24 h-full col-start-2 row-start-1">
+                        <div className="flex flex-col gap-2 w-20 col-start-2 row-start-1">
                             <button
                                 onClick={handleSpin}
-                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
+                                className="h-20 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
                             >
-                                <span className="text-4xl mb-1 text-indigo-400">↻</span>
+                                <span className="text-3xl mb-1 text-indigo-400">↻</span>
                                 <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Spin</span>
                             </button>
                             <button
                                 onClick={handleVary}
-                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
+                                className="h-20 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
                             >
-                                <span className="text-4xl mb-1 text-emerald-400">⤮</span>
+                                <span className="text-3xl mb-1 text-emerald-400">⤮</span>
                                 <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Vary</span>
                             </button>
                         </div>
 
+                        {/* Fate Button - New Row */}
+                        <button
+                            className="bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group col-start-2 row-start-2 w-20 h-20"
+                        >
+                            <span className="text-3xl mb-1 text-amber-400">✦</span>
+                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Fate</span>
+                        </button>
+
                         {/* Name Display - Directly under Grid */}
-                        <div className="w-full text-center h-6 flex items-center justify-center pointer-events-none col-start-1 row-start-2">
+
+                        <div className="w-full text-center h-full flex items-center justify-center pointer-events-none col-start-1 row-start-2 min-h-[4rem]">
                             <AnimatePresence mode="wait">
                                 {selectedSprite && (
                                     <motion.div
@@ -224,9 +233,17 @@ export default function DailyRogueUI() {
                                         initial={{ opacity: 0, y: -5 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: 5 }}
-                                        className="text-sm font-medium tracking-widest text-zinc-400 uppercase"
+                                        className="flex flex-col items-center justify-center"
                                     >
-                                        {selectedSprite.replace(/_/g, ' ')}
+                                        <div className="text-xs font-medium tracking-widest text-zinc-400 uppercase">
+                                            {selectedSprite.replace(/_/g, ' ')}
+                                        </div>
+                                        <div className="text-[10px] font-medium tracking-wider text-green-400/80 uppercase mt-0.5">
+                                            +3 Stat
+                                        </div>
+                                        <div className="text-[10px] tracking-wide text-zinc-500">
+                                            Adds X to Y
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
