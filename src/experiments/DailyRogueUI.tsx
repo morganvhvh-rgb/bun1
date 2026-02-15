@@ -144,31 +144,28 @@ export default function DailyRogueUI() {
                     />
                 </section>
 
-                {/* Divider - Visual only, the sizing is handled by flex/height on sections */}
+                {/* Divider */}
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex items-center justify-center bg-zinc-950 px-6 py-8 relative">
-                    {/* Centered Wrapper for Grid and Buttons - Ensures same height */}
-                    <div className="relative flex gap-4 h-min z-10">
+                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 px-6 py-8 relative gap-4">
 
-                        {/* Name Display - Absolute above wrapper */}
-                        <div className="absolute -top-8 left-0 w-full text-center h-6 flex items-center justify-center pointer-events-none">
-                            <AnimatePresence mode="wait">
-                                {selectedSprite && (
-                                    <motion.div
-                                        key="name"
-                                        initial={{ opacity: 0, y: 5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -5 }}
-                                        className="text-sm font-medium tracking-widest text-zinc-400 uppercase"
-                                    >
-                                        {selectedSprite.replace(/_/g, ' ')}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                    {/* Kept Sprites Row - Centered between top line and grid */}
+                    <div className="w-full flex justify-center items-center shrink-0 mb-2">
+                        {/* Use fixed width container to prevent layout shifts */}
+                        <div className="flex gap-2 w-[328px] justify-start h-12 items-center">
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
+                                    {keptSprites[i] && (
+                                        <Sprite name={keptSprites[i]} scale={3} />
+                                    )}
+                                </div>
+                            ))}
                         </div>
+                    </div>
 
+                    {/* Centered Wrapper for Grid and Buttons - Ensures same height */}
+                    <div className="relative grid grid-cols-[max-content_max-content] gap-x-4 gap-y-2 h-min z-10">
                         {/* Grid Section */}
                         <motion.div
                             key={spinKey}
@@ -180,7 +177,7 @@ export default function DailyRogueUI() {
                             <AnimatePresence mode='popLayout'>
                                 {gridSprites.map((item, index) => (
                                     <motion.div
-                                        key={index}
+                                        key={item?.id ?? `empty-${index}`} // Use stable ID for reordering animation
                                         layout
                                         variants={itemVariants}
                                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -201,35 +198,41 @@ export default function DailyRogueUI() {
                         </motion.div>
 
                         {/* Controls Section - Right Side */}
-                        <div className="flex flex-col gap-2 w-24">
+                        <div className="flex flex-col gap-2 w-24 h-full col-start-2 row-start-1">
                             <button
                                 onClick={handleSpin}
-                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:scale-95 shadow-lg group"
+                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
                             >
-                                <span className="text-3xl mb-1 text-indigo-400">↻</span>
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">Spin</span>
+                                <span className="text-4xl mb-1 text-indigo-400">↻</span>
+                                <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Spin</span>
                             </button>
                             <button
                                 onClick={handleVary}
-                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:scale-95 shadow-lg group"
+                                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
                             >
-                                <span className="text-3xl mb-1 text-emerald-400">⤮</span>
-                                <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">Vary</span>
+                                <span className="text-4xl mb-1 text-emerald-400">⤮</span>
+                                <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Vary</span>
                             </button>
+                        </div>
+
+                        {/* Name Display - Directly under Grid */}
+                        <div className="w-full text-center h-6 flex items-center justify-center pointer-events-none col-start-1 row-start-2">
+                            <AnimatePresence mode="wait">
+                                {selectedSprite && (
+                                    <motion.div
+                                        key="name"
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 5 }}
+                                        className="text-sm font-medium tracking-widest text-zinc-400 uppercase"
+                                    >
+                                        {selectedSprite.replace(/_/g, ' ')}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
 
-                    {/* Kept Sprites Row - Absolute Bottom */}
-                    <div className="absolute bottom-4 left-0 w-full flex justify-center pointer-events-none">
-                        {/* Fixed width container (6 sprites + gaps) to ensure left-to-right filling without centering shifts */}
-                        <div className="flex gap-2 pointer-events-auto w-[328px] justify-start h-12 items-center">
-                            {keptSprites.map((name, i) => (
-                                <div key={i} className="shrink-0">
-                                    <Sprite name={name} scale={3} />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
                 </section>
             </main>
         </div>
