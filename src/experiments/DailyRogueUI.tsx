@@ -117,7 +117,7 @@ export default function DailyRogueUI() {
     };
 
     const controlButtonClass =
-        "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-10 h-10";
+        "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12";
 
     return (
         <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
@@ -156,25 +156,24 @@ export default function DailyRogueUI() {
 
                     {/* Kept Sprites Row */}
                     <div className="w-full flex justify-center items-center shrink-0 mb-6">
-                        <div className="flex gap-2 min-h-[3rem] items-center">
+                        <div className="flex gap-2 min-h-[3.5rem] items-center">
                             {keptSprites.length > 0 ? keptSprites.map((name, i) => (
-                                <Sprite key={i} name={name} scale={2.5} />
+                                <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
+                                    <Sprite name={name} scale={3} />
+                                </div>
                             )) : <div className="text-zinc-800 text-xs tracking-widest uppercase">No items kept</div>}
                         </div>
                     </div>
 
                     {/* Main Layout: Spacer - Grid - Buttons */}
-                    <div className="w-full flex items-start justify-center flex-1">
-
-                        {/* Left Spacer */}
-                        <div className="flex-1" />
-
+                    {/* Main Layout: Grid + Buttons Centered */}
+                    <div className="flex flex-row items-start justify-center gap-6 w-full max-w-2xl px-4 flex-1">
 
                         {/* Center Column: Grid + Text */}
-                        <div className="flex flex-col items-center gap-6">
+                        <div className="flex flex-col items-center gap-8">
                             <motion.div
                                 key={spinKey}
-                                className="grid grid-cols-4 grid-rows-3 gap-2"
+                                className="grid grid-cols-4 grid-rows-3 gap-3"
                                 variants={containerVariants}
                                 initial="hidden"
                                 animate="show"
@@ -186,17 +185,17 @@ export default function DailyRogueUI() {
                                             layout
                                             variants={itemVariants}
                                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                            className="w-10 h-10 flex items-center justify-center" // Enforce cell size
+                                            className="w-12 h-12 flex items-center justify-center" // Enforce cell size
                                         >
                                             {item ? (
                                                 <Sprite
                                                     name={item.name}
-                                                    scale={2.5}
+                                                    scale={3}
                                                     onClick={() => handleSpriteClick(item)}
                                                     className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
                                                 />
                                             ) : (
-                                                <div className="w-10 h-10 border border-zinc-900/50 rounded-sm" />
+                                                <div className="w-12 h-12 border border-zinc-900/50 rounded-sm" />
                                             )}
                                         </motion.div>
                                     ))}
@@ -204,7 +203,7 @@ export default function DailyRogueUI() {
                             </motion.div>
 
                             {/* Info Text */}
-                            <div className="h-16 flex items-start justify-center text-center">
+                            <div className="h-20 flex items-start justify-center text-center">
                                 <AnimatePresence mode="wait">
                                     {selectedSprite ? (
                                         <motion.div
@@ -214,13 +213,13 @@ export default function DailyRogueUI() {
                                             exit={{ opacity: 0, y: 5 }}
                                             className="flex flex-col items-center justify-start gap-1"
                                         >
-                                            <div className="text-xs font-medium tracking-widest text-zinc-400 uppercase">
+                                            <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
                                                 {selectedSprite.replace(/_/g, ' ')}
                                             </div>
-                                            <div className="text-[10px] font-medium tracking-wider text-green-400/80 uppercase">
+                                            <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
                                                 +3 Stat
                                             </div>
-                                            <div className="text-[10px] font-medium tracking-wider uppercase text-zinc-500">
+                                            <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
                                                 Adds X to Y
                                             </div>
                                         </motion.div>
@@ -230,7 +229,7 @@ export default function DailyRogueUI() {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="text-[10px] text-zinc-600 uppercase tracking-widest mt-1"
+                                            className="text-xs text-zinc-600 uppercase tracking-widest mt-1"
                                         >
                                             Select a sprite
                                         </motion.div>
@@ -239,38 +238,36 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
 
-                        {/* Right Section: Buttons Centered in Gutter */}
-                        <div className="flex-1 flex justify-center">
-                            <div className="flex flex-col gap-2">
-                                {/* Row 1: Spin */}
-                                <motion.button
-                                    onClick={handleSpin}
-                                    whileTap={{ scale: 0.95 }}
-                                    className={controlButtonClass}
-                                    title="Spin"
-                                >
-                                    <RotateCw size={18} className="text-zinc-400" />
-                                </motion.button>
+                        {/* Right Section: Buttons - Aligned with Grid Rows */}
+                        <div className="flex flex-col gap-3"> {/* Gap matches grid gap-3 */}
+                            {/* Row 1: Spin */}
+                            <motion.button
+                                onClick={handleSpin}
+                                whileTap={{ scale: 0.95 }}
+                                className={controlButtonClass}
+                                title="Spin"
+                            >
+                                <RotateCw size={20} className="text-zinc-400" />
+                            </motion.button>
 
-                                {/* Row 2: Vary */}
-                                <motion.button
-                                    onClick={handleVary}
-                                    whileTap={{ scale: 0.95 }}
-                                    className={controlButtonClass}
-                                    title="Shuffle"
-                                >
-                                    <Shuffle size={18} className="text-zinc-400" />
-                                </motion.button>
+                            {/* Row 2: Vary */}
+                            <motion.button
+                                onClick={handleVary}
+                                whileTap={{ scale: 0.95 }}
+                                className={controlButtonClass}
+                                title="Shuffle"
+                            >
+                                <Shuffle size={20} className="text-zinc-400" />
+                            </motion.button>
 
-                                {/* Row 3: Fate */}
-                                <motion.button
-                                    whileTap={{ scale: 0.95 }}
-                                    className={controlButtonClass}
-                                    title="Fate"
-                                >
-                                    <Sparkles size={18} className="text-zinc-400" />
-                                </motion.button>
-                            </div>
+                            {/* Row 3: Fate */}
+                            <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                className={controlButtonClass}
+                                title="Fate"
+                            >
+                                <Sparkles size={20} className="text-zinc-400" />
+                            </motion.button>
                         </div>
 
                     </div>
