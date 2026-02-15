@@ -198,30 +198,35 @@ export default function DailyRogueUI() {
                         </motion.div>
 
                         {/* Controls Section - Right Side */}
-                        <div className="flex flex-col gap-2 w-20 col-start-2 row-start-1">
-                            <button
+                        <div className="flex flex-col gap-2 w-20 col-start-2 row-start-1 translate-x-6">
+                            <motion.button
                                 onClick={handleSpin}
-                                className="h-20 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
+                                whileTap={{ y: 1 }}
+                                transition={{ type: 'tween', duration: 0.08 }}
+                                className="w-20 h-20 bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none"
                             >
-                                <span className="text-3xl mb-1 text-indigo-400">↻</span>
-                                <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Spin</span>
-                            </button>
-                            <button
+                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">↻</span>
+                            </motion.button>
+                            <motion.button
                                 onClick={handleVary}
-                                className="h-20 bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group"
+                                whileTap={{ y: 1 }}
+                                transition={{ type: 'tween', duration: 0.08 }}
+                                className="w-20 h-20 bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none"
                             >
-                                <span className="text-3xl mb-1 text-emerald-400">⤮</span>
-                                <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Vary</span>
-                            </button>
+                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">⤮</span>
+                            </motion.button>
                         </div>
 
                         {/* Fate Button - New Row */}
-                        <button
-                            className="bg-zinc-800 border border-zinc-700 rounded-lg flex flex-col items-center justify-center transition-all active:bg-zinc-700 active:scale-95 shadow-lg group col-start-2 row-start-2 w-20 h-20"
-                        >
-                            <span className="text-3xl mb-1 text-amber-400">✦</span>
-                            <span className="text-xs uppercase tracking-wider font-bold text-zinc-400">Fate</span>
-                        </button>
+                        <div className="col-start-2 row-start-2 translate-x-6">
+                            <motion.button
+                                whileTap={{ y: 1 }}
+                                transition={{ type: 'tween', duration: 0.08 }}
+                                className="bg-zinc-900/85 border border-zinc-700 rounded-full grid place-items-center focus:outline-none focus-visible:outline-none w-20 h-20"
+                            >
+                                <span className="block text-3xl leading-none text-zinc-300 translate-y-[0.5px]">✦</span>
+                            </motion.button>
+                        </div>
 
                         {/* Name Display - Directly under Grid */}
 
@@ -241,7 +246,7 @@ export default function DailyRogueUI() {
                                         <div className="text-[10px] font-medium tracking-wider text-green-400/80 uppercase mt-0.5">
                                             +3 Stat
                                         </div>
-                                        <div className="text-[10px] tracking-wide text-zinc-500">
+                                        <div className="text-[10px] font-medium tracking-wider uppercase text-zinc-500">
                                             Adds X to Y
                                         </div>
                                     </motion.div>
