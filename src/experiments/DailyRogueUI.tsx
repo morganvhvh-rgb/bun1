@@ -1,4 +1,3 @@
-
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -52,9 +51,10 @@ interface GridItem {
 }
 
 export default function DailyRogueUI() {
-    const [gridSprites, setGridSprites] = useState<GridItem[]>([]);
+    const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>([]);
     const [spinKey, setSpinKey] = useState(0);
     const [selectedSprite, setSelectedSprite] = useState<SpriteName | null>(null);
+    const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
 
     function generateRandomSprites(): GridItem[] {
         return Array.from({ length: 12 }, () => {
@@ -73,6 +73,7 @@ export default function DailyRogueUI() {
     const handleSpin = () => {
         setGridSprites(generateRandomSprites());
         setSpinKey(prev => prev + 1);
+        setSelectedSprite(null);
     };
 
     const handleVary = () => {
@@ -85,6 +86,18 @@ export default function DailyRogueUI() {
             }
             return newArr;
         });
+    };
+
+    const handleSpriteClick = (item: GridItem) => {
+        if (selectedSprite === item.name) {
+            // "Keep" the sprite - replace with null to maintain grid structure
+            setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
+            setKeptSprites(prev => [...prev, item.name]);
+            setSelectedSprite(null);
+        } else {
+            // Select the sprite
+            setSelectedSprite(item.name);
+        }
     };
 
     const containerVariants = {
@@ -112,10 +125,18 @@ export default function DailyRogueUI() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col relative h-full">
-                {/* Top Half - Smaller (40%) */}
-                <section className="h-[40%] flex items-center justify-center gap-12 bg-zinc-900/50 relative">
-                    <Sprite name="Creature_Ghost_U" scale={4} />
-                    <Sprite name="Creature_Bat_U" scale={4} />
+                {/* Top Half - Split into Left (30%) and Right */}
+                <section className="h-[40%] flex bg-zinc-900/50 relative">
+                    {/* Left Section */}
+                    <div className="w-[30%] border-r border-zinc-800 flex items-center justify-center">
+                        {/* Placeholder or future content */}
+                    </div>
+
+                    {/* Right Section */}
+                    <div className="flex-1 flex items-center justify-center gap-12 relative">
+                        <Sprite name="Creature_Ghost_U" scale={4} />
+                        <Sprite name="Creature_Bat_U" scale={4} />
+                    </div>
 
                     {/* Subtle grid pattern for texture */}
                     <div className="absolute inset-0 opacity-5 pointer-events-none"
@@ -127,10 +148,9 @@ export default function DailyRogueUI() {
                 <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Bottom Half - Larger (60%) */}
-                {/* Bottom Half - Larger (60%) */}
-                <section className="h-[60%] flex items-center justify-center bg-zinc-950 px-6 py-8">
+                <section className="h-[60%] flex items-center justify-center bg-zinc-950 px-6 py-8 relative">
                     {/* Centered Wrapper for Grid and Buttons - Ensures same height */}
-                    <div className="relative flex gap-4 h-min">
+                    <div className="relative flex gap-4 h-min z-10">
 
                         {/* Name Display - Absolute above wrapper */}
                         <div className="absolute -top-8 left-0 w-full text-center h-6 flex items-center justify-center pointer-events-none">
@@ -158,19 +178,23 @@ export default function DailyRogueUI() {
                             animate="show"
                         >
                             <AnimatePresence mode='popLayout'>
-                                {gridSprites.map((item) => (
+                                {gridSprites.map((item, index) => (
                                     <motion.div
-                                        key={item.id}
+                                        key={index}
                                         layout
                                         variants={itemVariants}
                                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                     >
-                                        <Sprite
-                                            name={item.name}
-                                            scale={3}
-                                            onClick={() => setSelectedSprite(item.name)}
-                                            className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
-                                        />
+                                        {item ? (
+                                            <Sprite
+                                                name={item.name}
+                                                scale={3}
+                                                onClick={() => handleSpriteClick(item)}
+                                                className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
+                                            />
+                                        ) : (
+                                            <div style={{ width: 48, height: 48 }} />
+                                        )}
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
@@ -192,6 +216,18 @@ export default function DailyRogueUI() {
                                 <span className="text-3xl mb-1 text-emerald-400">⤮</span>
                                 <span className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">Vary</span>
                             </button>
+                        </div>
+                    </div>
+
+                    {/* Kept Sprites Row - Absolute Bottom */}
+                    <div className="absolute bottom-4 left-0 w-full flex justify-center pointer-events-none">
+                        {/* Fixed width container (6 sprites + gaps) to ensure left-to-right filling without centering shifts */}
+                        <div className="flex gap-2 pointer-events-auto w-[328px] justify-start h-12 items-center">
+                            {keptSprites.map((name, i) => (
+                                <div key={i} className="shrink-0">
+                                    <Sprite name={name} scale={3} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>
