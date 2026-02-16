@@ -77,6 +77,10 @@ export default function DailyRogueUI() {
     const [selectedSprite, setSelectedSprite] = useState<SpriteName | null>(null);
     const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
 
+    // Pirate Logic State
+    const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
+    const [activePirateIndex, setActivePirateIndex] = useState<number | null>(null);
+
     function generateRandomSprites(): GridItem[] {
         return Array.from({ length: 12 }, () => {
             const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
@@ -91,10 +95,16 @@ export default function DailyRogueUI() {
         setGridSprites(generateRandomSprites());
     }, []);
 
+    const resetSelection = () => {
+        setSelectedSprite(null);
+        setGlowingIndices([]);
+        setActivePirateIndex(null);
+    };
+
     const handleSpin = () => {
         setGridSprites(generateRandomSprites());
         setSpinKey(prev => prev + 1);
-        setSelectedSprite(null);
+        resetSelection();
     };
 
     const handleVary = () => {
@@ -107,18 +117,88 @@ export default function DailyRogueUI() {
             }
             return newArr;
         });
+        resetSelection();
     };
 
-    const handleSpriteClick = (item: GridItem) => {
+
+    const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
+    const getIndex = (row: number, col: number) => row * 4 + col;
+
+    const handleSpriteClick = (item: GridItem, index: number) => {
+        // If clicking a glowing target (Movement)
+        if (glowingIndices.includes(index) && activePirateIndex !== null) {
+            const pirate = gridSprites[activePirateIndex];
+            // Verify we are moving a pirate
+            if (pirate && pirate.name === "Human_Pirate_F") {
+                setGridSprites(prev => {
+                    const next = [...prev];
+                    const pCoords = getCoordinates(activePirateIndex);
+                    const tCoords = getCoordinates(index);
+
+                    // Clear path
+                    if (pCoords.row === tCoords.row) { // Horizontal
+                        const min = Math.min(pCoords.col, tCoords.col);
+                        const max = Math.max(pCoords.col, tCoords.col);
+                        for (let c = min; c <= max; c++) next[getIndex(pCoords.row, c)] = null;
+                    } else { // Vertical
+                        const min = Math.min(pCoords.row, tCoords.row);
+                        const max = Math.max(pCoords.row, tCoords.row);
+                        for (let r = min; r <= max; r++) next[getIndex(r, pCoords.col)] = null;
+                    }
+
+                    // Place Pirate at target (reusing ID to potentially keep identity, or new ID)
+                    next[index] = { ...pirate };
+                    return next;
+                });
+
+                resetSelection();
+                return;
+            }
+        }
+
+        // Handle Pirate Selection
+        if (item.name === "Human_Pirate_F") {
+            const { row, col } = getCoordinates(index);
+            const targets: number[] = [];
+
+            // Furthest in Row logic
+            const rowIndices = [0, 1, 2, 3].map(c => getIndex(row, c)).filter(i => i !== index);
+            rowIndices.sort((a, b) => Math.abs(a - index) - Math.abs(b - index));
+            if (rowIndices.length > 0) targets.push(rowIndices[rowIndices.length - 1]);
+
+            // Furthest in Col logic
+            const colIndices = [0, 1, 2].map(r => getIndex(r, col)).filter(i => i !== index);
+            colIndices.sort((a, b) => {
+                const dA = Math.abs(Math.floor(a / 4) - row);
+                const dB = Math.abs(Math.floor(b / 4) - row);
+                return dA - dB;
+            });
+            if (colIndices.length > 0) targets.push(colIndices[colIndices.length - 1]);
+
+            setGlowingIndices(targets);
+            setActivePirateIndex(index);
+            setSelectedSprite(item.name);
+            return;
+        }
+
+        // Default behavior (Select/Keep) for non-Pirates
         if (selectedSprite === item.name) {
-            // "Keep" the sprite - replace with null to maintain grid structure
+            if (activePirateIndex !== null) {
+                // If we had a pirate selected and clicked another same-named item (unlikely since Pirate is unique usually, but possible)
+                // Or if we clicked a non-glowing cell while pirate is active -> Reset
+                resetSelection();
+                // Optionally process the click as a new selection? 
+                // For now, let's just reset to be safe or treat as standard toggle
+            }
+
             if (keptSprites.length >= 6) return;
             setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
             setKeptSprites(prev => [...prev, item.name]);
-            setSelectedSprite(null);
+            resetSelection();
         } else {
-            // Select the sprite
             setSelectedSprite(item.name);
+            setGlowingIndices([]);
+            setActivePirateIndex(null);
         }
     };
 
@@ -195,7 +275,6 @@ export default function DailyRogueUI() {
                         </div>
 
                         {/* Main Layout: Spacer - Grid - Buttons */}
-                        {/* Main Layout: Grid + Buttons Centered */}
                         <div className="flex flex-row items-start justify-center gap-6 w-full max-w-2xl px-4 flex-1">
 
                             {/* Center Column: Grid + Text */}
@@ -214,17 +293,33 @@ export default function DailyRogueUI() {
                                                 layout
                                                 variants={itemVariants}
                                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className="w-12 h-12 flex items-center justify-center" // Enforce cell size
+                                                className={cn(
+                                                    "w-12 h-12 flex items-center justify-center relative",
+                                                    glowingIndices.includes(index) && "ring-2 ring-yellow-500 rounded-sm shadow-[0_0_15px_rgba(234,179,8,0.5)]"
+                                                )}
                                             >
                                                 {item ? (
                                                     <Sprite
                                                         name={item.name}
                                                         scale={3}
-                                                        onClick={() => handleSpriteClick(item)}
-                                                        className={selectedSprite === item.name ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95"}
+                                                        onClick={() => handleSpriteClick(item, index)}
+                                                        className={cn(
+                                                            selectedSprite === item.name && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
+                                                            (glowingIndices.includes(index) || (activePirateIndex === index && item.name === 'Human_Pirate_F')) && "brightness-125"
+                                                        )}
                                                     />
                                                 ) : (
-                                                    <div className="w-12 h-12 border border-zinc-900/50 rounded-sm" />
+                                                    glowingIndices.includes(index) ? (
+                                                        <div
+                                                            onClick={() => {
+                                                                // Handle click on empty glowing cell
+                                                                if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Human_Pirate_F' } as any, index);
+                                                            }}
+                                                            className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-12 h-12 border border-zinc-900/50 rounded-sm" />
+                                                    )
                                                 )}
                                             </motion.div>
                                         ))}
@@ -269,7 +364,6 @@ export default function DailyRogueUI() {
 
                             {/* Right Section: Buttons - Aligned with Grid Rows */}
                             <div className="flex flex-col gap-3"> {/* Gap matches grid gap-3 */}
-                                {/* Row 1: Spin */}
                                 <motion.button
                                     onClick={handleSpin}
                                     whileTap={{ scale: 0.95 }}
@@ -279,7 +373,6 @@ export default function DailyRogueUI() {
                                     <RotateCw size={20} className="text-zinc-400" />
                                 </motion.button>
 
-                                {/* Row 2: Vary */}
                                 <motion.button
                                     onClick={handleVary}
                                     whileTap={{ scale: 0.95 }}
@@ -289,7 +382,6 @@ export default function DailyRogueUI() {
                                     <Shuffle size={20} className="text-zinc-400" />
                                 </motion.button>
 
-                                {/* Row 3: Fate */}
                                 <motion.button
                                     whileTap={{ scale: 0.95 }}
                                     className={controlButtonClass}
@@ -302,7 +394,6 @@ export default function DailyRogueUI() {
                         </div>
                     </div>
 
-                    {/* Context Info Overlay - REMOVED (now integrated above) */}
                     <div className="hidden" />
 
                     <div className="absolute bottom-6 right-6">
