@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, Shuffle, Link } from 'lucide-react';
+import { RotateCw, Shuffle, Link, Sword } from 'lucide-react';
 
 import { SPRITES } from './SPRITES';
 
@@ -80,6 +80,7 @@ export default function DailyRogueUI() {
     // Pirate Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activePirateIndex, setActivePirateIndex] = useState<number | null>(null);
+    const [isScrollWindowOpen, setIsScrollWindowOpen] = useState(false);
 
     function generateRandomSprites(): GridItem[] {
         return Array.from({ length: 12 }, () => {
@@ -245,9 +246,34 @@ export default function DailyRogueUI() {
                     </div>
 
                     {/* Right Section */}
-                    <div className="flex-1 flex items-center justify-center gap-12 relative">
-                        <Sprite name="Creature_Ghost_U" scale={4} />
-                        <Sprite name="Creature_Bat_U" scale={4} />
+                    <div className="flex-1 flex items-start justify-center gap-12 relative pt-8">
+                        <div className="flex flex-col items-center gap-2">
+                            <Sprite name="Creature_Ghost_U" scale={4} />
+                            <div className="flex flex-col w-24 px-1 text-[10px] tracking-widest text-zinc-500 uppercase font-medium">
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <Sprite name="Creature_Bat_U" scale={4} />
+                            <div className="flex flex-col w-24 px-1 text-[10px] tracking-widest text-zinc-500 uppercase font-medium">
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
+                                <div className="flex justify-between items-center border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                            </div>
+                        </div>
+
+                        {/* New Action Buttons */}
+                        <div className="absolute bottom-4 right-4 flex gap-3">
+                            <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                className={controlButtonClass}
+                                title="Attack"
+                            >
+                                <Sword size={20} className="text-zinc-400" />
+                            </motion.button>
+                        </div>
                     </div>
 
                     {/* Subtle grid pattern */}
@@ -295,7 +321,8 @@ export default function DailyRogueUI() {
                                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                 className={cn(
                                                     "w-12 h-12 flex items-center justify-center relative",
-                                                    glowingIndices.includes(index) && "ring-2 ring-yellow-500 rounded-sm shadow-[0_0_15px_rgba(234,179,8,0.5)]"
+                                                    // Removed ring-2 ring-yellow-500, added strong glow
+                                                    glowingIndices.includes(index) && "drop-shadow-[0_0_8px_rgba(255,215,0,0.8)] brightness-125 z-10"
                                                 )}
                                             >
                                                 {item ? (
@@ -305,7 +332,10 @@ export default function DailyRogueUI() {
                                                         onClick={() => handleSpriteClick(item, index)}
                                                         className={cn(
                                                             selectedSprite === item.name && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
-                                                            (glowingIndices.includes(index) || (activePirateIndex === index && item.name === 'Human_Pirate_F')) && "brightness-125"
+                                                            // Ensure target has strong glow if it's a valid move target
+                                                            (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
+                                                            // Active pirate distinct style
+                                                            (activePirateIndex === index && item.name === 'Human_Pirate_F') && "brightness-125"
                                                         )}
                                                     />
                                                 ) : (
@@ -396,9 +426,48 @@ export default function DailyRogueUI() {
 
                     <div className="hidden" />
 
-                    <div className="absolute bottom-6 right-6">
-                        <Sprite name="Item_Letter" scale={4} />
+                    <div className="absolute bottom-6 right-6 z-50">
+                        <Sprite
+                            name="Item_Scroll"
+                            scale={4}
+                            className="cursor-pointer hover:scale-105 transition-transform"
+                            onClick={() => setIsScrollWindowOpen(true)}
+                        />
                     </div>
+
+                    {/* Scroll Window Modal */}
+                    <AnimatePresence>
+                        {isScrollWindowOpen && (
+                            <>
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setIsScrollWindowOpen(false)}
+                                    className="absolute inset-0 bg-black/50 z-[60]"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    className="absolute inset-x-8 inset-y-24 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl z-[70] flex flex-col p-6"
+                                >
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Scroll Content</h2>
+                                        <button
+                                            onClick={() => setIsScrollWindowOpen(false)}
+                                            className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono">
+                                        {/* Blank for now */}
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
 
                 </section>
             </main>
