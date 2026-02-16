@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, Shuffle, Link, Sword } from 'lucide-react';
+import { RotateCw, Shuffle, Link } from 'lucide-react';
 
 import { SPRITES } from './SPRITES';
 
@@ -274,13 +274,13 @@ export default function DailyRogueUI() {
                         </div>
 
                         {/* New Action Buttons */}
-                        <div className="absolute bottom-4 right-4 flex gap-3">
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
-                                className={controlButtonClass}
+                                className="w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase"
                                 title="Attack"
                             >
-                                <Sword size={20} className="text-zinc-400" />
+                                ENGAGE
                             </motion.button>
                         </div>
                     </div>
