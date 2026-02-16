@@ -92,6 +92,7 @@ export default function DailyRogueUI() {
     const handleSpriteClick = (item: GridItem) => {
         if (selectedSprite === item.name) {
             // "Keep" the sprite - replace with null to maintain grid structure
+            if (keptSprites.length >= 6) return;
             setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
             setKeptSprites(prev => [...prev, item.name]);
             setSelectedSprite(null);
@@ -170,7 +171,7 @@ export default function DailyRogueUI() {
                     <div className="flex flex-row items-start justify-center gap-6 w-full max-w-2xl px-4 flex-1">
 
                         {/* Center Column: Grid + Text */}
-                        <div className="flex flex-col items-center gap-8">
+                        <div className="flex flex-col items-center gap-2">
                             <motion.div
                                 key={spinKey}
                                 className="grid grid-cols-4 grid-rows-3 gap-3"
@@ -247,7 +248,7 @@ export default function DailyRogueUI() {
                                 className={controlButtonClass}
                                 title="Spin"
                             >
-                                <RotateCw size={20} className="text-zinc-400" />
+                                <RotateCw size={20} className="text-blue-500" />
                             </motion.button>
 
                             {/* Row 2: Vary */}
@@ -257,7 +258,7 @@ export default function DailyRogueUI() {
                                 className={controlButtonClass}
                                 title="Shuffle"
                             >
-                                <Shuffle size={20} className="text-zinc-400" />
+                                <Shuffle size={20} className="text-green-500" />
                             </motion.button>
 
                             {/* Row 3: Fate */}
@@ -266,7 +267,7 @@ export default function DailyRogueUI() {
                                 className={controlButtonClass}
                                 title="Fate"
                             >
-                                <Sparkles size={20} className="text-zinc-400" />
+                                <Sparkles size={20} className="text-yellow-500" />
                             </motion.button>
                         </div>
 
@@ -274,6 +275,10 @@ export default function DailyRogueUI() {
 
                     {/* Context Info Overlay - REMOVED (now integrated above) */}
                     <div className="hidden" />
+
+                    <div className="absolute bottom-6 right-6">
+                        <Sprite name="Human_Pirate_F" scale={4} />
+                    </div>
 
                 </section>
             </main>
