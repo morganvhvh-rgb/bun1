@@ -35,28 +35,58 @@ interface SpriteProps {
     scale?: number;
     onClick?: () => void;
     tintColor?: string;
+    gradient?: string[];
+    animateGradient?: boolean;
+    idleAnimation?: boolean | 'sway' | 'hover';
 }
 
-function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps) {
+function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: SpriteProps) {
     const sprite = SPRITES[name];
     if (!sprite) return null;
     const { x, y, w, h } = sprite;
     const sheetWidth = 512;
     const sheetHeight = 256;
+
+    // Gradient logic: Use provided colors directly for smooth transition
+    const bgImage = gradient
+        ? `linear-gradient(to top, ${gradient.join(', ')})`
+        : undefined;
+
+    // Determine animation variants based on type
+    const animationType = idleAnimation === true ? 'sway' : idleAnimation;
+    const idleVariants = {
+        sway: {
+            scale: [1, 1.25, 1], // Intense zoom for Snake
+            rotate: [-5, 5, -5],
+        },
+        hover: {
+            scale: [1, 1.05, 1],
+            y: [0, -6, 0], // Floating up and down
+        }
+    };
+
     return (
-        <div
+        <motion.div
             onClick={onClick}
             className={cn("inline-block overflow-hidden relative select-none", onClick && "cursor-pointer active:scale-95 transition-transform", className)}
             style={{
                 width: w * scale,
                 height: h * scale,
             }}
+            animate={animationType ? idleVariants[animationType] : undefined}
+            transition={animationType ? {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+            } : undefined}
         >
-            {tintColor ? (
-                <div
+            {tintColor || gradient ? (
+                <motion.div
                     className="absolute top-0 left-0"
                     style={{
                         backgroundColor: tintColor,
+                        backgroundImage: bgImage,
+                        backgroundSize: '100% 100%',
                         width: `${sheetWidth}px`,
                         height: `${sheetHeight}px`,
                         imageRendering: 'pixelated',
@@ -69,6 +99,14 @@ function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps)
                         transform: `scale(${scale})`,
                         transformOrigin: 'top left',
                     }}
+                    animate={animateGradient ? {
+                        backgroundPosition: ["0px 0px", `0px ${sheetHeight}px`]
+                    } : undefined}
+                    transition={animateGradient ? {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                    } : undefined}
                 />
             ) : (
                 <div
@@ -84,7 +122,7 @@ function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps)
                     }}
                 />
             )}
-        </div>
+        </motion.div>
     );
 }
 
@@ -283,7 +321,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Ifrit_U" scale={4} tintColor="#f97316" />
+                            <Sprite name="Creature_Ifrit_U" scale={4} gradient={['#7f1d1d', '#dc2626', '#fb923c', '#dc2626', '#7f1d1d']} animateGradient idleAnimation="hover" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -291,7 +329,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" />
+                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" idleAnimation />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
