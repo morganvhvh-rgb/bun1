@@ -34,12 +34,20 @@ interface SpriteProps {
     className?: string;
     scale?: number;
     onClick?: () => void;
+    tintColor?: string;
 }
 
-function Sprite({ name, className, scale = 4, onClick }: SpriteProps) {
+function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps) {
     const sprite = SPRITES[name];
     if (!sprite) return null;
     const { x, y, w, h } = sprite;
+    const sheetWidth = 512;
+    const sheetHeight = 256;
+    const tintFilterByColor: Record<string, string> = {
+        '#f97316': 'invert(56%) sepia(88%) saturate(2565%) hue-rotate(353deg) brightness(101%) contrast(95%)',
+        '#22c55e': 'invert(62%) sepia(63%) saturate(676%) hue-rotate(88deg) brightness(92%) contrast(90%)',
+    };
+    const tintFilter = tintColor ? tintFilterByColor[tintColor.toLowerCase()] : undefined;
 
     return (
         <div
@@ -55,9 +63,10 @@ function Sprite({ name, className, scale = 4, onClick }: SpriteProps) {
                 style={{
                     backgroundImage: 'url(/Scroll.png)',
                     backgroundPosition: `-${x}px -${y}px`,
-                    width: '512px', // Total width of the sprite sheet
-                    height: '256px', // Total height of the sprite sheet
-                    imageRendering: 'pixelated', // Ensure crisp pixels
+                    width: `${sheetWidth}px`,
+                    height: `${sheetHeight}px`,
+                    imageRendering: 'pixelated',
+                    filter: tintFilter,
                     transform: `scale(${scale})`,
                     transformOrigin: 'top left',
                 }}
@@ -234,9 +243,9 @@ export default function DailyRogueUI() {
                 {/* Top Half */}
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
-                    <div className="w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-4 pt-8">
+                    <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <Sprite name="Human_Pirate_F" scale={4} />
-                        <div className="flex flex-col w-full px-2 text-[11px] tracking-widest text-zinc-500 uppercase font-medium">
+                        <div className="flex flex-col w-full px-1.5 sm:px-2 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">50</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Magic</span> <span className="text-zinc-300">7</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50 whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
@@ -246,18 +255,18 @@ export default function DailyRogueUI() {
                     </div>
 
                     {/* Right Section */}
-                    <div className="flex-1 flex items-start justify-center gap-12 relative pt-8">
-                        <div className="flex flex-col items-center gap-4">
-                            <Sprite name="Creature_Ifrit_U" scale={4} className="sepia saturate-200 hue-rotate-[-25deg]" />
-                            <div className="flex flex-col w-24 px-1 text-[11px] tracking-widest text-zinc-500 uppercase font-medium">
+                    <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
+                        <div className="flex flex-col items-center gap-2">
+                            <Sprite name="Creature_Ifrit_U" scale={4} tintColor="#f97316" />
+                            <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center gap-4">
-                            <Sprite name="Creature_Snake_U" scale={4} className="sepia saturate-200 hue-rotate-[70deg]" />
-                            <div className="flex flex-col w-24 px-1 text-[11px] tracking-widest text-zinc-500 uppercase font-medium">
+                        <div className="flex flex-col items-center gap-2">
+                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" />
+                            <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
