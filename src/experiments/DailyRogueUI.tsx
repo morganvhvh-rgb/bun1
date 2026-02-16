@@ -43,12 +43,6 @@ function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps)
     const { x, y, w, h } = sprite;
     const sheetWidth = 512;
     const sheetHeight = 256;
-    const tintFilterByColor: Record<string, string> = {
-        '#f97316': 'invert(56%) sepia(88%) saturate(2565%) hue-rotate(353deg) brightness(101%) contrast(95%)',
-        '#22c55e': 'invert(62%) sepia(63%) saturate(676%) hue-rotate(88deg) brightness(92%) contrast(90%)',
-    };
-    const tintFilter = tintColor ? tintFilterByColor[tintColor.toLowerCase()] : undefined;
-
     return (
         <div
             onClick={onClick}
@@ -58,19 +52,38 @@ function Sprite({ name, className, scale = 4, onClick, tintColor }: SpriteProps)
                 height: h * scale,
             }}
         >
-            <div
-                className="absolute top-0 left-0"
-                style={{
-                    backgroundImage: 'url(/Scroll.png)',
-                    backgroundPosition: `-${x}px -${y}px`,
-                    width: `${sheetWidth}px`,
-                    height: `${sheetHeight}px`,
-                    imageRendering: 'pixelated',
-                    filter: tintFilter,
-                    transform: `scale(${scale})`,
-                    transformOrigin: 'top left',
-                }}
-            />
+            {tintColor ? (
+                <div
+                    className="absolute top-0 left-0"
+                    style={{
+                        backgroundColor: tintColor,
+                        width: `${sheetWidth}px`,
+                        height: `${sheetHeight}px`,
+                        imageRendering: 'pixelated',
+                        WebkitMaskImage: 'url(/Scroll.png)',
+                        maskImage: 'url(/Scroll.png)',
+                        WebkitMaskRepeat: 'no-repeat',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskPosition: `-${x}px -${y}px`,
+                        maskPosition: `-${x}px -${y}px`,
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                    }}
+                />
+            ) : (
+                <div
+                    className="absolute top-0 left-0"
+                    style={{
+                        backgroundImage: 'url(/Scroll.png)',
+                        backgroundPosition: `-${x}px -${y}px`,
+                        width: `${sheetWidth}px`,
+                        height: `${sheetHeight}px`,
+                        imageRendering: 'pixelated',
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                    }}
+                />
+            )}
         </div>
     );
 }
@@ -244,7 +257,7 @@ export default function DailyRogueUI() {
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
-                        <Sprite name="Human_Pirate_F" scale={4} />
+                        <Sprite name="Human_Pirate_F" scale={4} tintColor="#facc15" />
                         <div className="flex flex-col w-full px-1.5 sm:px-2 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">50</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Magic</span> <span className="text-zinc-300">7</span></div>
@@ -277,7 +290,7 @@ export default function DailyRogueUI() {
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
-                                className="w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase"
+                                className="w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase flex items-center justify-center text-center leading-none whitespace-nowrap"
                                 title="Attack"
                             >
                                 ENGAGE
@@ -439,6 +452,7 @@ export default function DailyRogueUI() {
                         <Sprite
                             name="Item_Scroll"
                             scale={4}
+                            tintColor="#d6c39a"
                             className="cursor-pointer hover:scale-105 transition-transform"
                             onClick={() => setIsScrollWindowOpen(true)}
                         />
@@ -459,7 +473,7 @@ export default function DailyRogueUI() {
                                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                                    className="absolute inset-x-8 inset-y-24 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl z-[70] flex flex-col p-6"
+                                    className="absolute inset-x-8 inset-y-10 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl z-[70] flex flex-col p-6"
                                 >
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Scroll Content</h2>
@@ -470,8 +484,13 @@ export default function DailyRogueUI() {
                                             Close
                                         </button>
                                     </div>
-                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono">
-                                        {/* Blank for now */}
+                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto">
+                                        <div>placeholder text</div>
+                                        <div>placeholder text</div>
+                                        <div>placeholder text</div>
+                                        <div>placeholder text</div>
+                                        <div>placeholder text</div>
+                                        <div>placeholder text</div>
                                     </div>
                                 </motion.div>
                             </>
