@@ -133,8 +133,15 @@ export default function DailyRogueUI() {
                 {/* Top Half */}
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
-                    <div className="w-[30%] border-r border-zinc-800 flex items-center justify-center">
-                        {/* Placeholder */}
+                    <div className="w-[30%] border-r border-zinc-800 flex flex-col items-center justify-center gap-4 py-4">
+                        <Sprite name="Human_Pirate_F" scale={4} />
+                        <div className="flex flex-col w-full px-5 text-xs tracking-widest text-zinc-500 uppercase font-medium">
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">50</span></div>
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Magic</span> <span className="text-zinc-300">7</span></div>
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50 whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Gear</span> <span className="text-zinc-300">4</span></div>
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Trust</span> <span className="text-zinc-300">11</span></div>
+                        </div>
                     </div>
 
                     {/* Right Section */}
@@ -277,7 +284,7 @@ export default function DailyRogueUI() {
                     <div className="hidden" />
 
                     <div className="absolute bottom-6 right-6">
-                        <Sprite name="Human_Pirate_F" scale={4} />
+                        <Sprite name="Item_Letter" scale={4} />
                     </div>
 
                 </section>
