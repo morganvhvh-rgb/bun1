@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, Shuffle, Link } from 'lucide-react';
+import { RotateCw, Shuffle } from 'lucide-react';
 
 import { SPRITES } from './SPRITES';
 
@@ -96,20 +96,31 @@ interface GridItem {
 export default function DailyRogueUI() {
     const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>([]);
     const [spinKey, setSpinKey] = useState(0);
-    const [selectedSprite, setSelectedSprite] = useState<SpriteName | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
+    const [gold, setGold] = useState(100);
 
     // Pirate Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activePirateIndex, setActivePirateIndex] = useState<number | null>(null);
     const [isScrollWindowOpen, setIsScrollWindowOpen] = useState(false);
+    const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
 
     function generateRandomSprites(): GridItem[] {
+        let pirateCount = 0;
         return Array.from({ length: 12 }, () => {
-            const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
+            let name: SpriteName;
+            // Prevent multiple pirates
+            do {
+                const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
+                name = SPRITE_KEYS[randomIndex];
+            } while (name === "Human_Pirate_F" && pirateCount >= 1);
+
+            if (name === "Human_Pirate_F") pirateCount++;
+
             return {
                 id: crypto.randomUUID(),
-                name: SPRITE_KEYS[randomIndex]
+                name: name
             };
         });
     }
@@ -119,18 +130,22 @@ export default function DailyRogueUI() {
     }, []);
 
     const resetSelection = () => {
-        setSelectedSprite(null);
+        setSelectedIndex(null);
         setGlowingIndices([]);
         setActivePirateIndex(null);
     };
 
     const handleSpin = () => {
+        if (gold < 1) return;
+        setGold(g => g - 1);
         setGridSprites(generateRandomSprites());
         setSpinKey(prev => prev + 1);
         resetSelection();
     };
 
     const handleVary = () => {
+        if (gold < 1) return;
+        setGold(g => g - 1);
         setGridSprites(prev => {
             const newArr = [...prev];
             // Fisher-Yates shuffle
@@ -184,28 +199,20 @@ export default function DailyRogueUI() {
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
 
-            // Furthest in Row logic
-            const rowIndices = [0, 1, 2, 3].map(c => getIndex(row, c)).filter(i => i !== index);
-            rowIndices.sort((a, b) => Math.abs(a - index) - Math.abs(b - index));
-            if (rowIndices.length > 0) targets.push(rowIndices[rowIndices.length - 1]);
-
-            // Furthest in Col logic
-            const colIndices = [0, 1, 2].map(r => getIndex(r, col)).filter(i => i !== index);
-            colIndices.sort((a, b) => {
-                const dA = Math.abs(Math.floor(a / 4) - row);
-                const dB = Math.abs(Math.floor(b / 4) - row);
-                return dA - dB;
-            });
-            if (colIndices.length > 0) targets.push(colIndices[colIndices.length - 1]);
+            // 4 Directions: Edges
+            if (col > 0) targets.push(getIndex(row, 0)); // Far Left
+            if (col < 3) targets.push(getIndex(row, 3)); // Far Right
+            if (row > 0) targets.push(getIndex(0, col)); // Far Up
+            if (row < 2) targets.push(getIndex(2, col)); // Far Down
 
             setGlowingIndices(targets);
             setActivePirateIndex(index);
-            setSelectedSprite(item.name);
+            setSelectedIndex(index);
             return;
         }
 
         // Default behavior (Select/Keep) for non-Pirates
-        if (selectedSprite === item.name) {
+        if (selectedIndex === index) {
             if (activePirateIndex !== null) {
                 // If we had a pirate selected and clicked another same-named item (unlikely since Pirate is unique usually, but possible)
                 // Or if we clicked a non-glowing cell while pirate is active -> Reset
@@ -219,7 +226,7 @@ export default function DailyRogueUI() {
             setKeptSprites(prev => [...prev, item.name]);
             resetSelection();
         } else {
-            setSelectedSprite(item.name);
+            setSelectedIndex(index);
             setGlowingIndices([]);
             setActivePirateIndex(null);
         }
@@ -241,7 +248,7 @@ export default function DailyRogueUI() {
     };
 
     const controlButtonClass =
-        "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12";
+        "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
 
     return (
         <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
@@ -257,13 +264,19 @@ export default function DailyRogueUI() {
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
-                        <Sprite name="Human_Pirate_F" scale={4} tintColor="#facc15" />
+                        <Sprite
+                            name="Human_Pirate_F"
+                            scale={4}
+                            tintColor="#facc15"
+                            className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
+                            onClick={() => setIsCharacterModalOpen(true)}
+                        />
                         <div className="flex flex-col w-full px-1.5 sm:px-2 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">50</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Magic</span> <span className="text-zinc-300">7</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50 whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
                             <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Gear</span> <span className="text-zinc-300">4</span></div>
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Trust</span> <span className="text-zinc-300">11</span></div>
+                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
                         </div>
                     </div>
 
@@ -353,7 +366,7 @@ export default function DailyRogueUI() {
                                                         scale={3}
                                                         onClick={() => handleSpriteClick(item, index)}
                                                         className={cn(
-                                                            selectedSprite === item.name && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
+                                                            selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
                                                             // Ensure target has strong glow if it's a valid move target
                                                             (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
                                                             // Active pirate distinct style
@@ -370,7 +383,7 @@ export default function DailyRogueUI() {
                                                             className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
                                                         />
                                                     ) : (
-                                                        <div className="w-12 h-12 border border-zinc-900/50 rounded-sm" />
+                                                        <div className="w-12 h-12" />
                                                     )
                                                 )}
                                             </motion.div>
@@ -381,7 +394,7 @@ export default function DailyRogueUI() {
                                 {/* Info Text */}
                                 <div className="h-20 flex items-start justify-center text-center">
                                     <AnimatePresence mode="wait">
-                                        {selectedSprite ? (
+                                        {selectedIndex !== null && gridSprites[selectedIndex] ? (
                                             <motion.div
                                                 key="name"
                                                 initial={{ opacity: 0, y: -5 }}
@@ -390,7 +403,7 @@ export default function DailyRogueUI() {
                                                 className="flex flex-col items-center justify-start gap-1"
                                             >
                                                 <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
-                                                    {selectedSprite.replace(/_/g, ' ')}
+                                                    {gridSprites[selectedIndex]!.name.replace(/_/g, ' ')}
                                                 </div>
                                                 <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
                                                     +3 Stat
@@ -415,9 +428,10 @@ export default function DailyRogueUI() {
                             </div>
 
                             {/* Right Section: Buttons - Aligned with Grid Rows */}
-                            <div className="flex flex-col gap-3"> {/* Gap matches grid gap-3 */}
+                            <div className="flex flex-col gap-3 mt-[1.875rem]"> {/* Gap matches grid gap-3 */}
                                 <motion.button
                                     onClick={handleSpin}
+                                    disabled={gold < 1}
                                     whileTap={{ scale: 0.95 }}
                                     className={controlButtonClass}
                                     title="Spin"
@@ -427,6 +441,7 @@ export default function DailyRogueUI() {
 
                                 <motion.button
                                     onClick={handleVary}
+                                    disabled={gold < 1}
                                     whileTap={{ scale: 0.95 }}
                                     className={controlButtonClass}
                                     title="Shuffle"
@@ -434,13 +449,7 @@ export default function DailyRogueUI() {
                                     <Shuffle size={20} className="text-zinc-400" />
                                 </motion.button>
 
-                                <motion.button
-                                    whileTap={{ scale: 0.95 }}
-                                    className={controlButtonClass}
-                                    title="Fate"
-                                >
-                                    <Link size={20} className="text-zinc-400" />
-                                </motion.button>
+
                             </div>
 
                         </div>
@@ -467,13 +476,14 @@ export default function DailyRogueUI() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     onClick={() => setIsScrollWindowOpen(false)}
-                                    className="absolute inset-0 bg-black/50 z-[60]"
+                                    className="fixed inset-0 bg-black/50 z-[60]"
                                 />
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                                    className="absolute inset-x-8 inset-y-10 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl z-[70] flex flex-col p-6"
+                                    initial={{ y: "100%" }}
+                                    animate={{ y: 0 }}
+                                    exit={{ y: "100%" }}
+                                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                    className="fixed bottom-0 left-0 right-0 h-[50dvh] bg-zinc-900 border-t border-zinc-700 rounded-t-3xl shadow-2xl z-[70] flex flex-col p-6"
                                 >
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Scroll Content</h2>
@@ -497,8 +507,43 @@ export default function DailyRogueUI() {
                         )}
                     </AnimatePresence>
 
+                    {/* Character Modal */}
+                    <AnimatePresence>
+                        {isCharacterModalOpen && (
+                            <>
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setIsCharacterModalOpen(false)}
+                                    className="fixed inset-0 bg-black/50 z-[60]"
+                                />
+                                <motion.div
+                                    initial={{ y: "-100%" }}
+                                    animate={{ y: 0 }}
+                                    exit={{ y: "-100%" }}
+                                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                    className="fixed top-0 left-0 right-0 h-[50dvh] bg-zinc-900 border-b border-zinc-700 rounded-b-3xl shadow-2xl z-[70] flex flex-col p-6"
+                                >
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Character</h2>
+                                        <button
+                                            onClick={() => setIsCharacterModalOpen(false)}
+                                            className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono flex items-center justify-center">
+                                        <div className="opacity-50">Content Coming Soon</div>
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
+
                 </section>
             </main>
-        </div>
+        </div >
     );
 }
