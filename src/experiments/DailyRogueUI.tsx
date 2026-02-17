@@ -282,6 +282,51 @@ export default function DailyRogueUI() {
         }
     };
 
+    const findMatchingIndices = () => {
+        const matches = new Set<number>();
+        const visited = new Set<number>();
+
+        for (let i = 0; i < gridSprites.length; i++) {
+            if (visited.has(i) || !gridSprites[i]) continue;
+
+            const name = gridSprites[i]!.name;
+            const group = [i];
+            const queue = [i];
+            visited.add(i);
+
+            while (queue.length > 0) {
+                const current = queue.shift()!;
+                const { row, col } = getCoordinates(current);
+
+                // Check 4 adjacent neighbors (no diagonals)
+                const neighbors = [
+                    { r: row - 1, c: col },
+                    { r: row + 1, c: col },
+                    { r: row, c: col - 1 },
+                    { r: row, c: col + 1 }
+                ];
+
+                for (const n of neighbors) {
+                    if (n.r >= 0 && n.r < 3 && n.c >= 0 && n.c < 4) {
+                        const nIdx = getIndex(n.r, n.c);
+                        if (!visited.has(nIdx) && gridSprites[nIdx]?.name === name) {
+                            visited.add(nIdx);
+                            group.push(nIdx);
+                            queue.push(nIdx);
+                        }
+                    }
+                }
+            }
+
+            if (group.length >= 3) {
+                group.forEach(idx => matches.add(idx));
+            }
+        }
+        return matches;
+    };
+
+    const matchingIndices = findMatchingIndices();
+
     const containerVariants = {
         hidden: { opacity: 0 },
         show: {
@@ -398,82 +443,77 @@ export default function DailyRogueUI() {
                                     animate="show"
                                 >
                                     <AnimatePresence mode='popLayout'>
-                                        {gridSprites.map((item, index) => (
-                                            <motion.div
-                                                key={item?.id ?? `empty-${index}`}
-                                                layout
-                                                variants={itemVariants}
-                                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className={cn(
-                                                    "w-12 h-12 flex items-center justify-center relative",
-                                                    // Removed ring-2 ring-yellow-500, added strong glow
-                                                    glowingIndices.includes(index) && "drop-shadow-[0_0_8px_rgba(255,215,0,0.8)] brightness-125 z-10"
-                                                )}
-                                            >
-                                                {item ? (
-                                                    <Sprite
-                                                        name={item.name}
-                                                        scale={3}
-                                                        onClick={() => handleSpriteClick(item, index)}
-                                                        className={cn(
-                                                            selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
-                                                            // Ensure target has strong glow if it's a valid move target
-                                                            (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
-                                                            // Active pirate distinct style
-                                                            (activePirateIndex === index && item.name === 'Human_Pirate_F') && "brightness-125"
-                                                        )}
-                                                    />
-                                                ) : (
-                                                    glowingIndices.includes(index) ? (
-                                                        <div
-                                                            onClick={() => {
-                                                                // Handle click on empty glowing cell
-                                                                if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Human_Pirate_F' } as any, index);
-                                                            }}
-                                                            className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
+                                        {gridSprites.map((item, index) => {
+                                            const isMatching = matchingIndices.has(index);
+                                            return (
+                                                <motion.div
+                                                    key={item?.id ?? `empty-${index}`}
+                                                    layout
+                                                    variants={itemVariants}
+                                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                                    className={cn(
+                                                        "w-12 h-12 flex items-center justify-center relative",
+                                                        // Moved/Selection Glow
+                                                        glowingIndices.includes(index) && "drop-shadow-[0_0_8px_rgba(255,215,0,0.8)] brightness-125 z-10",
+                                                        // Matching (3+ adjacent) Glow - Strong Pink
+                                                        (!glowingIndices.includes(index) && isMatching) && "drop-shadow-[0_0_15px_rgba(255,20,147,1)] brightness-125"
+                                                    )}
+                                                >
+                                                    {item ? (
+                                                        <Sprite
+                                                            name={item.name}
+                                                            scale={3}
+                                                            onClick={() => handleSpriteClick(item, index)}
+                                                            className={cn(
+                                                                selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
+                                                                // Ensure target has strong glow if it's a valid move target
+                                                                (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
+                                                                // Active pirate distinct style
+                                                                (activePirateIndex === index && item.name === 'Human_Pirate_F') && "brightness-125"
+                                                            )}
                                                         />
                                                     ) : (
-                                                        <div className="w-12 h-12" />
-                                                    )
-                                                )}
-                                            </motion.div>
-                                        ))}
+                                                        glowingIndices.includes(index) ? (
+                                                            <div
+                                                                onClick={() => {
+                                                                    // Handle click on empty glowing cell
+                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Human_Pirate_F' } as any, index);
+                                                                }}
+                                                                className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-12 h-12" />
+                                                        )
+                                                    )}
+                                                </motion.div>
+                                            )
+                                        })}
                                     </AnimatePresence>
                                 </motion.div>
 
                                 {/* Info Text */}
                                 <div className="h-20 flex items-start justify-center text-center">
-                                    <AnimatePresence mode="wait">
-                                        {selectedIndex !== null && gridSprites[selectedIndex] ? (
-                                            <motion.div
-                                                key="name"
-                                                initial={{ opacity: 0, y: -5 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: 5 }}
-                                                className="flex flex-col items-center justify-start gap-1"
-                                            >
-                                                <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
-                                                    {gridSprites[selectedIndex]!.name.replace(/_/g, ' ')}
-                                                </div>
-                                                <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
-                                                    +3 Stat
-                                                </div>
-                                                <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
-                                                    Adds X to Y
-                                                </div>
-                                            </motion.div>
-                                        ) : (
-                                            <motion.div
-                                                key="empty"
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                exit={{ opacity: 0 }}
-                                                className="text-xs text-zinc-600 uppercase tracking-widest mt-1"
-                                            >
-                                                Select a sprite
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    {selectedIndex !== null && gridSprites[selectedIndex] ? (
+                                        <div
+                                            className="flex flex-col items-center justify-start gap-1"
+                                        >
+                                            <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
+                                                {gridSprites[selectedIndex]!.name.replace(/_/g, ' ')}
+                                            </div>
+                                            <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
+                                                +3 Stat
+                                            </div>
+                                            <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
+                                                Adds X to Y
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className="text-xs text-zinc-600 uppercase tracking-widest mt-1"
+                                        >
+                                            Select a sprite
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
