@@ -136,6 +136,7 @@ export default function DailyRogueUI() {
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
+    const [keptScrolls, setKeptScrolls] = useState<SpriteName[]>([]);
     const [gold, setGold] = useState(100);
 
     // Pirate Logic State
@@ -260,6 +261,14 @@ export default function DailyRogueUI() {
                 resetSelection();
                 // Optionally process the click as a new selection? 
                 // For now, let's just reset to be safe or treat as standard toggle
+            }
+
+            if (item.name === 'Item_Scroll') {
+                if (keptScrolls.length >= 6) return;
+                setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
+                setKeptScrolls(prev => [...prev, item.name]);
+                resetSelection();
+                return;
             }
 
             if (keptSprites.length >= 6) return;
@@ -536,12 +545,15 @@ export default function DailyRogueUI() {
                                         </button>
                                     </div>
                                     <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto">
-                                        <div>placeholder text</div>
-                                        <div>placeholder text</div>
-                                        <div>placeholder text</div>
-                                        <div>placeholder text</div>
-                                        <div>placeholder text</div>
-                                        <div>placeholder text</div>
+                                        {keptScrolls.length > 0 ? (
+                                            keptScrolls.map((_, i) => (
+                                                <div key={i} className="text-zinc-400">
+                                                    Scroll {i + 1} - Does X to Y twice
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="opacity-50">No scrolls collected</div>
+                                        )}
                                     </div>
                                 </motion.div>
                             </>
