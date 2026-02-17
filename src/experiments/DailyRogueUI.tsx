@@ -132,7 +132,7 @@ interface GridItem {
 }
 
 export default function DailyRogueUI() {
-    const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>([]);
+    const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>(() => generateRandomSprites());
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
@@ -141,6 +141,7 @@ export default function DailyRogueUI() {
     // Pirate Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activePirateIndex, setActivePirateIndex] = useState<number | null>(null);
+    const [hasMoved, setHasMoved] = useState(false);
     const [isScrollWindowOpen, setIsScrollWindowOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
 
@@ -163,9 +164,7 @@ export default function DailyRogueUI() {
         });
     }
 
-    useEffect(() => {
-        setGridSprites(generateRandomSprites());
-    }, []);
+
 
     const resetSelection = () => {
         setSelectedIndex(null);
@@ -179,6 +178,7 @@ export default function DailyRogueUI() {
         setGridSprites(generateRandomSprites());
         setSpinKey(prev => prev + 1);
         resetSelection();
+        setHasMoved(false);
     };
 
     const handleVary = () => {
@@ -194,6 +194,7 @@ export default function DailyRogueUI() {
             return newArr;
         });
         resetSelection();
+        setHasMoved(false);
     };
 
 
@@ -228,12 +229,14 @@ export default function DailyRogueUI() {
                 });
 
                 resetSelection();
+                setHasMoved(true);
                 return;
             }
         }
 
         // Handle Pirate Selection
         if (item.name === "Human_Pirate_F") {
+            if (hasMoved) return; // Prevent selection if already moved
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
 
@@ -321,7 +324,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Ifrit_U" scale={4} gradient={['#7f1d1d', '#dc2626', '#fb923c', '#dc2626', '#7f1d1d']} animateGradient idleAnimation="hover" />
+                            <Sprite name="Creature_Ifrit_U" scale={4} gradient={['#9a3412', '#ea580c', '#fb923c', '#ea580c', '#9a3412']} />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -329,7 +332,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" idleAnimation />
+                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
