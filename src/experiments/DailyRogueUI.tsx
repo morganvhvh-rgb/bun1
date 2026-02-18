@@ -1,43 +1,57 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, Shuffle } from 'lucide-react';
+import { RotateCw, Shuffle, Smile, Scroll, Sword, Shield, FlaskRound, Coins, Skull, Ghost, Flame, Droplet, Zap, Heart } from 'lucide-react';
 
-import { SPRITES } from './SPRITES';
+const ICON_MAP = {
+    "Smile": Smile,
+    "Scroll": Scroll,
+    "Sword": Sword,
+    "Shield": Shield,
+    "Potion": FlaskRound,
+    "Coins": Coins,
+    "Skull": Skull,
+    "Ghost": Ghost,
+    "Flame": Flame,
+    "Droplet": Droplet,
+    "Zap": Zap,
+    "Heart": Heart,
+} as const;
 
-type SpriteName = keyof typeof SPRITES;
-// Helper for random selection
-const SPRITE_KEYS: SpriteName[] = [
-    "Travel_Tree_Full",
-    "Travel_Tree_Pine",
-    "Travel_Waves",
-    "Feature_Trap_Ready",
-    "Human_Pirate_F",
-    "Item_Bomb",
-    "Item_Book",
-    "Weapon_Bow",
-    "Food_Bread",
-    "Food_Cheese",
-    "Treasure_Chest_Ready",
-    "Gear_Cloak",
-    "Treasure_Coins",
-    "Gear_Crown",
-    "Weapon_Dagger",
-    "Weapon_Hammer",
-    "Music_Harp",
-    "Gear_Helm",
-    "Item_Key_A",
-    "Music_Lute",
-    "Gear_Ring",
-    "Item_Scroll",
-    "Gear_Shield_B",
-    "Magic_Staff",
-    "Food_Steak",
-    "Item_Vial"
+type IconName = keyof typeof ICON_MAP;
+
+const SPRITE_KEYS: IconName[] = [
+    "Smile",
+    "Scroll",
+    "Sword",
+    "Shield",
+    "Potion",
+    "Coins",
+    "Skull",
+    "Ghost",
+    "Flame",
+    "Droplet",
+    "Zap",
+    "Heart"
 ];
 
+const SPRITE_STATS: Partial<Record<IconName, string>> = {
+    "Smile": "MC",
+    "Scroll": "???",
+    "Sword": "+1 Attack",
+    "Shield": "+1 Defense",
+    "Potion": "+10 HP",
+    "Coins": "+10 Gold",
+    "Skull": "Danger",
+    "Ghost": "Spooky",
+    "Flame": "Hot",
+    "Droplet": "Wet",
+    "Zap": "Shocking",
+    "Heart": "+1 Life"
+};
+
 interface SpriteProps {
-    name: SpriteName;
+    name: IconName;
     className?: string;
     scale?: number;
     onClick?: () => void;
@@ -48,38 +62,26 @@ interface SpriteProps {
 }
 
 function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: SpriteProps) {
-    const sprite = SPRITES[name];
-    if (!sprite) return null;
-    const { x, y, w, h } = sprite;
-    const sheetWidth = 512;
-    const sheetHeight = 256;
+    const Icon = ICON_MAP[name];
+    if (!Icon) return null;
 
-    // Gradient logic: Use provided colors directly for smooth transition
-    const bgImage = gradient
-        ? `linear-gradient(to top, ${gradient.join(', ')})`
-        : undefined;
+    const size = 16 * scale;
 
-    // Determine animation variants based on type
     const animationType = idleAnimation === true ? 'sway' : idleAnimation;
     const idleVariants = {
         sway: {
-            scale: [1, 1.25, 1], // Intense zoom for Snake
             rotate: [-5, 5, -5],
         },
         hover: {
-            scale: [1, 1.05, 1],
-            y: [0, -6, 0], // Floating up and down
+            y: [0, -6, 0],
         }
     };
 
     return (
         <motion.div
             onClick={onClick}
-            className={cn("inline-block overflow-hidden relative select-none", onClick && "cursor-pointer active:scale-95 transition-transform", className)}
-            style={{
-                width: w * scale,
-                height: h * scale,
-            }}
+            className={cn("inline-flex items-center justify-center relative select-none", onClick && "cursor-pointer active:scale-95 transition-transform", className)}
+            style={{ width: size, height: size }}
             animate={animationType ? idleVariants[animationType] : undefined}
             transition={animationType ? {
                 duration: 4,
@@ -87,63 +89,27 @@ function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, anim
                 ease: "easeInOut"
             } : undefined}
         >
-            {tintColor || gradient ? (
-                <motion.div
-                    className="absolute top-0 left-0"
-                    style={{
-                        backgroundColor: tintColor,
-                        backgroundImage: bgImage,
-                        backgroundSize: '100% 100%',
-                        width: `${sheetWidth}px`,
-                        height: `${sheetHeight}px`,
-                        imageRendering: 'pixelated',
-                        WebkitMaskImage: 'url(/Scroll.png)',
-                        maskImage: 'url(/Scroll.png)',
-                        WebkitMaskRepeat: 'no-repeat',
-                        maskRepeat: 'no-repeat',
-                        WebkitMaskPosition: `-${x}px -${y}px`,
-                        maskPosition: `-${x}px -${y}px`,
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
-                    }}
-                    animate={animateGradient ? {
-                        backgroundPosition: ["0px 0px", `0px ${sheetHeight}px`]
-                    } : undefined}
-                    transition={animateGradient ? {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                    } : undefined}
-                />
-            ) : (
-                <div
-                    className="absolute top-0 left-0"
-                    style={{
-                        backgroundImage: 'url(/Scroll.png)',
-                        backgroundPosition: `-${x}px -${y}px`,
-                        width: `${sheetWidth}px`,
-                        height: `${sheetHeight}px`,
-                        imageRendering: 'pixelated',
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
-                    }}
-                />
-            )}
+            <Icon
+                size={size}
+                className={cn("w-full h-full", animateGradient && "animate-pulse")}
+                color={tintColor || (gradient ? gradient[0] : undefined)}
+                style={gradient ? { color: gradient[0] } : undefined}
+            />
         </motion.div>
     );
 }
 
 interface GridItem {
     id: string;
-    name: SpriteName;
+    name: IconName;
 }
 
 export default function DailyRogueUI() {
     const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>(() => generateRandomSprites());
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [keptSprites, setKeptSprites] = useState<SpriteName[]>([]);
-    const [keptScrolls, setKeptScrolls] = useState<SpriteName[]>([]);
+    const [keptSprites, setKeptSprites] = useState<IconName[]>([]);
+    const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
 
     // Pirate Logic State
@@ -156,14 +122,14 @@ export default function DailyRogueUI() {
     function generateRandomSprites(): GridItem[] {
         let pirateCount = 0;
         return Array.from({ length: 12 }, () => {
-            let name: SpriteName;
+            let name: IconName;
             // Prevent multiple pirates
             do {
                 const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
                 name = SPRITE_KEYS[randomIndex];
-            } while (name === "Human_Pirate_F" && pirateCount >= 1);
+            } while (name === "Smile" && pirateCount >= 1);
 
-            if (name === "Human_Pirate_F") pirateCount++;
+            if (name === "Smile") pirateCount++;
 
             return {
                 id: crypto.randomUUID(),
@@ -214,7 +180,7 @@ export default function DailyRogueUI() {
         if (glowingIndices.includes(index) && activePirateIndex !== null) {
             const pirate = gridSprites[activePirateIndex];
             // Verify we are moving a pirate
-            if (pirate && pirate.name === "Human_Pirate_F") {
+            if (pirate && pirate.name === "Smile") {
                 setGridSprites(prev => {
                     const next = [...prev];
                     const pCoords = getCoordinates(activePirateIndex);
@@ -243,7 +209,7 @@ export default function DailyRogueUI() {
         }
 
         // Handle Pirate Selection
-        if (item.name === "Human_Pirate_F") {
+        if (item.name === "Smile") {
             if (hasMoved) return; // Prevent selection if already moved
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
@@ -270,7 +236,7 @@ export default function DailyRogueUI() {
                 // For now, let's just reset to be safe or treat as standard toggle
             }
 
-            if (item.name === 'Item_Scroll') {
+            if (item.name === 'Scroll') {
                 if (keptScrolls.length >= 6) return;
                 setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
                 setKeptScrolls(prev => [...prev, item.name]);
@@ -367,7 +333,7 @@ export default function DailyRogueUI() {
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <Sprite
-                            name="Human_Pirate_F"
+                            name="Smile"
                             scale={4}
                             tintColor="#facc15"
                             className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
@@ -385,7 +351,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Ifrit_U" scale={4} gradient={['#9a3412', '#ea580c', '#fb923c', '#ea580c', '#9a3412']} />
+                            <Sprite name="Flame" scale={4} tintColor="#ea580c" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -393,7 +359,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Creature_Snake_U" scale={4} tintColor="#22c55e" />
+                            <Sprite name="Potion" scale={4} tintColor="#22c55e" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -476,7 +442,7 @@ export default function DailyRogueUI() {
                                                                 // Ensure target has strong glow if it's a valid move target
                                                                 (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
                                                                 // Active pirate distinct style
-                                                                (activePirateIndex === index && item.name === 'Human_Pirate_F') && "brightness-125"
+                                                                (activePirateIndex === index && item.name === 'Smile') && "brightness-125"
                                                             )}
                                                         />
                                                     ) : (
@@ -484,7 +450,7 @@ export default function DailyRogueUI() {
                                                             <div
                                                                 onClick={() => {
                                                                     // Handle click on empty glowing cell
-                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Human_Pirate_F' } as any, index);
+                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Smile' } as any, index);
                                                                 }}
                                                                 className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
                                                             />
@@ -508,7 +474,7 @@ export default function DailyRogueUI() {
                                                 {gridSprites[selectedIndex]!.name.replace(/_/g, ' ')}
                                             </div>
                                             <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
-                                                +3 Stat
+                                                {SPRITE_STATS[gridSprites[selectedIndex]!.name] || "???"}
                                             </div>
                                             <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
                                                 Adds X to Y
@@ -556,7 +522,7 @@ export default function DailyRogueUI() {
 
                     <div className="absolute bottom-6 right-6 z-50">
                         <Sprite
-                            name="Item_Scroll"
+                            name="Scroll"
                             scale={4}
                             tintColor="#d6c39a"
                             className="cursor-pointer hover:scale-105 transition-transform"
