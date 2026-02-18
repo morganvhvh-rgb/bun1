@@ -1,27 +1,41 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, Shuffle, Smile, Scroll, Sword, Shield, FlaskRound, Coins, Skull, Ghost, Flame, Droplet, Zap, Heart } from 'lucide-react';
+import {
+    GiPirateCaptain,
+    GiScrollUnfurled,
+    GiBroadsword,
+    GiRoundShield,
+    GiHealthPotion,
+    GiCoins,
+    GiDeathSkull,
+    GiSpectre,
+    GiFlame,
+    GiWaterDrop,
+    GiLightningTrio,
+    GiHearts
+} from 'react-icons/gi';
+import { FaRedo, FaRandom } from 'react-icons/fa';
 
 const ICON_MAP = {
-    "Smile": Smile,
-    "Scroll": Scroll,
-    "Sword": Sword,
-    "Shield": Shield,
-    "Potion": FlaskRound,
-    "Coins": Coins,
-    "Skull": Skull,
-    "Ghost": Ghost,
-    "Flame": Flame,
-    "Droplet": Droplet,
-    "Zap": Zap,
-    "Heart": Heart,
+    "Pirate": GiPirateCaptain,
+    "Scroll": GiScrollUnfurled,
+    "Sword": GiBroadsword,
+    "Shield": GiRoundShield,
+    "Potion": GiHealthPotion,
+    "Coins": GiCoins,
+    "Skull": GiDeathSkull,
+    "Ghost": GiSpectre,
+    "Flame": GiFlame,
+    "Droplet": GiWaterDrop,
+    "Zap": GiLightningTrio,
+    "Heart": GiHearts,
 } as const;
 
 type IconName = keyof typeof ICON_MAP;
 
 const SPRITE_KEYS: IconName[] = [
-    "Smile",
+    "Pirate",
     "Scroll",
     "Sword",
     "Shield",
@@ -35,8 +49,23 @@ const SPRITE_KEYS: IconName[] = [
     "Heart"
 ];
 
+const SPRITE_THEME: Record<IconName, string> = {
+    "Pirate": "#facc15",  // Yellow
+    "Scroll": "#d4b483",  // Parchment
+    "Sword": "#94a3b8",   // Steel
+    "Shield": "#cbd5e1",  // Silver
+    "Potion": "#ef4444",  // Red
+    "Coins": "#fbbf24",   // Gold
+    "Skull": "#a1a1aa",   // Bone
+    "Ghost": "#e4e4e7",   // Spirit
+    "Flame": "#f97316",   // Fire
+    "Droplet": "#3b82f6", // Water
+    "Zap": "#eab308",     // Lightning
+    "Heart": "#ec4899",   // Pink
+};
+
 const SPRITE_STATS: Partial<Record<IconName, string>> = {
-    "Smile": "MC",
+    "Pirate": "Captain",
     "Scroll": "???",
     "Sword": "+1 Attack",
     "Shield": "+1 Defense",
@@ -127,9 +156,9 @@ export default function DailyRogueUI() {
             do {
                 const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
                 name = SPRITE_KEYS[randomIndex];
-            } while (name === "Smile" && pirateCount >= 1);
+            } while (name === "Pirate" && pirateCount >= 1);
 
-            if (name === "Smile") pirateCount++;
+            if (name === "Pirate") pirateCount++;
 
             return {
                 id: crypto.randomUUID(),
@@ -180,7 +209,7 @@ export default function DailyRogueUI() {
         if (glowingIndices.includes(index) && activePirateIndex !== null) {
             const pirate = gridSprites[activePirateIndex];
             // Verify we are moving a pirate
-            if (pirate && pirate.name === "Smile") {
+            if (pirate && pirate.name === "Pirate") {
                 setGridSprites(prev => {
                     const next = [...prev];
                     const pCoords = getCoordinates(activePirateIndex);
@@ -209,7 +238,7 @@ export default function DailyRogueUI() {
         }
 
         // Handle Pirate Selection
-        if (item.name === "Smile") {
+        if (item.name === "Pirate") {
             if (hasMoved) return; // Prevent selection if already moved
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
@@ -333,7 +362,7 @@ export default function DailyRogueUI() {
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <Sprite
-                            name="Smile"
+                            name="Pirate"
                             scale={4}
                             tintColor="#facc15"
                             className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
@@ -436,13 +465,14 @@ export default function DailyRogueUI() {
                                                         <Sprite
                                                             name={item.name}
                                                             scale={3}
+                                                            tintColor={SPRITE_THEME[item.name]}
                                                             onClick={() => handleSpriteClick(item, index)}
                                                             className={cn(
                                                                 selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
                                                                 // Ensure target has strong glow if it's a valid move target
                                                                 (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
                                                                 // Active pirate distinct style
-                                                                (activePirateIndex === index && item.name === 'Smile') && "brightness-125"
+                                                                (activePirateIndex === index && item.name === 'Pirate') && "brightness-125"
                                                             )}
                                                         />
                                                     ) : (
@@ -450,7 +480,7 @@ export default function DailyRogueUI() {
                                                             <div
                                                                 onClick={() => {
                                                                     // Handle click on empty glowing cell
-                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Smile' } as any, index);
+                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Pirate' } as any, index);
                                                                 }}
                                                                 className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
                                                             />
@@ -499,7 +529,7 @@ export default function DailyRogueUI() {
                                     className={controlButtonClass}
                                     title="Spin"
                                 >
-                                    <RotateCw size={20} className="text-zinc-400" />
+                                    <FaRedo size={20} className="text-zinc-400" />
                                 </motion.button>
 
                                 <motion.button
@@ -509,7 +539,7 @@ export default function DailyRogueUI() {
                                     className={controlButtonClass}
                                     title="Shuffle"
                                 >
-                                    <Shuffle size={20} className="text-zinc-400" />
+                                    <FaRandom size={20} className="text-zinc-400" />
                                 </motion.button>
 
 
