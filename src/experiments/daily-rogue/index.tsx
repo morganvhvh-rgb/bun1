@@ -27,7 +27,7 @@ export default function DailyRogueUI() {
             if (index === characterIndex) {
                 return {
                     id: crypto.randomUUID(),
-                    name: "Hooded"
+                    name: "hood"
                 };
             }
 
@@ -83,7 +83,7 @@ export default function DailyRogueUI() {
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
             const character = gridSprites[activeHoodedIndex];
             // Verify we are moving a hooded figure
-            if (character && character.name === "Hooded") {
+            if (character && character.name === "hood") {
                 setGridSprites(prev => {
                     const next = [...prev];
                     const pCoords = getCoordinates(activeHoodedIndex);
@@ -112,7 +112,7 @@ export default function DailyRogueUI() {
         }
 
         // Handle Hooded Figure Selection
-        if (item.name === "Hooded") {
+        if (item.name === "hood") {
             if (hasMoved) return; // Prevent selection if already moved
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
@@ -233,9 +233,9 @@ export default function DailyRogueUI() {
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <Sprite
-                            name="Hooded"
+                            name="hood"
                             scale={4}
-                            tintColor="#a855f7"
+                            tintColor="#7e22ce"
                             className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
                             onClick={() => setIsCharacterModalOpen(true)}
                         />
@@ -251,7 +251,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Goblin" scale={4} tintColor="#4ade80" />
+                            <Sprite name="wyvern" scale={4} tintColor="#15803d" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -259,7 +259,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Skeleton" scale={4} tintColor="#e4e4e7" />
+                            <Sprite name="octopus" scale={4} tintColor="#f9a8d4" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -374,7 +374,7 @@ export default function DailyRogueUI() {
                                                             className={cn(
                                                                 selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
                                                                 // Active hooded distinct style
-                                                                (activeHoodedIndex === index && item.name === 'Hooded') && "brightness-125"
+                                                                (activeHoodedIndex === index && item.name === 'hood') && "brightness-125"
                                                             )}
                                                         />
                                                     ) : (
@@ -382,7 +382,7 @@ export default function DailyRogueUI() {
                                                             <div
                                                                 onClick={() => {
                                                                     // Handle click on empty glowing cell
-                                                                    if (activeHoodedIndex !== null) handleSpriteClick({ id: 'empty', name: 'Hooded' } as any, index);
+                                                                    if (activeHoodedIndex !== null) handleSpriteClick({ id: 'empty', name: 'hood' } as any, index);
                                                                 }}
                                                                 className="w-12 h-12 cursor-pointer"
                                                             />
@@ -462,6 +462,9 @@ export default function DailyRogueUI() {
                             className="cursor-pointer hover:scale-105 transition-transform"
                             onClick={() => setIsScrollWindowOpen(true)}
                         />
+                        <div className="absolute -bottom-1 -left-1 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
+                            {keptScrolls.length}
+                        </div>
                     </div>
 
                     {/* Scroll Window Modal */}

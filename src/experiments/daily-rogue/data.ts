@@ -1,9 +1,9 @@
 export const ICON_MAP = {
     // Character
-    "Hooded": "hood",
+    "hood": "hood",
     // Enemies
-    "Goblin": "monster-skull",
-    "Skeleton": "skull",
+    "wyvern": "wyvern",
+    "octopus": "octopus",
 
     // Food
     "apple": "apple",
@@ -66,9 +66,9 @@ export const SPRITE_KEYS: IconName[] = [
 ];
 
 export const SPRITE_THEME: Record<IconName, string> = {
-    "Hooded": "#a855f7",   // Purple (Hero)
-    "Goblin": "#84cc16",   // Lime (Enemy)
-    "Skeleton": "#e4e4e7", // Bone White (Enemy)
+    "hood": "#7e22ce",   // Darker Purple (Hero)
+    "wyvern": "#15803d",   // Dark Green (Enemy)
+    "octopus": "#f9a8d4", // Light Pink (Enemy)
 
     // Food (Red)
     "apple": "#ef4444",
@@ -110,9 +110,9 @@ export const SPRITE_THEME: Record<IconName, string> = {
 };
 
 export const SPRITE_STATS: Partial<Record<IconName, string>> = {
-    "Hooded": "Hero",
-    "Goblin": "Enemy",
-    "Skeleton": "Enemy",
+    "hood": "Hero",
+    "wyvern": "Enemy",
+    "octopus": "Enemy",
 
     "apple": "+Health",
     "meat": "+Health",
@@ -146,9 +146,9 @@ export const SPRITE_STATS: Partial<Record<IconName, string>> = {
 };
 
 export const SPRITE_CATEGORIES: Record<IconName, string> = {
-    "Hooded": "Hero",
-    "Goblin": "Enemy",
-    "Skeleton": "Enemy",
+    "hood": "Hero",
+    "wyvern": "Enemy",
+    "octopus": "Enemy",
 
     "apple": "Food",
     "meat": "Food",
