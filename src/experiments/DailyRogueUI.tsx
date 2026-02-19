@@ -1,82 +1,123 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    GiPirateCaptain,
-    GiScrollUnfurled,
-    GiBroadsword,
-    GiRoundShield,
-    GiHealthPotion,
-    GiCoins,
-    GiDeathSkull,
-    GiSpectre,
-    GiFlame,
-    GiWaterDrop,
-    GiLightningTrio,
-    GiHearts
-} from 'react-icons/gi';
-import { FaRedo, FaRandom } from 'react-icons/fa';
+import 'rpg-awesome/css/rpg-awesome.min.css';
+
 
 const ICON_MAP = {
-    "Pirate": GiPirateCaptain,
-    "Scroll": GiScrollUnfurled,
-    "Sword": GiBroadsword,
-    "Shield": GiRoundShield,
-    "Potion": GiHealthPotion,
-    "Coins": GiCoins,
-    "Skull": GiDeathSkull,
-    "Ghost": GiSpectre,
-    "Flame": GiFlame,
-    "Droplet": GiWaterDrop,
-    "Zap": GiLightningTrio,
-    "Heart": GiHearts,
+    // Character
+    "Hooded": "hood",
+    // Enemies (Display Only)
+    "Goblin": "monster-skull",
+    "Skeleton": "skull",
+    // Pool Items
+    "Lute": "ocarina",
+    "Flute": "horn-call",
+    "Lyre": "bell",
+    "Sword": "sword",
+    "Axe": "axe",
+    "Dagger": "plain-dagger",
+    "Staff": "crystal-wand",
+    "Wand": "fairy-wand",
+    "Meat": "meat",
+    "Cheese": "cheese",
+    "Grapes": "apple",
+    "Chicken": "chicken-leg",
+    "Shield": "shield",
+    "Armor": "vest",
+    "Helmet": "helmet",
+    "Gauntlet": "hand",
+    "Coins": "gold-bar",
+    "Crown": "crown",
+    "Flame": "fire",
+    "Droplet": "droplet",
+    "Zap": "lightning-trio",
+    "Leaf": "leaf",
+    "Trap": "bear-trap",
+    "Scroll": "scroll-unfurled",
 } as const;
 
 type IconName = keyof typeof ICON_MAP;
 
 const SPRITE_KEYS: IconName[] = [
-    "Pirate",
-    "Scroll",
-    "Sword",
-    "Shield",
-    "Potion",
-    "Coins",
-    "Skull",
-    "Ghost",
-    "Flame",
-    "Droplet",
-    "Zap",
-    "Heart"
+    // 3 Instruments
+    "Lute", "Flute", "Lyre",
+    // 3 Weapons
+    "Sword", "Axe", "Dagger",
+    // 2 Magic Staffs
+    "Staff", "Wand",
+    // 4 Food
+    "Meat", "Cheese", "Grapes", "Chicken",
+    // 4 Armor
+    "Shield", "Armor", "Helmet", "Gauntlet",
+    // 2 Treasure
+    "Coins", "Crown",
+    // 4 Nature
+    "Flame", "Droplet", "Zap", "Leaf",
+    // 1 Trap
+    "Trap",
+    // 1 Special
+    "Scroll"
 ];
 
 const SPRITE_THEME: Record<IconName, string> = {
-    "Pirate": "#facc15",  // Yellow
-    "Scroll": "#d4b483",  // Parchment
-    "Sword": "#94a3b8",   // Steel
-    "Shield": "#cbd5e1",  // Silver
-    "Potion": "#ef4444",  // Red
-    "Coins": "#fbbf24",   // Gold
-    "Skull": "#a1a1aa",   // Bone
-    "Ghost": "#e4e4e7",   // Spirit
-    "Flame": "#f97316",   // Fire
-    "Droplet": "#3b82f6", // Water
-    "Zap": "#eab308",     // Lightning
-    "Heart": "#ec4899",   // Pink
+    "Hooded": "#a855f7",   // Purple
+    "Goblin": "#4ade80",   // Green
+    "Skeleton": "#e4e4e7", // Bone White
+    "Lute": "#d4b483",     // Wood
+    "Flute": "#a1a1aa",    // Silver/Grey
+    "Lyre": "#facc15",     // Gold
+    "Sword": "#94a3b8",    // Steel
+    "Axe": "#cbd5e1",      // Silver
+    "Dagger": "#64748b",   // Dark Grey
+    "Staff": "#8b5cf6",    // Violet
+    "Wand": "#d8b4fe",     // Light Purple
+    "Meat": "#ef4444",     // Red
+    "Cheese": "#fde047",   // Yellow
+    "Grapes": "#a855f7",   // Purple
+    "Chicken": "#fb923c",  // Orange
+    "Shield": "#cbd5e1",   // Silver
+    "Armor": "#9ca3af",    // Grey
+    "Helmet": "#475569",   // Slate
+    "Gauntlet": "#52525b", // Zinc
+    "Coins": "#fbbf24",    // Gold
+    "Crown": "#fbbf24",    // Gold
+    "Flame": "#f97316",    // Orange
+    "Droplet": "#3b82f6",  // Blue
+    "Zap": "#eab308",      // Yellow
+    "Leaf": "#22c55e",     // Green
+    "Trap": "#71717a",     // Zinc
+    "Scroll": "#d4b483",   // Parchment
 };
 
 const SPRITE_STATS: Partial<Record<IconName, string>> = {
-    "Pirate": "Captain",
-    "Scroll": "???",
+    "Hooded": "Hero",
+    "Goblin": "Enemy",
+    "Skeleton": "Enemy",
+    "Lute": "+1 Bard logic",
+    "Flute": "Charm",
+    "Lyre": "Inspire",
     "Sword": "+1 Attack",
+    "Axe": "+2 Attack",
+    "Dagger": "Fast Atk",
+    "Staff": "+1 Magic",
+    "Wand": "Cast",
+    "Meat": "+10 HP",
+    "Cheese": "+5 HP",
+    "Grapes": "+2 HP",
+    "Chicken": "+8 HP",
     "Shield": "+1 Defense",
-    "Potion": "+10 HP",
+    "Armor": "+2 Defense",
+    "Helmet": "Headgear",
+    "Gauntlet": "Hands",
     "Coins": "+10 Gold",
-    "Skull": "Danger",
-    "Ghost": "Spooky",
-    "Flame": "Hot",
+    "Crown": "Victory",
+    "Flame": "Burn",
     "Droplet": "Wet",
-    "Zap": "Shocking",
-    "Heart": "+1 Life"
+    "Zap": "Shock",
+    "Leaf": "Nature",
+    "Trap": "Danger",
+    "Scroll": "Mystery",
 };
 
 interface SpriteProps {
@@ -91,8 +132,8 @@ interface SpriteProps {
 }
 
 function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: SpriteProps) {
-    const Icon = ICON_MAP[name];
-    if (!Icon) return null;
+    const iconClass = ICON_MAP[name];
+    if (!iconClass) return null;
 
     const size = 16 * scale;
 
@@ -118,11 +159,13 @@ function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, anim
                 ease: "easeInOut"
             } : undefined}
         >
-            <Icon
-                size={size}
-                className={cn("w-full h-full", animateGradient && "animate-pulse")}
-                color={tintColor || (gradient ? gradient[0] : undefined)}
-                style={gradient ? { color: gradient[0] } : undefined}
+            <i
+                className={cn(`ra ra-${iconClass}`, animateGradient && "animate-pulse")}
+                style={{
+                    fontSize: size,
+                    color: tintColor || (gradient ? gradient[0] : undefined),
+                    ...gradient ? { color: gradient[0] } : undefined
+                }}
             />
         </motion.div>
     );
@@ -141,24 +184,27 @@ export default function DailyRogueUI() {
     const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
 
-    // Pirate Logic State
+    // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
-    const [activePirateIndex, setActivePirateIndex] = useState<number | null>(null);
+    const [activeHoodedIndex, setActiveHoodedIndex] = useState<number | null>(null);
     const [hasMoved, setHasMoved] = useState(false);
     const [isScrollWindowOpen, setIsScrollWindowOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
 
     function generateRandomSprites(): GridItem[] {
-        let pirateCount = 0;
-        return Array.from({ length: 12 }, () => {
-            let name: IconName;
-            // Prevent multiple pirates
-            do {
-                const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
-                name = SPRITE_KEYS[randomIndex];
-            } while (name === "Pirate" && pirateCount >= 1);
+        const totalSlots = 12;
+        const characterIndex = Math.floor(Math.random() * totalSlots);
 
-            if (name === "Pirate") pirateCount++;
+        return Array.from({ length: totalSlots }, (_, index) => {
+            if (index === characterIndex) {
+                return {
+                    id: crypto.randomUUID(),
+                    name: "Hooded"
+                };
+            }
+
+            const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
+            const name = SPRITE_KEYS[randomIndex];
 
             return {
                 id: crypto.randomUUID(),
@@ -172,7 +218,7 @@ export default function DailyRogueUI() {
     const resetSelection = () => {
         setSelectedIndex(null);
         setGlowingIndices([]);
-        setActivePirateIndex(null);
+        setActiveHoodedIndex(null);
     };
 
     const handleSpin = () => {
@@ -206,13 +252,13 @@ export default function DailyRogueUI() {
 
     const handleSpriteClick = (item: GridItem, index: number) => {
         // If clicking a glowing target (Movement)
-        if (glowingIndices.includes(index) && activePirateIndex !== null) {
-            const pirate = gridSprites[activePirateIndex];
-            // Verify we are moving a pirate
-            if (pirate && pirate.name === "Pirate") {
+        if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
+            const character = gridSprites[activeHoodedIndex];
+            // Verify we are moving a hooded figure
+            if (character && character.name === "Hooded") {
                 setGridSprites(prev => {
                     const next = [...prev];
-                    const pCoords = getCoordinates(activePirateIndex);
+                    const pCoords = getCoordinates(activeHoodedIndex);
                     const tCoords = getCoordinates(index);
 
                     // Clear path
@@ -226,8 +272,8 @@ export default function DailyRogueUI() {
                         for (let r = min; r <= max; r++) next[getIndex(r, pCoords.col)] = null;
                     }
 
-                    // Place Pirate at target (reusing ID to potentially keep identity, or new ID)
-                    next[index] = { ...pirate };
+                    // Place Character at target (reusing ID)
+                    next[index] = { ...character };
                     return next;
                 });
 
@@ -237,8 +283,8 @@ export default function DailyRogueUI() {
             }
         }
 
-        // Handle Pirate Selection
-        if (item.name === "Pirate") {
+        // Handle Hooded Figure Selection
+        if (item.name === "Hooded") {
             if (hasMoved) return; // Prevent selection if already moved
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
@@ -250,19 +296,16 @@ export default function DailyRogueUI() {
             if (row < 2) targets.push(getIndex(2, col)); // Far Down
 
             setGlowingIndices(targets);
-            setActivePirateIndex(index);
+            setActiveHoodedIndex(index);
             setSelectedIndex(index);
             return;
         }
 
-        // Default behavior (Select/Keep) for non-Pirates
+        // Default behavior (Select/Keep) for non-Hooded
         if (selectedIndex === index) {
-            if (activePirateIndex !== null) {
-                // If we had a pirate selected and clicked another same-named item (unlikely since Pirate is unique usually, but possible)
-                // Or if we clicked a non-glowing cell while pirate is active -> Reset
+            if (activeHoodedIndex !== null) {
+                // If we had a character selected and clicked another same-named item
                 resetSelection();
-                // Optionally process the click as a new selection? 
-                // For now, let's just reset to be safe or treat as standard toggle
             }
 
             if (item.name === 'Scroll') {
@@ -280,7 +323,7 @@ export default function DailyRogueUI() {
         } else {
             setSelectedIndex(index);
             setGlowingIndices([]);
-            setActivePirateIndex(null);
+            setActiveHoodedIndex(null);
         }
     };
 
@@ -362,9 +405,9 @@ export default function DailyRogueUI() {
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <Sprite
-                            name="Pirate"
+                            name="Hooded"
                             scale={4}
-                            tintColor="#facc15"
+                            tintColor="#a855f7"
                             className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
                             onClick={() => setIsCharacterModalOpen(true)}
                         />
@@ -380,7 +423,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Flame" scale={4} tintColor="#ea580c" />
+                            <Sprite name="Goblin" scale={4} tintColor="#4ade80" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -388,7 +431,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="Potion" scale={4} tintColor="#22c55e" />
+                            <Sprite name="Skeleton" scale={4} tintColor="#e4e4e7" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -471,8 +514,8 @@ export default function DailyRogueUI() {
                                                                 selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
                                                                 // Ensure target has strong glow if it's a valid move target
                                                                 (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
-                                                                // Active pirate distinct style
-                                                                (activePirateIndex === index && item.name === 'Pirate') && "brightness-125"
+                                                                // Active hooded distinct style
+                                                                (activeHoodedIndex === index && item.name === 'Hooded') && "brightness-125"
                                                             )}
                                                         />
                                                     ) : (
@@ -480,7 +523,7 @@ export default function DailyRogueUI() {
                                                             <div
                                                                 onClick={() => {
                                                                     // Handle click on empty glowing cell
-                                                                    if (activePirateIndex !== null) handleSpriteClick({ id: 'empty', name: 'Pirate' } as any, index);
+                                                                    if (activeHoodedIndex !== null) handleSpriteClick({ id: 'empty', name: 'Hooded' } as any, index);
                                                                 }}
                                                                 className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
                                                             />
@@ -529,7 +572,7 @@ export default function DailyRogueUI() {
                                     className={controlButtonClass}
                                     title="Spin"
                                 >
-                                    <FaRedo size={20} className="text-zinc-400" />
+                                    <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
 
                                 <motion.button
@@ -539,7 +582,7 @@ export default function DailyRogueUI() {
                                     className={controlButtonClass}
                                     title="Shuffle"
                                 >
-                                    <FaRandom size={20} className="text-zinc-400" />
+                                    <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
 
 
