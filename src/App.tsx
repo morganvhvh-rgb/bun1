@@ -1,4 +1,4 @@
-import DailyRogueUI from '@/experiments/DailyRogueUI';
+import DailyRogueUI from '@/experiments/daily-rogue';
 
 export default function App() {
 
