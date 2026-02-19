@@ -1,57 +1,68 @@
 export const ICON_MAP = {
     // Character
     "Hooded": "hood",
-    // Enemies (Display Only)
+    // Enemies
     "Goblin": "monster-skull",
     "Skeleton": "skull",
-    // Pool Items
-    "Lute": "ocarina",
-    "Flute": "horn-call",
-    "Lyre": "bell",
-    "Sword": "sword",
-    "Axe": "axe",
-    "Dagger": "plain-dagger",
-    "Staff": "crystal-wand",
-    "Wand": "fairy-wand",
-    "Meat": "meat",
-    "Cheese": "cheese",
-    "Grapes": "apple",
-    "Chicken": "chicken-leg",
-    "Shield": "shield",
-    "Armor": "vest",
-    "Helmet": "helmet",
-    "Gauntlet": "hand",
-    "Coins": "gold-bar",
-    "Crown": "crown",
-    // Nature (Green/Growth)
-    "Pine": "pine-tree",
-    "Mushroom": "super-mushroom",
-    "Zigzag": "zigzag-leaf",
-    "Trap": "bear-trap",
-    "Scroll": "scroll-unfurled",
+
+    // Food
+    "apple": "apple",
+    "meat": "meat",
+    "crab-claw": "crab-claw",
+    "brandy-bottle": "brandy-bottle",
+
+    // Nature
+    "clover": "clover",
+    "pine-tree": "pine-tree",
+    "zigzag-leaf": "zigzag-leaf",
+
+    // Weapon
+    "axe": "axe",
+    "relic-blade": "relic-blade",
+    "crossbow": "crossbow",
+    "daggers": "daggers",
+
+    // Armor
+    "shield": "shield",
+    "knight-helmet": "knight-helmet",
+
+    // Magic
+    "crystal-wand": "crystal-wand",
+    "fairy-wand": "fairy-wand",
+
+    // Treasure
+    "gold-bar": "gold-bar",
+    "gem-pendant": "gem-pendant",
+
+    // Item
+    "key": "key",
+    "scroll-unfurled": "scroll-unfurled",
+    "book": "book",
+
+    // Music
+    "bell": "bell",
+    "ocarina": "ocarina",
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;
 
 export const SPRITE_KEYS: IconName[] = [
-    // 3 Instruments
-    "Lute", "Flute", "Lyre",
-    // 3 Weapons
-    "Sword", "Axe", "Dagger",
-    // 2 Magic Staffs
-    "Staff", "Wand",
-    // 4 Food
-    "Meat", "Cheese", "Grapes", "Chicken",
-    // 4 Armor
-    "Shield", "Armor", "Helmet", "Gauntlet",
-    // 2 Treasure
-    "Coins", "Crown",
-    // 3 Nature
-    "Pine", "Mushroom", "Zigzag",
-    // 1 Trap
-    "Trap",
-    // 1 Special
-    "Scroll"
+    // Food
+    "apple", "meat", "crab-claw", "brandy-bottle",
+    // Nature
+    "clover", "pine-tree", "zigzag-leaf",
+    // Weapon
+    "axe", "relic-blade", "crossbow", "daggers",
+    // Armor
+    "shield", "knight-helmet",
+    // Magic
+    "crystal-wand", "fairy-wand",
+    // Treasure
+    "gold-bar", "gem-pendant",
+    // Item
+    "key", "scroll-unfurled", "book",
+    // Music
+    "bell", "ocarina",
 ];
 
 export const SPRITE_THEME: Record<IconName, string> = {
@@ -59,104 +70,115 @@ export const SPRITE_THEME: Record<IconName, string> = {
     "Goblin": "#84cc16",   // Lime (Enemy)
     "Skeleton": "#e4e4e7", // Bone White (Enemy)
 
-    // Instruments (Amber/Bardic)
-    "Lute": "#f59e0b",
-    "Flute": "#f59e0b",
-    "Lyre": "#f59e0b",
+    // Food (Red)
+    "apple": "#ef4444",
+    "meat": "#ef4444",
+    "crab-claw": "#ef4444",
+    "brandy-bottle": "#ef4444",
 
-    // Weapons (Slate/Steel)
-    "Sword": "#94a3b8",
-    "Axe": "#94a3b8",
-    "Dagger": "#94a3b8",
+    // Nature (Green)
+    "clover": "#22c55e",
+    "pine-tree": "#22c55e",
+    "zigzag-leaf": "#22c55e",
 
-    // Magic (Violet/Arcane)
-    "Staff": "#c084fc",
-    "Wand": "#c084fc",
+    // Weapon (Gray)
+    "axe": "#94a3b8",
+    "relic-blade": "#94a3b8",
+    "crossbow": "#94a3b8",
+    "daggers": "#94a3b8",
 
-    // Food (Rose/Vitality)
-    "Meat": "#fb7185",
-    "Cheese": "#fb7185",
-    "Grapes": "#fb7185",
-    "Chicken": "#fb7185",
+    // Armor (Blue)
+    "shield": "#3b82f6",
+    "knight-helmet": "#3b82f6",
 
-    // Armor (Zinc/Metal)
-    "Shield": "#52525b",
-    "Armor": "#52525b",
-    "Helmet": "#52525b",
-    "Gauntlet": "#52525b",
+    // Magic (Pink)
+    "crystal-wand": "#ec4899",
+    "fairy-wand": "#ec4899",
 
-    // Treasure (Yellow/Gold)
-    "Coins": "#facc15",
-    "Crown": "#facc15",
+    // Treasure (Yellow)
+    "gold-bar": "#eab308",
+    "gem-pendant": "#eab308",
 
-    // Nature (Green/Growth)
-    "Pine": "#4ade80",
-    "Mushroom": "#4ade80",
-    "Zigzag": "#4ade80",
+    // Item (Brown)
+    "key": "#a16207",
+    "scroll-unfurled": "#a16207",
+    "book": "#a16207",
 
-    // Trap (Red/Danger)
-    "Trap": "#ef4444",
-
-    // Special
-    "Scroll": "#d4b483",   // Parchment
+    // Music (Orange)
+    "bell": "#f97316",
+    "ocarina": "#f97316",
 };
 
 export const SPRITE_STATS: Partial<Record<IconName, string>> = {
     "Hooded": "Hero",
     "Goblin": "Enemy",
     "Skeleton": "Enemy",
-    "Lute": "+1 Bard logic",
-    "Flute": "Charm",
-    "Lyre": "Inspire",
-    "Sword": "+1 Attack",
-    "Axe": "+2 Attack",
-    "Dagger": "Fast Atk",
-    "Staff": "+1 Magic",
-    "Wand": "Cast",
-    "Meat": "+10 HP",
-    "Cheese": "+5 HP",
-    "Grapes": "+2 HP",
-    "Chicken": "+8 HP",
-    "Shield": "+1 Defense",
-    "Armor": "+2 Defense",
-    "Helmet": "Headgear",
-    "Gauntlet": "Hands",
-    "Coins": "+10 Gold",
-    "Crown": "Victory",
-    "Pine": "Woods",
-    "Mushroom": "Food?",
-    "Zigzag": "Nature",
-    "Trap": "Danger",
-    "Scroll": "Mystery",
+
+    "apple": "+Health",
+    "meat": "+Health",
+    "crab-claw": "+Health",
+    "brandy-bottle": "+Mana",
+
+    "clover": "Luck",
+    "pine-tree": "Cover",
+    "zigzag-leaf": "Hiding",
+
+    "axe": "Cleave",
+    "relic-blade": "Slash",
+    "crossbow": "Pierce",
+    "daggers": "Backstab",
+
+    "shield": "Block",
+    "knight-helmet": "Head",
+
+    "crystal-wand": "Zap",
+    "fairy-wand": "Charm",
+
+    "gold-bar": "Wealth",
+    "gem-pendant": "Shiny",
+
+    "key": "Open",
+    "scroll-unfurled": "Learn",
+    "book": "Read",
+
+    "bell": "Ring",
+    "ocarina": "Tuut",
 };
 
 export const SPRITE_CATEGORIES: Record<IconName, string> = {
     "Hooded": "Hero",
     "Goblin": "Enemy",
     "Skeleton": "Enemy",
-    "Lute": "Instrument",
-    "Flute": "Instrument",
-    "Lyre": "Instrument",
-    "Sword": "Weapon",
-    "Axe": "Weapon",
-    "Dagger": "Weapon",
-    "Staff": "Magic",
-    "Wand": "Magic",
-    "Meat": "Food",
-    "Cheese": "Food",
-    "Grapes": "Food",
-    "Chicken": "Food",
-    "Shield": "Armor",
-    "Armor": "Armor",
-    "Helmet": "Armor",
-    "Gauntlet": "Armor",
-    "Coins": "Treasure",
-    "Crown": "Treasure",
-    "Pine": "Nature",
-    "Mushroom": "Nature",
-    "Zigzag": "Nature",
-    "Trap": "Hazard",
-    "Scroll": "Special",
+
+    "apple": "Food",
+    "meat": "Food",
+    "crab-claw": "Food",
+    "brandy-bottle": "Food",
+
+    "clover": "Nature",
+    "pine-tree": "Nature",
+    "zigzag-leaf": "Nature",
+
+    "axe": "Weapon",
+    "relic-blade": "Weapon",
+    "crossbow": "Weapon",
+    "daggers": "Weapon",
+
+    "shield": "Armor",
+    "knight-helmet": "Armor",
+
+    "crystal-wand": "Magic",
+    "fairy-wand": "Magic",
+
+    "gold-bar": "Treasure",
+    "gem-pendant": "Treasure",
+
+    "key": "Item",
+    "scroll-unfurled": "Item",
+    "book": "Item",
+
+    "bell": "Music",
+    "ocarina": "Music",
 };
 
 export interface GridItem {

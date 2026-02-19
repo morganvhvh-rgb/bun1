@@ -117,11 +117,11 @@ export default function DailyRogueUI() {
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
 
-            // 4 Directions: Edges
-            if (col > 0) targets.push(getIndex(row, 0)); // Far Left
-            if (col < 3) targets.push(getIndex(row, 3)); // Far Right
-            if (row > 0) targets.push(getIndex(0, col)); // Far Up
-            if (row < 2) targets.push(getIndex(2, col)); // Far Down
+            // 4 Directions: Neighbors
+            if (col > 0) targets.push(getIndex(row, col - 1)); // Left
+            if (col < 3) targets.push(getIndex(row, col + 1)); // Right
+            if (row > 0) targets.push(getIndex(row - 1, col)); // Up
+            if (row < 2) targets.push(getIndex(row + 1, col)); // Down
 
             setGlowingIndices(targets);
             setActiveHoodedIndex(index);
@@ -136,7 +136,7 @@ export default function DailyRogueUI() {
                 resetSelection();
             }
 
-            if (item.name === 'Scroll') {
+            if (item.name === 'scroll-unfurled') {
                 if (keptScrolls.length >= 6) return;
                 setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
                 setKeptScrolls(prev => [...prev, item.name]);
@@ -318,6 +318,19 @@ export default function DailyRogueUI() {
                                     <AnimatePresence mode='popLayout'>
                                         {gridSprites.map((item, index) => {
                                             const isMatching = matchingIndices.has(index);
+                                            const isTarget = glowingIndices.includes(index) && activeHoodedIndex !== null;
+
+                                            let arrowRotation = 0;
+                                            if (isTarget) {
+                                                const { row: startRow, col: startCol } = getCoordinates(activeHoodedIndex!);
+                                                const { row: targetRow, col: targetCol } = getCoordinates(index);
+
+                                                if (targetRow < startRow) arrowRotation = 0; // Up
+                                                else if (targetRow > startRow) arrowRotation = 180; // Down
+                                                else if (targetCol < startCol) arrowRotation = 270; // Left
+                                                else if (targetCol > startCol) arrowRotation = 90; // Right
+                                            }
+
                                             return (
                                                 <motion.div
                                                     key={item?.id ?? `empty-${index}`}
@@ -326,12 +339,32 @@ export default function DailyRogueUI() {
                                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                     className={cn(
                                                         "w-12 h-12 flex items-center justify-center relative",
-                                                        // Moved/Selection Glow
-                                                        glowingIndices.includes(index) && "drop-shadow-[0_0_8px_rgba(255,215,0,0.8)] brightness-125 z-10",
                                                         // Matching (3+ adjacent) Glow - Strong Pink
                                                         (!glowingIndices.includes(index) && isMatching) && "drop-shadow-[0_0_15px_rgba(255,20,147,1)] brightness-125"
                                                     )}
                                                 >
+                                                    {isTarget && (
+                                                        <div
+                                                            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+                                                            style={{ transform: `rotate(${arrowRotation}deg)` }}
+                                                        >
+                                                            <svg
+                                                                width="32"
+                                                                height="32"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="#ffffff"
+                                                                strokeWidth="2.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                className="drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]"
+                                                            >
+                                                                <path d="M12 19V5" />
+                                                                <path d="M5 12l7-7 7 7" />
+                                                            </svg>
+                                                        </div>
+                                                    )}
+
                                                     {item ? (
                                                         <Sprite
                                                             name={item.name}
@@ -340,8 +373,6 @@ export default function DailyRogueUI() {
                                                             onClick={() => handleSpriteClick(item, index)}
                                                             className={cn(
                                                                 selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
-                                                                // Ensure target has strong glow if it's a valid move target
-                                                                (glowingIndices.includes(index)) && "drop-shadow-[0_0_12px_rgba(255,215,0,1)] brightness-150",
                                                                 // Active hooded distinct style
                                                                 (activeHoodedIndex === index && item.name === 'Hooded') && "brightness-125"
                                                             )}
@@ -353,7 +384,7 @@ export default function DailyRogueUI() {
                                                                     // Handle click on empty glowing cell
                                                                     if (activeHoodedIndex !== null) handleSpriteClick({ id: 'empty', name: 'Hooded' } as any, index);
                                                                 }}
-                                                                className="w-12 h-12 border border-yellow-500/50 rounded-sm bg-yellow-900/10 cursor-pointer"
+                                                                className="w-12 h-12 cursor-pointer"
                                                             />
                                                         ) : (
                                                             <div className="w-12 h-12" />
@@ -425,9 +456,9 @@ export default function DailyRogueUI() {
 
                     <div className="absolute bottom-6 right-6 z-50">
                         <Sprite
-                            name="Scroll"
+                            name="scroll-unfurled"
                             scale={4}
-                            tintColor="#d6c39a"
+                            tintColor="#a16207"
                             className="cursor-pointer hover:scale-105 transition-transform"
                             onClick={() => setIsScrollWindowOpen(true)}
                         />
