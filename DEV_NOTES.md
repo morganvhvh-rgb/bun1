@@ -1,57 +1,35 @@
-# PROJECT GUIDELINES: Mobile Browser Game (React/Vite/Zustand)
+# DRogue Architecture & Agent Workflow
 
-## 0. CONTEXT & ROLE
-Act as a **Senior Frontend Game Architect**. This is a high-performance, mobile-first web game.
-**Tech Stack:** Bun, Vite, React (TS), Zustand + Immer, Tailwind + clsx/tailwind-merge, Framer Motion (UI), GSAP (Loop), DnD-Kit, Howler.js.
+Welcome, AI Agent. This project has graduated from its prototype phase into a structured, scalable application. We are committed to a clean architecture using React, Zustand, and TypeScript. 
 
----
+Your fundamental goal is to maintain clean code and adhere to the established architecture, so that the AI coding ecosystem around this project remains efficient and confusion-free.
 
-## 1. THE "MOBILE HARD RESET" (CRITICAL)
-To ensure this game feels like a Native App, you must enforce these constraints:
-* **Viewport:** `index.html` must contain `<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />`.
-* **Gestures:** `index.css` must enforce `touch-action: manipulation` and `user-select: none` to prevent zooming and text highlighting.
-* **Layout:** The outer app container must use `min-height: 100dvh` to handle mobile browser address bars.
+## 1. PROJECT STRUCTURE
+We enforce a strict separation of concerns to keep the codebase maintainable:
 
-## 2. THE "SANDBOX" WORKFLOW (EXPERIMENTATION)
-**DO NOT** implement new game mechanics directly into the global store or main loop.
-1.  **Create:** Start in `src/experiments/` (e.g., `NewMechanicTest.tsx`).
-2.  **Build:** Use local `useState` only. Isolate the logic.
-3.  **Verify:** Only once the "game feel" is polished do we refactor into `src/store`.
+* **`src/types/`** (e.g., `game.ts`): **TypeScript Definitions**. The source of truth for all game data structures and interfaces.
+* **`src/lib/`** (e.g., `constants.ts`, `utils.ts`): **Constants & Helpers**. All magic numbers, balancing variables, grid configurations, and pure helper functions (like `cn()`) live here.
+* **`src/store/`** (e.g., `gameStore.ts`): **State Management**. All game logic, state mutations, and the core "engine" are centralized in Zustand.
+* **`src/ui/`**: **Visual Components**. React components should be purely presentational ("dumb"). They read state and dispatch actions, but never compute complex game logic.
 
-## 3. THE "MERGE" STRATEGY
-When moving a feature from **Sandbox** -> **Production**, follow this strict order:
-1.  **Types:** Define the interface in `src/types/`.
-2.  **Constants:** Move hardcoded magic numbers to `src/lib/constants.ts`.
-3.  **State:** Move logic from `useState` to a **Zustand Slice**.
-4.  **UI:** Connect components to the store (UI becomes "dumb").
+## 2. THE AGENT WORKFLOW (CRITICAL)
+Whenever you are adding, modifying, or removing a feature, you must follow this sequence to maintain system integrity:
 
-## 4. COMPONENT ARCHITECTURE (THE SLOT PATTERN)
-UI Components (Grid, Card, Reel) must be **Visual Only**.
-* **BAD:** `<Card />` calculates its own damage or internal state.
-* **GOOD:** `<Card isDamaged={true} onClick={emitEvent} />`.
-* *Why:* We must be able to swap the visual layer (Symbols -> Cards) without breaking the math.
+1. **Update Types**: Start in `src/types/` to define the shape of your new data.
+2. **Set Constants**: Place any new configuration values, defaults, or magic numbers in `src/lib/constants.ts`. Do not hardcode numbers in components or the store.
+3. **Implement Logic**: Add your state variables and mutation functions into `src/store/gameStore.ts`. Ensure clean, side-effect-free updates (we use Zustand + Immer).
+4. **Wire the UI**: Finally, build or update components side in `src/ui/`, connecting them to the store values and actions you just created.
 
-## 5. STATE MANAGEMENT
-* **Store:** Use `Zustand` with `Immer` middleware for nested updates.
-* **Persistence:** Use `persist` middleware. **IMPORTANT:** Increment the `version` number in the persist config whenever the data shape changes to prevent white-screen crashes on reload.
+## 3. UI & COMPONENT PRINCIPLES
+* **The Slot Pattern**: UI components must remain completely decoupled from the underlying math.
+  * *Bad:* `<Enemy />` calculates its own health based on incoming damage props.
+  * *Good:* `<Enemy health={store.enemyHealth} onHit={() => store.processAttack()} />`
+* **Styling**: Always use the `cn(...)` utility (`clsx` + `tailwind-merge`) for conditional classes. Never use template literals for dynamic class combinations.
+* **Mobile-First**: The game mimics a native app. Keep viewport constraints (`dvh`) and gesture lockdowns (`touch-action: manipulation`, `user-select: none`) intact for all interactive UI layers.
 
-## 6. STYLING & CONFLICTS
-* **Utility:** Always use the `cn(...)` utility (clsx + tailwind-merge).
-* **Rule:** Never use template literals for classNames involving conditionals.
-    * *Bad:* `` `p-4 ${isActive ? 'bg-red' : 'bg-blue'}` ``
-    * *Good:* `cn('p-4', isActive ? 'bg-red' : 'bg-blue')`
+## 4. ANIMATION STRATEGY
+* **Framer Motion**: Use exclusively for high-level UI transitions (Menus, Modals, Toasts).
+* **GSAP / CSS**: Use for high-frequency Game Loop updates, particle effects, or rapid sequencing to prevent React render saturation.
 
-## 7. ANIMATION SEPARATION
-* **Framer Motion:** Use strictly for UI (Modals, Toasts, Menu Transitions).
-* **GSAP:** Use strictly for the **Game Loop** and high-frequency updates (Sequencers, Timelines, Particle effects).
-
-## 8. FILE STRUCTURE & IMPORTS
-* **Aliases:** ALWAYS use `@/` for imports (e.g., `import { useStore } from '@/store'`).
-* **Separation:**
-    * `src/game/`: Core logic, math, engines.
-    * `src/ui/`: HUD, Settings, Buttons.
-    * `src/experiments/`: Temporary sandboxes for new features.
-
-## 9. AUDIO (HOWLER.JS)
-* Initialize audio globally but muted/paused.
-* Unlock the `AudioContext` on the **first user interaction** (click/tap) to comply with browser autoplay policies.
+## 5. CODE HYGIENE
+Keep files well-scoped and clean up after yourself. If an idea or feature is discarded, fully purge its types, constants, state logic, and UI components to prevent technical debt. Keep things predictable for the next agent that reads this.
