@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Sprite } from './Sprite';
-import { SPRITE_KEYS, SPRITE_THEME, SPRITE_STATS, SPRITE_CATEGORIES, type GridItem, type IconName } from './data';
+import { Icon } from './Icon';
+import { ICON_KEYS, ICON_THEME, ICON_STATS, ICON_CATEGORIES, type GridItem, type IconName } from './data';
 
 export default function DailyRogueUI() {
-    const [gridSprites, setGridSprites] = useState<(GridItem | null)[]>(() => generateRandomSprites());
+    const [gridIcons, setGridIcons] = useState<(GridItem | null)[]>(() => generateRandomIcons());
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [keptSprites, setKeptSprites] = useState<IconName[]>([]);
+    const [keptIcons, setKeptIcons] = useState<IconName[]>([]);
     const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
 
@@ -19,7 +19,7 @@ export default function DailyRogueUI() {
     const [isScrollWindowOpen, setIsScrollWindowOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
 
-    function generateRandomSprites(): GridItem[] {
+    function generateRandomIcons(): GridItem[] {
         const totalSlots = 12;
         const characterIndex = Math.floor(Math.random() * totalSlots);
 
@@ -31,8 +31,8 @@ export default function DailyRogueUI() {
                 };
             }
 
-            const randomIndex = Math.floor(Math.random() * SPRITE_KEYS.length);
-            const name = SPRITE_KEYS[randomIndex];
+            const randomIndex = Math.floor(Math.random() * ICON_KEYS.length);
+            const name = ICON_KEYS[randomIndex];
 
             return {
                 id: crypto.randomUUID(),
@@ -52,7 +52,7 @@ export default function DailyRogueUI() {
     const handleSpin = () => {
         if (gold < 1) return;
         setGold(g => g - 1);
-        setGridSprites(generateRandomSprites());
+        setGridIcons(generateRandomIcons());
         setSpinKey(prev => prev + 1);
         resetSelection();
         setHasMoved(false);
@@ -61,7 +61,7 @@ export default function DailyRogueUI() {
     const handleVary = () => {
         if (gold < 1) return;
         setGold(g => g - 1);
-        setGridSprites(prev => {
+        setGridIcons(prev => {
             const newArr = [...prev];
             // Fisher-Yates shuffle
             for (let i = newArr.length - 1; i > 0; i--) {
@@ -78,13 +78,13 @@ export default function DailyRogueUI() {
     const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
     const getIndex = (row: number, col: number) => row * 4 + col;
 
-    const handleSpriteClick = (item: GridItem, index: number) => {
+    const handleIconClick = (item: GridItem, index: number) => {
         // If clicking a glowing target (Movement)
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
-            const character = gridSprites[activeHoodedIndex];
+            const character = gridIcons[activeHoodedIndex];
             // Verify we are moving a hooded figure
             if (character && character.name === "hood") {
-                setGridSprites(prev => {
+                setGridIcons(prev => {
                     const next = [...prev];
                     const pCoords = getCoordinates(activeHoodedIndex);
                     const tCoords = getCoordinates(index);
@@ -138,15 +138,15 @@ export default function DailyRogueUI() {
 
             if (item.name === 'scroll-unfurled') {
                 if (keptScrolls.length >= 6) return;
-                setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
+                setGridIcons(prev => prev.map(s => s?.id === item.id ? null : s));
                 setKeptScrolls(prev => [...prev, item.name]);
                 resetSelection();
                 return;
             }
 
-            if (keptSprites.length >= 6) return;
-            setGridSprites(prev => prev.map(s => s?.id === item.id ? null : s));
-            setKeptSprites(prev => [...prev, item.name]);
+            if (keptIcons.length >= 6) return;
+            setGridIcons(prev => prev.map(s => s?.id === item.id ? null : s));
+            setKeptIcons(prev => [...prev, item.name]);
             resetSelection();
         } else {
             setSelectedIndex(index);
@@ -159,10 +159,10 @@ export default function DailyRogueUI() {
         const matches = new Set<number>();
         const visited = new Set<number>();
 
-        for (let i = 0; i < gridSprites.length; i++) {
-            if (visited.has(i) || !gridSprites[i]) continue;
+        for (let i = 0; i < gridIcons.length; i++) {
+            if (visited.has(i) || !gridIcons[i]) continue;
 
-            const name = gridSprites[i]!.name;
+            const name = gridIcons[i]!.name;
             const group = [i];
             const queue = [i];
             visited.add(i);
@@ -182,7 +182,7 @@ export default function DailyRogueUI() {
                 for (const n of neighbors) {
                     if (n.r >= 0 && n.r < 3 && n.c >= 0 && n.c < 4) {
                         const nIdx = getIndex(n.r, n.c);
-                        if (!visited.has(nIdx) && gridSprites[nIdx]?.name === name) {
+                        if (!visited.has(nIdx) && gridIcons[nIdx]?.name === name) {
                             visited.add(nIdx);
                             group.push(nIdx);
                             queue.push(nIdx);
@@ -232,7 +232,7 @@ export default function DailyRogueUI() {
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
-                        <Sprite
+                        <Icon
                             name="hood"
                             scale={4}
                             tintColor="#7e22ce"
@@ -251,7 +251,7 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="wyvern" scale={4} tintColor="#15803d" />
+                            <Icon name="wyvern" scale={4} tintColor="#15803d" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -259,7 +259,7 @@ export default function DailyRogueUI() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Sprite name="octopus" scale={4} tintColor="#f9a8d4" />
+                            <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
                             <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
                                 <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
@@ -292,12 +292,12 @@ export default function DailyRogueUI() {
                 <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2 overflow-hidden">
                     <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
 
-                        {/* Kept Sprites Row */}
+                        {/* Kept Icons Row */}
                         <div className="w-full flex justify-center items-center shrink-0 mb-6">
                             <div className="flex gap-2 min-h-[3.5rem] items-center">
-                                {keptSprites.length > 0 ? keptSprites.map((name, i) => (
+                                {keptIcons.length > 0 ? keptIcons.map((name, i) => (
                                     <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
-                                        <Sprite name={name} scale={3} />
+                                        <Icon name={name} scale={3} />
                                     </div>
                                 )) : <div className="text-zinc-800 text-xs tracking-widest uppercase">No items kept</div>}
                             </div>
@@ -316,7 +316,7 @@ export default function DailyRogueUI() {
                                     animate="show"
                                 >
                                     <AnimatePresence mode='popLayout'>
-                                        {gridSprites.map((item, index) => {
+                                        {gridIcons.map((item, index) => {
                                             const isMatching = matchingIndices.has(index);
                                             const isTarget = glowingIndices.includes(index) && activeHoodedIndex !== null;
 
@@ -366,11 +366,11 @@ export default function DailyRogueUI() {
                                                     )}
 
                                                     {item ? (
-                                                        <Sprite
+                                                        <Icon
                                                             name={item.name}
                                                             scale={3}
-                                                            tintColor={SPRITE_THEME[item.name]}
-                                                            onClick={() => handleSpriteClick(item, index)}
+                                                            tintColor={ICON_THEME[item.name]}
+                                                            onClick={() => handleIconClick(item, index)}
                                                             className={cn(
                                                                 selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
                                                                 // Active hooded distinct style
@@ -382,7 +382,7 @@ export default function DailyRogueUI() {
                                                             <div
                                                                 onClick={() => {
                                                                     // Handle click on empty glowing cell
-                                                                    if (activeHoodedIndex !== null) handleSpriteClick({ id: 'empty', name: 'hood' } as any, index);
+                                                                    if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as any, index);
                                                                 }}
                                                                 className="w-12 h-12 cursor-pointer"
                                                             />
@@ -398,17 +398,17 @@ export default function DailyRogueUI() {
 
                                 {/* Info Text */}
                                 <div className="h-20 flex items-start justify-center text-center">
-                                    {selectedIndex !== null && gridSprites[selectedIndex] ? (
+                                    {selectedIndex !== null && gridIcons[selectedIndex] ? (
                                         <div
                                             className="flex flex-col items-center justify-start gap-1"
                                         >
                                             <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
-                                                <span className="text-zinc-200">{gridSprites[selectedIndex]!.name.replace(/_/g, ' ')}</span>
+                                                <span className="text-zinc-200">{gridIcons[selectedIndex]!.name.replace(/_/g, ' ')}</span>
                                                 <span className="text-zinc-600 mx-2">-</span>
-                                                <span className="text-zinc-500">{SPRITE_CATEGORIES[gridSprites[selectedIndex]!.name]}</span>
+                                                <span className="text-zinc-500">{ICON_CATEGORIES[gridIcons[selectedIndex]!.name]}</span>
                                             </div>
                                             <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
-                                                {SPRITE_STATS[gridSprites[selectedIndex]!.name] || "???"}
+                                                {ICON_STATS[gridIcons[selectedIndex]!.name] || "???"}
                                             </div>
                                             <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
                                                 Adds X to Y
@@ -418,7 +418,7 @@ export default function DailyRogueUI() {
                                         <div
                                             className="text-xs text-zinc-600 uppercase tracking-widest mt-1"
                                         >
-                                            Select a sprite
+                                            Select an icon
                                         </div>
                                     )}
                                 </div>
@@ -459,7 +459,7 @@ export default function DailyRogueUI() {
                     </div>
 
                     <div className="absolute bottom-6 right-6 z-50">
-                        <Sprite
+                        <Icon
                             name="scroll-unfurled"
                             scale={4}
                             tintColor="#a16207"

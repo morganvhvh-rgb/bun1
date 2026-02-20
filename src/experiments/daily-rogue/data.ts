@@ -46,7 +46,7 @@ export const ICON_MAP = {
 
 export type IconName = keyof typeof ICON_MAP;
 
-export const SPRITE_KEYS: IconName[] = [
+export const ICON_KEYS: IconName[] = [
     // Food
     "apple", "meat", "crab-claw", "brandy-bottle",
     // Nature
@@ -65,7 +65,7 @@ export const SPRITE_KEYS: IconName[] = [
     "bell", "ocarina",
 ];
 
-export const SPRITE_THEME: Record<IconName, string> = {
+export const ICON_THEME: Record<IconName, string> = {
     "hood": "#7e22ce",   // Darker Purple (Hero)
     "wyvern": "#15803d",   // Dark Green (Enemy)
     "octopus": "#f9a8d4", // Light Pink (Enemy)
@@ -109,7 +109,7 @@ export const SPRITE_THEME: Record<IconName, string> = {
     "ocarina": "#f97316",
 };
 
-export const SPRITE_STATS: Partial<Record<IconName, string>> = {
+export const ICON_STATS: Partial<Record<IconName, string>> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",
@@ -145,7 +145,7 @@ export const SPRITE_STATS: Partial<Record<IconName, string>> = {
     "ocarina": "Tuut",
 };
 
-export const SPRITE_CATEGORIES: Record<IconName, string> = {
+export const ICON_CATEGORIES: Record<IconName, string> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",

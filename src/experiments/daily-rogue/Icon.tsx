@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { ICON_MAP, type IconName } from './data';
 import 'rpg-awesome/css/rpg-awesome.min.css';
 
-export interface SpriteProps {
+export interface IconProps {
     name: IconName;
     className?: string;
     scale?: number;
@@ -14,7 +14,7 @@ export interface SpriteProps {
     idleAnimation?: boolean | 'sway' | 'hover';
 }
 
-export function Sprite({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: SpriteProps) {
+export function Icon({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: IconProps) {
     const iconClass = ICON_MAP[name];
     if (!iconClass) return null;
 
