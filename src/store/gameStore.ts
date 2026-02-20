@@ -19,8 +19,8 @@ interface GameState {
     playerMaxHp: number;
     playerBaseAtk: number;
 
-    enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean };
-    enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean };
+    enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
+    enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
 
     // Actions
     spinBoard: () => void;
@@ -71,8 +71,8 @@ export const useGameStore = create<GameState>()(
             playerMaxHp: 50,
             playerBaseAtk: 5,
 
-            enemy1: { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true },
-            enemy2: { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true },
+            enemy1: { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
+            enemy2: { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
 
             spinBoard: () => set((state) => {
                 if (state.gold < 1) return;
@@ -160,8 +160,8 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
-                state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true };
-                state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true };
+                state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
             }),
 
             resetGame: () => set((state) => {
@@ -173,8 +173,8 @@ export const useGameStore = create<GameState>()(
                 state.playerHp = 50;
                 state.playerMaxHp = 50;
                 state.playerBaseAtk = 5;
-                state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true };
-                state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true };
+                state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
             }),
 
         })),

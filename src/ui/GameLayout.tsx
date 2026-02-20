@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { Icon } from './Icon';
 import { HeroStatsPanel } from './HeroStatsPanel';
@@ -413,7 +412,6 @@ export function GameLayout() {
                                 activeHoodedIndex={activeHoodedIndex}
                                 selectedIndex={selectedIndex}
                                 isShaking={isShaking}
-                                isAnimating={isAnimating}
                                 onIconClick={handleIconClick}
                                 onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as any, index); }}
                             />

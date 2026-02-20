@@ -12,7 +12,6 @@ interface GridBoardProps {
     activeHoodedIndex: number | null;
     selectedIndex: number | null;
     isShaking: boolean;
-    isAnimating: boolean;
     onIconClick: (item: GridItem, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
 }
@@ -25,7 +24,6 @@ export function GridBoard({
     activeHoodedIndex,
     selectedIndex,
     isShaking,
-    isAnimating,
     onIconClick,
     onEmptyGlowClick
 }: GridBoardProps) {
