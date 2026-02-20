@@ -7,7 +7,7 @@ import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
 import { GridBoard } from './GridBoard';
 import { ICON_THEME, ICON_CATEGORIES } from '@/lib/constants';
-import type { GridItem } from '@/types/game';
+import type { GridItem, IconName } from '@/types/game';
 
 export function GameLayout() {
     const {
@@ -28,7 +28,8 @@ export function GameLayout() {
         keepScroll,
         applyBattleDamage,
         setEnemyVisibility,
-        resetBattleTarget
+        resetBattleTarget,
+        resetGame
     } = useGameStore();
 
     const [spinKey, setSpinKey] = useState(0);
@@ -250,13 +251,18 @@ export function GameLayout() {
                 resetSelection();
             }
 
+            if (item.name === 'key') {
+                resetSelection();
+                return;
+            }
+
             if (item.name === 'scroll-unfurled') {
                 keepScroll(item);
                 resetSelection();
                 return;
             }
 
-            const category = ICON_CATEGORIES[item.name];
+            const category = ICON_CATEGORIES[item.name as IconName];
             if (category === 'Nature' || category === 'Treasure') {
                 resetSelection();
                 return;
@@ -351,14 +357,17 @@ export function GameLayout() {
                         {/* Kept Icons Row */}
                         <div className="w-full flex justify-center items-center shrink-0 mb-6">
                             <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
-                                {/* Food / Item */}
+                                {/* Food / Special */}
                                 <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
                                     {!keptIcons[0] && !keptIcons[1] ? (
-                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Food/Item</div>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Special</span>
+                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                        </div>
                                     ) : (
                                         <>
-                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0]]} /></div>}
-                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[1]} scale={3} tintColor={ICON_THEME[keptIcons[1]]} /></div>}
+                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0] as IconName]} /></div>}
+                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[1]} scale={3} tintColor={ICON_THEME[keptIcons[1] as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -366,11 +375,14 @@ export function GameLayout() {
                                 {/* Armor / Magic */}
                                 <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
                                     {!keptIcons[2] && !keptIcons[3] ? (
-                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Armor/Magic</div>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
+                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                        </div>
                                     ) : (
                                         <>
-                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[2]} scale={3} tintColor={ICON_THEME[keptIcons[2]]} /></div>}
-                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[3]} scale={3} tintColor={ICON_THEME[keptIcons[3]]} /></div>}
+                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[2]} scale={3} tintColor={ICON_THEME[keptIcons[2] as IconName]} /></div>}
+                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[3]} scale={3} tintColor={ICON_THEME[keptIcons[3] as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -378,11 +390,14 @@ export function GameLayout() {
                                 {/* Weapon / Music */}
                                 <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
                                     {!keptIcons[4] && !keptIcons[5] ? (
-                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Weapon/Music</div>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
+                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                        </div>
                                     ) : (
                                         <>
-                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[4]} scale={3} tintColor={ICON_THEME[keptIcons[4]]} /></div>}
-                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[5]} scale={3} tintColor={ICON_THEME[keptIcons[5]]} /></div>}
+                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[4]} scale={3} tintColor={ICON_THEME[keptIcons[4] as IconName]} /></div>}
+                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[5]} scale={3} tintColor={ICON_THEME[keptIcons[5] as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -464,6 +479,17 @@ export function GameLayout() {
                                     </div>
                                     <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono flex items-center justify-center">
                                         <div className="opacity-50">Content Coming Soon</div>
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-zinc-800/50">
+                                        <button
+                                            onClick={() => {
+                                                resetGame();
+                                                setIsCharacterModalOpen(false);
+                                            }}
+                                            className="w-full py-3 bg-red-950/30 hover:bg-red-900/40 text-red-500 rounded font-bold tracking-widest uppercase transition-colors text-sm border border-red-900/30"
+                                        >
+                                            Reset Game
+                                        </button>
                                     </div>
                                 </motion.div>
                             </>

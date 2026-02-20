@@ -29,6 +29,7 @@ interface GameState {
     keepItem: (item: GridItem) => void;
     keepScroll: (item: GridItem) => void;
     resetBattleTarget: () => void;
+    resetGame: () => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
@@ -116,10 +117,12 @@ export const useGameStore = create<GameState>()(
             }),
 
             keepItem: (item) => set((state) => {
+                if (item.name === 'key') return;
+
                 const category = ICON_CATEGORIES[item.name];
                 let targetSlots: number[] = [];
 
-                if (category === 'Food' || category === 'Item') targetSlots = [0, 1];
+                if (category === 'Food' || category === 'Special') targetSlots = [0, 1];
                 else if (category === 'Armor' || category === 'Magic') targetSlots = [2, 3];
                 else if (category === 'Weapon' || category === 'Music') targetSlots = [4, 5];
 
@@ -159,6 +162,19 @@ export const useGameStore = create<GameState>()(
             resetBattleTarget: () => set((state) => {
                 state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true };
                 state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true };
+            }),
+
+            resetGame: () => set((state) => {
+                state.grid = generateRandomIcons();
+                state.keptIcons = [null, null, null, null, null, null];
+                state.keptScrolls = [];
+                state.gold = 100;
+                state.moves = 0;
+                state.playerHp = 50;
+                state.playerMaxHp = 50;
+                state.playerBaseAtk = 5;
+                state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true };
+                state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true };
             }),
 
         })),

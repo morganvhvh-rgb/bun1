@@ -61,7 +61,7 @@ export const ICON_KEYS: IconName[] = [
     "crystal-wand", "fairy-wand",
     // Treasure
     "gold-bar", "gem-pendant",
-    // Item
+    // Special
     "key", "scroll-unfurled", "book",
     // Music
     "bell", "ocarina",
@@ -103,7 +103,7 @@ export const ICON_THEME: Record<IconName, string> = {
     "gold-bar": "#eab308",
     "gem-pendant": "#eab308",
 
-    // Item (Brown)
+    // Special (Brown)
     "key": "#a16207",
     "scroll-unfurled": "#a16207",
     "book": "#a16207",
@@ -181,9 +181,9 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "gold-bar": "Treasure",
     "gem-pendant": "Treasure",
 
-    "key": "Item",
-    "scroll-unfurled": "Item",
-    "book": "Item",
+    "key": "Special",
+    "scroll-unfurled": "Special",
+    "book": "Special",
 
     "bell": "Music",
     "ocarina": "Music",
