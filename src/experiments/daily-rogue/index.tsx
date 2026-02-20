@@ -26,10 +26,12 @@ export default function DailyRogueUI() {
     const [playerMaxHp] = useState(50);
     const [playerBaseAtk] = useState(5);
 
+    const [enemy1Name, setEnemy1Name] = useState<IconName>('wyvern');
     const [enemy1Hp, setEnemy1Hp] = useState(10);
     const [enemy1MaxHp] = useState(10);
     const [enemy1Atk] = useState(5);
 
+    const [enemy2Name, setEnemy2Name] = useState<IconName>('octopus');
     const [enemy2Hp, setEnemy2Hp] = useState(10);
     const [enemy2MaxHp] = useState(10);
     const [enemy2Atk] = useState(5);
@@ -129,11 +131,24 @@ export default function DailyRogueUI() {
             await delay(200);
         }
 
+        if (e1HP === 0 && e2HP === 0) {
+            setTimeout(() => {
+                setEnemy1Name('monster-skull');
+                setEnemy2Name('snail');
+                setEnemy1Hp(enemy1MaxHp);
+                setEnemy2Hp(enemy2MaxHp);
+                setEnemy1Visible(true);
+                setEnemy2Visible(true);
+                setIsBattleRunning(false);
+            }, 1000); // Wait for the fade out to finish
+            return;
+        }
+
         setIsBattleRunning(false);
     };
 
     const handlePointerDown = () => {
-        if (playerHp === 0 || (enemy1Hp === 0 && enemy2Hp === 0) || isBattleRunning) return;
+        if (playerHp === 0 || (enemy1Hp === 0 && enemy2Hp === 0 && !isBattleRunning && !enemy1Visible && !enemy2Visible) || isBattleRunning) return;
         setEngageProgress(0);
 
         let progress = 0;
@@ -457,7 +472,7 @@ export default function DailyRogueUI() {
                                     exit={{ opacity: 0, transition: { duration: 1 } }}
                                 >
                                     <motion.div animate={enemy1Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                                        <Icon name="wyvern" scale={4} tintColor="#15803d" />
+                                        <Icon name={enemy1Name} scale={4} tintColor={ICON_THEME[enemy1Name]} />
                                     </motion.div>
                                     <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
                                         <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
@@ -484,7 +499,7 @@ export default function DailyRogueUI() {
                                     exit={{ opacity: 0, transition: { duration: 1 } }}
                                 >
                                     <motion.div animate={enemy2Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                                        <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
+                                        <Icon name={enemy2Name} scale={4} tintColor={ICON_THEME[enemy2Name]} />
                                     </motion.div>
                                     <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
                                         <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>

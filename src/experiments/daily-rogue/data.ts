@@ -4,6 +4,8 @@ export const ICON_MAP = {
     // Enemies
     "wyvern": "wyvern",
     "octopus": "octopus",
+    "monster-skull": "monster-skull",
+    "snail": "snail",
 
     // Food
     "apple": "apple",
@@ -69,6 +71,8 @@ export const ICON_THEME: Record<IconName, string> = {
     "hood": "#7e22ce",   // Darker Purple (Hero)
     "wyvern": "#15803d",   // Dark Green (Enemy)
     "octopus": "#f9a8d4", // Light Pink (Enemy)
+    "monster-skull": "#ef4444", // Red (Enemy)
+    "snail": "#eab308", // Yellow (Enemy)
 
     // Food (Red)
     "apple": "#ef4444",
@@ -113,6 +117,8 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",
+    "monster-skull": "Enemy",
+    "snail": "Enemy",
 
     "apple": "+Health",
     "meat": "+Health",
@@ -149,6 +155,8 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",
+    "monster-skull": "Enemy",
+    "snail": "Enemy",
 
     "apple": "Food",
     "meat": "Food",
