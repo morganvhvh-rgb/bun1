@@ -135,7 +135,7 @@ export const useGameStore = create<GameState>()(
                 const category = ICON_CATEGORIES[item.name];
                 let targetSlots: number[] = [];
 
-                if (category === 'Food' || category === 'Special') {
+                if (category === 'Food' || category === 'Item') {
                     if (!state.unlockedSections[0]) return;
                     targetSlots = [0, 1];
                 }

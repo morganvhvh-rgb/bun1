@@ -46,9 +46,11 @@ export function HeroStatsPanel({
                         onClick={onCharacterClick}
                     />
                 </motion.div>
-                <div className="absolute bottom-0 -right-2 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none">
-                    {moves}
-                </div>
+                {moves >= 10 && (
+                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
+                        <i className="ra ra-muscle-up" />
+                    </div>
+                )}
             </div>
             <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
                 <div className="flex justify-between items-center">
@@ -64,6 +66,7 @@ export function HeroStatsPanel({
                 <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">7</span></div>
                 <div className="flex justify-between items-center whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
                 <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">4</span></div>
+                <div className="flex justify-between items-center"><span>Experience</span> <span className="text-zinc-300">{moves}</span></div>
                 <div className="flex justify-between items-center"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
             </div>
         </div>

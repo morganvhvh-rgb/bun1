@@ -365,14 +365,14 @@ export function GameLayout() {
                         {/* Kept Icons Row */}
                         <div className="w-full flex justify-center items-center shrink-0 mb-6">
                             <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
-                                {/* Food / Special */}
+                                {/* Food / Item */}
                                 <div
                                     className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative"
                                     onClick={() => handleInventoryClick(0)}
                                 >
                                     {!unlockedSections[0] ? (
                                         <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
-                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Special</span>
+                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                             {isUnlockingMode ? (
                                                 <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
                                             ) : (
@@ -383,7 +383,7 @@ export function GameLayout() {
                                         <>
                                             {!keptIcons[0] && !keptIcons[1] && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
-                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Special</span>
+                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                                 </div>
                                             )}
                                             {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0] as IconName]} /></div>}

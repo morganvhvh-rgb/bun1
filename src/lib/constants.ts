@@ -183,7 +183,7 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 
     "key": "Special",
     "scroll-unfurled": "Special",
-    "book": "Special",
+    "book": "Item",
 
     "bell": "Music",
     "ocarina": "Music",
