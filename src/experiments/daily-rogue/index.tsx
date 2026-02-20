@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
@@ -14,6 +14,141 @@ export default function DailyRogueUI() {
     const [moves, setMoves] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+
+    // Battle Animation States
+    const [playerAnim, setPlayerAnim] = useState<'idle' | 'attack' | 'hurt'>('idle');
+    const [enemy1Anim, setEnemy1Anim] = useState<'idle' | 'attack' | 'hurt'>('idle');
+    const [enemy2Anim, setEnemy2Anim] = useState<'idle' | 'attack' | 'hurt'>('idle');
+    const [isBattleRunning, setIsBattleRunning] = useState(false);
+
+    // Battle Stats
+    const [playerHp, setPlayerHp] = useState(50);
+    const [playerMaxHp] = useState(50);
+    const [playerBaseAtk] = useState(5);
+
+    const [enemy1Hp, setEnemy1Hp] = useState(10);
+    const [enemy1MaxHp] = useState(10);
+    const [enemy1Atk] = useState(5);
+
+    const [enemy2Hp, setEnemy2Hp] = useState(10);
+    const [enemy2MaxHp] = useState(10);
+    const [enemy2Atk] = useState(5);
+
+    const [engageProgress, setEngageProgress] = useState(0);
+    const engageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (engageIntervalRef.current) clearInterval(engageIntervalRef.current);
+        };
+    }, []);
+
+    const handleBattleSequence = async () => {
+        if (isBattleRunning) return;
+        setIsBattleRunning(true);
+
+        const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+        let pHP = playerHp;
+        let e1HP = enemy1Hp;
+        let e2HP = enemy2Hp;
+
+        const pAtk = playerBaseAtk;
+        const e1AtkVal = enemy1Atk;
+        const e2AtkVal = enemy2Atk;
+
+        if (pHP === 0 || (e1HP === 0 && e2HP === 0)) {
+            setIsBattleRunning(false);
+            return;
+        }
+
+        while (pHP > 0 && (e1HP > 0 || e2HP > 0)) {
+            setPlayerAnim('attack');
+            await delay(200);
+            setPlayerAnim('idle');
+
+            let target = e1HP > 0 ? 1 : 2;
+            if (target === 1) {
+                e1HP = Math.max(0, e1HP - pAtk);
+                setEnemy1Hp(e1HP);
+                setEnemy1Anim('hurt');
+                await delay(400);
+                setEnemy1Anim('idle');
+            } else {
+                e2HP = Math.max(0, e2HP - pAtk);
+                setEnemy2Hp(e2HP);
+                setEnemy2Anim('hurt');
+                await delay(400);
+                setEnemy2Anim('idle');
+            }
+
+            if (e1HP === 0 && e2HP === 0) break;
+
+            await delay(200);
+
+            if (e1HP > 0) {
+                setEnemy1Anim('attack');
+                await delay(200);
+                setEnemy1Anim('idle');
+
+                pHP = Math.max(0, pHP - e1AtkVal);
+                setPlayerHp(pHP);
+                setPlayerAnim('hurt');
+                await delay(400);
+                setPlayerAnim('idle');
+            }
+
+            if (pHP === 0) break;
+            await delay(200);
+
+            if (e2HP > 0) {
+                setEnemy2Anim('attack');
+                await delay(200);
+                setEnemy2Anim('idle');
+
+                pHP = Math.max(0, pHP - e2AtkVal);
+                setPlayerHp(pHP);
+                setPlayerAnim('hurt');
+                await delay(400);
+                setPlayerAnim('idle');
+            }
+
+            if (pHP === 0) break;
+
+            await delay(200);
+        }
+
+        setIsBattleRunning(false);
+    };
+
+    const handlePointerDown = () => {
+        if (playerHp === 0 || (enemy1Hp === 0 && enemy2Hp === 0) || isBattleRunning) return;
+        setEngageProgress(0);
+
+        let progress = 0;
+        engageIntervalRef.current = setInterval(() => {
+            progress += 5;
+            if (progress >= 100) {
+                clearInterval(engageIntervalRef.current!);
+                engageIntervalRef.current = null;
+                setEngageProgress(100);
+                setTimeout(() => {
+                    handleBattleSequence();
+                    setEngageProgress(0);
+                }, 50);
+            } else {
+                setEngageProgress(progress);
+            }
+        }, 50);
+    };
+
+    const handlePointerUpOrLeave = () => {
+        if (engageIntervalRef.current) {
+            clearInterval(engageIntervalRef.current);
+            engageIntervalRef.current = null;
+        }
+        setEngageProgress(0);
+    };
 
     // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
@@ -235,6 +370,23 @@ export default function DailyRogueUI() {
         }
     };
 
+    const playerIconVariants = {
+        idle: { scale: 1, x: 0, y: 0 },
+        attack: { scale: 1.3, x: 20, y: -10, transition: { duration: 0.2, ease: "easeOut" } },
+        hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.4 } }
+    };
+
+    const enemyIconVariants = {
+        idle: { scale: 1, x: 0, y: 0 },
+        attack: { scale: 1.3, x: -20, y: 10, transition: { duration: 0.2, ease: "easeOut" } },
+        hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.4 } }
+    };
+
+    const hpVariants = {
+        idle: { color: '#d4d4d8', scale: 1 },
+        hurt: { color: '#ef4444', scale: [1, 1.5, 1], transition: { duration: 0.4 } }
+    };
+
     const controlButtonClass =
         "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -253,21 +405,32 @@ export default function DailyRogueUI() {
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
                         <div className="relative flex">
-                            <Icon
-                                name="hood"
-                                scale={4}
-                                tintColor="#7e22ce"
-                                className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
-                                onClick={() => setIsCharacterModalOpen(true)}
-                            />
-                            <div className="absolute bottom-0 -right-2 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
+                            <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
+                                <Icon
+                                    name="hood"
+                                    scale={4}
+                                    tintColor="#7e22ce"
+                                    className={cn("cursor-pointer hover:brightness-110 transition-all active:scale-95", isBattleRunning && "pointer-events-none")}
+                                    onClick={() => !isBattleRunning && setIsCharacterModalOpen(true)}
+                                />
+                            </motion.div>
+                            <div className="absolute bottom-0 -right-2 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none">
                                 {moves}
                             </div>
                         </div>
                         <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
-                            <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">50/50</span></div>
+                            <div className="flex justify-between items-center">
+                                <span>HP</span>
+                                <motion.span
+                                    animate={playerAnim === 'hurt' ? "hurt" : "idle"}
+                                    variants={hpVariants}
+                                    className="text-zinc-300 inline-block origin-right"
+                                >
+                                    {playerHp}/{playerMaxHp}
+                                </motion.span>
+                            </div>
                             <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">7</span></div>
-                            <div className="flex justify-between items-center whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
+                            <div className="flex justify-between items-center whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
                             <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">4</span></div>
                             <div className="flex justify-between items-center"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
                         </div>
@@ -276,19 +439,41 @@ export default function DailyRogueUI() {
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
-                            <Icon name="wyvern" scale={4} tintColor="#15803d" />
+                            <motion.div animate={enemy1Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                                <Icon name="wyvern" scale={4} tintColor="#15803d" />
+                            </motion.div>
                             <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
                                 <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">10/10</span></div>
-                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                                <div className="flex justify-between items-center">
+                                    <span>HP</span>
+                                    <motion.span
+                                        animate={enemy1Anim === 'hurt' ? "hurt" : "idle"}
+                                        variants={hpVariants}
+                                        className="text-zinc-300 inline-block origin-right"
+                                    >
+                                        {enemy1Hp}/{enemy1MaxHp}
+                                    </motion.span>
+                                </div>
+                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy1Atk}</span></div>
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
+                            <motion.div animate={enemy2Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                                <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
+                            </motion.div>
                             <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
                                 <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">10/10</span></div>
-                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                                <div className="flex justify-between items-center">
+                                    <span>HP</span>
+                                    <motion.span
+                                        animate={enemy2Anim === 'hurt' ? "hurt" : "idle"}
+                                        variants={hpVariants}
+                                        className="text-zinc-300 inline-block origin-right"
+                                    >
+                                        {enemy2Hp}/{enemy2MaxHp}
+                                    </motion.span>
+                                </div>
+                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy2Atk}</span></div>
                             </div>
                         </div>
 
@@ -296,10 +481,21 @@ export default function DailyRogueUI() {
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
-                                className="w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase flex items-center justify-center text-center leading-none whitespace-nowrap"
+                                onPointerDown={handlePointerDown}
+                                onPointerUp={handlePointerUpOrLeave}
+                                onPointerLeave={handlePointerUpOrLeave}
+                                disabled={isBattleRunning}
+                                className={cn(
+                                    "relative overflow-hidden w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase flex items-center justify-center text-center leading-none whitespace-nowrap select-none touch-none",
+                                    isBattleRunning && "opacity-50 cursor-not-allowed pointer-events-none"
+                                )}
                                 title="Attack"
                             >
-                                ENGAGE
+                                <div
+                                    className="absolute left-0 top-0 bottom-0 bg-red-900/50 transition-all duration-75 ease-linear pointer-events-none"
+                                    style={{ width: `${engageProgress}%` }}
+                                />
+                                <span className="relative z-10">ENGAGE</span>
                             </motion.button>
                         </div>
                     </div>
