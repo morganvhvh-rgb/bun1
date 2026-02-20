@@ -13,6 +13,7 @@ export default function DailyRogueUI() {
     const [gold, setGold] = useState(100);
     const [moves, setMoves] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
@@ -58,6 +59,8 @@ export default function DailyRogueUI() {
         setSpinKey(prev => prev + 1);
         resetSelection();
         setHasMoved(false);
+        setIsAnimating(true);
+        setTimeout(() => setIsAnimating(false), 1000);
     };
 
     const handleVary = () => {
@@ -75,7 +78,11 @@ export default function DailyRogueUI() {
         resetSelection();
         setHasMoved(false);
         setIsShaking(true);
-        setTimeout(() => setIsShaking(false), 400);
+        setIsAnimating(true);
+        setTimeout(() => {
+            setIsShaking(false);
+            setIsAnimating(false);
+        }, 400);
     };
 
 
@@ -83,6 +90,8 @@ export default function DailyRogueUI() {
     const getIndex = (row: number, col: number) => row * 4 + col;
 
     const handleIconClick = (item: GridItem, index: number) => {
+        if (isAnimating) return;
+
         // If clicking a glowing target (Movement)
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
             const character = gridIcons[activeHoodedIndex];
@@ -216,7 +225,7 @@ export default function DailyRogueUI() {
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.5, rotate: 0 },
+        hidden: { opacity: 0, scale: 0.5, rotate: -180 },
         show: { opacity: 1, scale: 1, rotate: 0 },
         shake: {
             opacity: 1,
@@ -352,7 +361,7 @@ export default function DailyRogueUI() {
                                                     key={item?.id ?? `empty-${index}`}
                                                     layout
                                                     variants={itemVariants}
-                                                    animate={isShaking ? "shake" : "show"}
+                                                    animate={isShaking ? "shake" : undefined}
                                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                     className={cn(
                                                         "w-14 h-14 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
@@ -447,7 +456,7 @@ export default function DailyRogueUI() {
                             <div className="flex flex-col gap-3 mt-[1.875rem]"> {/* Gap matches grid gap-3 */}
                                 <motion.button
                                     onClick={handleSpin}
-                                    disabled={gold < 1}
+                                    disabled={gold < 1 || isAnimating}
                                     whileTap={{ scale: 0.95 }}
                                     className={controlButtonClass}
                                     title="Spin"
@@ -457,7 +466,7 @@ export default function DailyRogueUI() {
 
                                 <motion.button
                                     onClick={handleVary}
-                                    disabled={gold < 1}
+                                    disabled={gold < 1 || isAnimating}
                                     whileTap={{ scale: 0.95 }}
                                     className={controlButtonClass}
                                     title="Shuffle"
