@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ICON_MAP, type IconName } from './data';
+import { ICON_MAP } from '@/lib/constants';
+import type { IconName } from '@/types/game';
 import 'rpg-awesome/css/rpg-awesome.min.css';
 
 export interface IconProps {

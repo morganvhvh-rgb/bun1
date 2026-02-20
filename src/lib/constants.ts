@@ -188,8 +188,3 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "bell": "Music",
     "ocarina": "Music",
 };
-
-export interface GridItem {
-    id: string;
-    name: IconName;
-}
