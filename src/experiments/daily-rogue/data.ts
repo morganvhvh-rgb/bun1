@@ -120,35 +120,35 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "monster-skull": "Enemy",
     "snail": "Enemy",
 
-    "apple": "+Health",
-    "meat": "+Health",
-    "crab-claw": "+Health",
-    "brandy-bottle": "+Mana",
+    "apple": "Heal 6 HP",
+    "meat": "Heal 10 HP",
+    "crab-claw": "+1 Max HP",
+    "brandy-bottle": "-50% HP & +4 Max HP",
 
-    "clover": "Luck",
-    "pine-tree": "Cover",
-    "zigzag-leaf": "Hiding",
+    "clover": "+1 EXP +1 Magic",
+    "pine-tree": "+1 EXP",
+    "zigzag-leaf": "-3 EXP +5 Magic",
 
-    "axe": "Cleave",
-    "relic-blade": "Slash",
-    "crossbow": "Pierce",
-    "daggers": "Backstab",
+    "axe": "+2 ATK +1 Gear",
+    "relic-blade": "+1 ATK +1 Gear",
+    "crossbow": "+1 ATK +1 Gear",
+    "daggers": "+1 ATK +1 Gear",
 
-    "shield": "Block",
-    "knight-helmet": "Head",
+    "shield": "+2 Gear",
+    "knight-helmet": "+2 Gear",
 
-    "crystal-wand": "Zap",
-    "fairy-wand": "Charm",
+    "crystal-wand": "+5 Magic",
+    "fairy-wand": "+5 Magic",
 
-    "gold-bar": "Wealth",
-    "gem-pendant": "Shiny",
+    "gold-bar": "+10 gold",
+    "gem-pendant": "+10 Gold",
 
-    "key": "Open",
-    "scroll-unfurled": "Learn",
-    "book": "Read",
+    "key": "???",
+    "scroll-unfurled": "???",
+    "book": "???",
 
-    "bell": "Ring",
-    "ocarina": "Tuut",
+    "bell": "-1 ATK",
+    "ocarina": "-1 ATK",
 };
 
 export const ICON_CATEGORIES: Record<IconName, string> = {

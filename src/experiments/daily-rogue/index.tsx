@@ -676,7 +676,7 @@ export default function DailyRogueUI() {
                                                 <span className="text-zinc-600 mx-2">-</span>
                                                 <span className="text-zinc-500">{ICON_CATEGORIES[gridIcons[selectedIndex]!.name]}</span>
                                             </div>
-                                            <div className="text-xs font-medium tracking-wider text-green-400/80 uppercase">
+                                            <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
                                                 {ICON_STATS[gridIcons[selectedIndex]!.name] || "???"}
                                             </div>
                                             <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
