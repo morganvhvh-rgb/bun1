@@ -20,6 +20,8 @@ export function GameLayout() {
         playerBaseAtk,
         enemy1,
         enemy2,
+        unlockedSections,
+        isUnlockingMode,
         spinBoard,
         shuffleBoard,
         moveCharacter,
@@ -28,8 +30,15 @@ export function GameLayout() {
         applyBattleDamage,
         setEnemyVisibility,
         resetBattleTarget,
-        resetGame
+        resetGame,
+        unlockSection
     } = useGameStore();
+
+    const handleInventoryClick = (sectionId: 0 | 1 | 2) => {
+        if (isUnlockingMode && !unlockedSections[sectionId]) {
+            unlockSection(sectionId);
+        }
+    };
 
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -191,7 +200,7 @@ export function GameLayout() {
     };
 
     const handleSpin = () => {
-        if (gold < 1) return;
+        if (gold < 1 || isUnlockingMode) return;
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
@@ -201,7 +210,7 @@ export function GameLayout() {
     };
 
     const handleVary = () => {
-        if (gold < 1) return;
+        if (gold < 1 || isUnlockingMode) return;
         shuffleBoard();
         resetSelection();
         setHasMoved(false);
@@ -217,7 +226,7 @@ export function GameLayout() {
     const getIndex = (row: number, col: number) => row * 4 + col;
 
     const handleIconClick = (item: GridItem, index: number) => {
-        if (isAnimating) return;
+        if (isAnimating || isUnlockingMode) return;
 
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
             const character = gridIcons[activeHoodedIndex];
@@ -357,14 +366,26 @@ export function GameLayout() {
                         <div className="w-full flex justify-center items-center shrink-0 mb-6">
                             <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
                                 {/* Food / Special */}
-                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
-                                    {!keptIcons[0] && !keptIcons[1] ? (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                <div
+                                    className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative"
+                                    onClick={() => handleInventoryClick(0)}
+                                >
+                                    {!unlockedSections[0] ? (
+                                        <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
                                             <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Special</span>
-                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            {isUnlockingMode ? (
+                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                            ) : (
+                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            )}
                                         </div>
                                     ) : (
                                         <>
+                                            {!keptIcons[0] && !keptIcons[1] && (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Special</span>
+                                                </div>
+                                            )}
                                             {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0] as IconName]} /></div>}
                                             {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[1]} scale={3} tintColor={ICON_THEME[keptIcons[1] as IconName]} /></div>}
                                         </>
@@ -372,14 +393,26 @@ export function GameLayout() {
                                 </div>
                                 <div className="w-px h-6 bg-zinc-800 shrink-0 mx-1" />
                                 {/* Armor / Magic */}
-                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
-                                    {!keptIcons[2] && !keptIcons[3] ? (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                <div
+                                    className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative"
+                                    onClick={() => handleInventoryClick(1)}
+                                >
+                                    {!unlockedSections[1] ? (
+                                        <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
                                             <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
-                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            {isUnlockingMode ? (
+                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                            ) : (
+                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            )}
                                         </div>
                                     ) : (
                                         <>
+                                            {!keptIcons[2] && !keptIcons[3] && (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
+                                                </div>
+                                            )}
                                             {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[2]} scale={3} tintColor={ICON_THEME[keptIcons[2] as IconName]} /></div>}
                                             {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[3]} scale={3} tintColor={ICON_THEME[keptIcons[3] as IconName]} /></div>}
                                         </>
@@ -387,14 +420,26 @@ export function GameLayout() {
                                 </div>
                                 <div className="w-px h-6 bg-zinc-800 shrink-0 mx-1" />
                                 {/* Weapon / Music */}
-                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
-                                    {!keptIcons[4] && !keptIcons[5] ? (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                <div
+                                    className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative"
+                                    onClick={() => handleInventoryClick(2)}
+                                >
+                                    {!unlockedSections[2] ? (
+                                        <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
                                             <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
-                                            <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            {isUnlockingMode ? (
+                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                            ) : (
+                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                            )}
                                         </div>
                                     ) : (
                                         <>
+                                            {!keptIcons[4] && !keptIcons[5] && (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
+                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
+                                                </div>
+                                            )}
                                             {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[4]} scale={3} tintColor={ICON_THEME[keptIcons[4] as IconName]} /></div>}
                                             {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[5]} scale={3} tintColor={ICON_THEME[keptIcons[5] as IconName]} /></div>}
                                         </>
@@ -417,10 +462,10 @@ export function GameLayout() {
                             />
 
                             <div className="flex flex-col gap-3 mt-[1.875rem]">
-                                <motion.button onClick={handleSpin} disabled={gold < 1 || isAnimating} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
+                                <motion.button onClick={handleSpin} disabled={gold < 1 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
-                                <motion.button onClick={handleVary} disabled={gold < 1 || isAnimating} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
+                                <motion.button onClick={handleVary} disabled={gold < 1 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
                                     <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
                             </div>

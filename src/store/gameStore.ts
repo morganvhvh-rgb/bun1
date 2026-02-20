@@ -9,6 +9,8 @@ interface GameState {
     grid: (GridItem | null)[];
     keptIcons: (IconName | null)[];
     keptScrolls: IconName[];
+    unlockedSections: { 0: boolean; 1: boolean; 2: boolean };
+    isUnlockingMode: boolean;
 
     // Stats & Resources
     gold: number;
@@ -28,6 +30,7 @@ interface GameState {
     moveCharacter: (fromIndex: number, toIndex: number) => void;
     keepItem: (item: GridItem) => void;
     keepScroll: (item: GridItem) => void;
+    unlockSection: (sectionId: 0 | 1 | 2) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
 
@@ -62,6 +65,8 @@ export const useGameStore = create<GameState>()(
             grid: generateRandomIcons(),
             keptIcons: [null, null, null, null, null, null],
             keptScrolls: [],
+            unlockedSections: { 0: false, 1: false, 2: false },
+            isUnlockingMode: false,
 
             gold: 100,
             moves: 0,
@@ -101,6 +106,8 @@ export const useGameStore = create<GameState>()(
                 const pCoords = getCoordinates(fromIndex);
                 const tCoords = getCoordinates(toIndex);
 
+                const targetHasKey = state.grid[toIndex]?.name === 'key';
+
                 // Clear path logically
                 if (pCoords.row === tCoords.row) { // Horizontal
                     const min = Math.min(pCoords.col, tCoords.col);
@@ -114,6 +121,12 @@ export const useGameStore = create<GameState>()(
 
                 state.grid[toIndex] = { ...character };
                 state.moves += 1;
+
+                if (targetHasKey) {
+                    if (!state.unlockedSections[0] || !state.unlockedSections[1] || !state.unlockedSections[2]) {
+                        state.isUnlockingMode = true;
+                    }
+                }
             }),
 
             keepItem: (item) => set((state) => {
@@ -122,9 +135,18 @@ export const useGameStore = create<GameState>()(
                 const category = ICON_CATEGORIES[item.name];
                 let targetSlots: number[] = [];
 
-                if (category === 'Food' || category === 'Special') targetSlots = [0, 1];
-                else if (category === 'Armor' || category === 'Magic') targetSlots = [2, 3];
-                else if (category === 'Weapon' || category === 'Music') targetSlots = [4, 5];
+                if (category === 'Food' || category === 'Special') {
+                    if (!state.unlockedSections[0]) return;
+                    targetSlots = [0, 1];
+                }
+                else if (category === 'Armor' || category === 'Magic') {
+                    if (!state.unlockedSections[1]) return;
+                    targetSlots = [2, 3];
+                }
+                else if (category === 'Weapon' || category === 'Music') {
+                    if (!state.unlockedSections[2]) return;
+                    targetSlots = [4, 5];
+                }
 
                 if (targetSlots.length > 0) {
                     const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
@@ -139,6 +161,13 @@ export const useGameStore = create<GameState>()(
                 if (state.keptScrolls.length >= 6) return;
                 state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                 state.keptScrolls.push(item.name);
+            }),
+
+            unlockSection: (sectionId) => set((state) => {
+                if (state.isUnlockingMode && !state.unlockedSections[sectionId]) {
+                    state.unlockedSections[sectionId] = true;
+                    state.isUnlockingMode = false;
+                }
             }),
 
             applyBattleDamage: (target, amount) => set((state) => {
@@ -168,6 +197,8 @@ export const useGameStore = create<GameState>()(
                 state.grid = generateRandomIcons();
                 state.keptIcons = [null, null, null, null, null, null];
                 state.keptScrolls = [];
+                state.unlockedSections = { 0: false, 1: false, 2: false };
+                state.isUnlockingMode = false;
                 state.gold = 100;
                 state.moves = 0;
                 state.playerHp = 50;
