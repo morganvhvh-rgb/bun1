@@ -12,6 +12,7 @@ export default function DailyRogueUI() {
     const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
     const [moves, setMoves] = useState(0);
+    const [isShaking, setIsShaking] = useState(false);
 
     // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
@@ -73,6 +74,8 @@ export default function DailyRogueUI() {
         });
         resetSelection();
         setHasMoved(false);
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 400);
     };
 
 
@@ -213,8 +216,14 @@ export default function DailyRogueUI() {
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.5 },
-        show: { opacity: 1, scale: 1 }
+        hidden: { opacity: 0, scale: 0.5, rotate: 0 },
+        show: { opacity: 1, scale: 1, rotate: 0 },
+        shake: {
+            opacity: 1,
+            scale: 1,
+            rotate: [0, -10, 10, -10, 10, 0],
+            transition: { duration: 0.4 }
+        }
     };
 
     const controlButtonClass =
@@ -343,6 +352,7 @@ export default function DailyRogueUI() {
                                                     key={item?.id ?? `empty-${index}`}
                                                     layout
                                                     variants={itemVariants}
+                                                    animate={isShaking ? "shake" : "show"}
                                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                     className={cn(
                                                         "w-14 h-14 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
