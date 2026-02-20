@@ -297,7 +297,7 @@ export default function DailyRogueUI() {
                             <div className="flex gap-2 min-h-[3.5rem] items-center">
                                 {keptIcons.length > 0 ? keptIcons.map((name, i) => (
                                     <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
-                                        <Icon name={name} scale={3} />
+                                        <Icon name={name} scale={3} tintColor={ICON_THEME[name]} />
                                     </div>
                                 )) : <div className="text-zinc-800 text-xs tracking-widest uppercase">No items kept</div>}
                             </div>
@@ -338,9 +338,11 @@ export default function DailyRogueUI() {
                                                     variants={itemVariants}
                                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                     className={cn(
-                                                        "w-12 h-12 flex items-center justify-center relative",
+                                                        "w-12 h-12 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
                                                         // Matching (3+ adjacent) Glow - Strong Pink
-                                                        (!glowingIndices.includes(index) && isMatching) && "drop-shadow-[0_0_15px_rgba(255,20,147,1)] brightness-125"
+                                                        (!glowingIndices.includes(index) && isMatching) ? "ring-pink-500" :
+                                                            // Selected state
+                                                            (selectedIndex === index && !glowingIndices.includes(index)) ? "ring-white" : "ring-transparent"
                                                     )}
                                                 >
                                                     {isTarget && (
@@ -372,7 +374,7 @@ export default function DailyRogueUI() {
                                                             tintColor={ICON_THEME[item.name]}
                                                             onClick={() => handleIconClick(item, index)}
                                                             className={cn(
-                                                                selectedIndex === index && !glowingIndices.includes(index) ? "brightness-125 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "hover:brightness-110 transition-all active:scale-95",
+                                                                "hover:brightness-110 transition-all active:scale-95",
                                                                 // Active hooded distinct style
                                                                 (activeHoodedIndex === index && item.name === 'hood') && "brightness-125"
                                                             )}
