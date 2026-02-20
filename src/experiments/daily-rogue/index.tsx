@@ -8,7 +8,7 @@ export default function DailyRogueUI() {
     const [gridIcons, setGridIcons] = useState<(GridItem | null)[]>(() => generateRandomIcons());
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [keptIcons, setKeptIcons] = useState<IconName[]>([]);
+    const [keptIcons, setKeptIcons] = useState<(IconName | null)[]>([null, null, null, null, null, null]);
     const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
     const [moves, setMoves] = useState(0);
@@ -319,9 +319,28 @@ export default function DailyRogueUI() {
                 return;
             }
 
-            if (keptIcons.length >= 6) return;
-            setGridIcons(prev => prev.map(s => s?.id === item.id ? null : s));
-            setKeptIcons(prev => [...prev, item.name]);
+            const category = ICON_CATEGORIES[item.name];
+            if (category === 'Nature' || category === 'Treasure') {
+                resetSelection();
+                return;
+            }
+
+            let targetSlots: number[] = [];
+            if (category === 'Food' || category === 'Item') targetSlots = [0, 1];
+            else if (category === 'Armor' || category === 'Magic') targetSlots = [2, 3];
+            else if (category === 'Weapon' || category === 'Music') targetSlots = [4, 5];
+
+            if (targetSlots.length > 0) {
+                const emptySlotIndex = targetSlots.find(slot => keptIcons[slot] === null);
+                if (emptySlotIndex !== undefined) {
+                    setGridIcons(prev => prev.map(s => s?.id === item.id ? null : s));
+                    setKeptIcons(prev => {
+                        const next = [...prev];
+                        next[emptySlotIndex] = item.name;
+                        return next;
+                    });
+                }
+            }
             resetSelection();
         } else {
             setSelectedIndex(index);
@@ -528,7 +547,8 @@ export default function DailyRogueUI() {
                                 onPointerLeave={handlePointerUpOrLeave}
                                 onPointerCancel={handlePointerUpOrLeave}
                                 onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                style={{ WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
+                                onTouchStart={(e) => e.preventDefault()}
+                                style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
                                 disabled={isBattleRunning}
                                 className={cn(
                                     "relative overflow-hidden w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase flex items-center justify-center text-center leading-none whitespace-nowrap select-none touch-none",
@@ -560,12 +580,42 @@ export default function DailyRogueUI() {
 
                         {/* Kept Icons Row */}
                         <div className="w-full flex justify-center items-center shrink-0 mb-6">
-                            <div className="flex gap-2 min-h-[3.5rem] items-center">
-                                {keptIcons.length > 0 ? keptIcons.map((name, i) => (
-                                    <div key={i} className="shrink-0 w-12 h-12 flex items-center justify-center">
-                                        <Icon name={name} scale={3} tintColor={ICON_THEME[name]} />
-                                    </div>
-                                )) : <div className="text-zinc-800 text-xs tracking-widest uppercase">No items kept</div>}
+                            <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
+                                {/* Food / Item */}
+                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
+                                    {!keptIcons[0] && !keptIcons[1] ? (
+                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Food/Item</div>
+                                    ) : (
+                                        <>
+                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0]]} /></div>}
+                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[1]} scale={3} tintColor={ICON_THEME[keptIcons[1]]} /></div>}
+                                        </>
+                                    )}
+                                </div>
+                                <div className="w-px h-6 bg-zinc-800 shrink-0 mx-1" />
+                                {/* Armor / Magic */}
+                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
+                                    {!keptIcons[2] && !keptIcons[3] ? (
+                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Armor/Magic</div>
+                                    ) : (
+                                        <>
+                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[2]} scale={3} tintColor={ICON_THEME[keptIcons[2]]} /></div>}
+                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[3]} scale={3} tintColor={ICON_THEME[keptIcons[3]]} /></div>}
+                                        </>
+                                    )}
+                                </div>
+                                <div className="w-px h-6 bg-zinc-800 shrink-0 mx-1" />
+                                {/* Weapon / Music */}
+                                <div className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative">
+                                    {!keptIcons[4] && !keptIcons[5] ? (
+                                        <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap pointer-events-none">Weapon/Music</div>
+                                    ) : (
+                                        <>
+                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[4]} scale={3} tintColor={ICON_THEME[keptIcons[4]]} /></div>}
+                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[5]} scale={3} tintColor={ICON_THEME[keptIcons[5]]} /></div>}
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
