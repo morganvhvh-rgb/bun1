@@ -11,6 +11,7 @@ export default function DailyRogueUI() {
     const [keptIcons, setKeptIcons] = useState<IconName[]>([]);
     const [keptScrolls, setKeptScrolls] = useState<IconName[]>([]);
     const [gold, setGold] = useState(100);
+    const [moves, setMoves] = useState(0);
 
     // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
@@ -107,6 +108,7 @@ export default function DailyRogueUI() {
 
                 resetSelection();
                 setHasMoved(true);
+                setMoves(m => m + 1);
                 return;
             }
         }
@@ -232,19 +234,24 @@ export default function DailyRogueUI() {
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
                     {/* Left Section */}
                     <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
-                        <Icon
-                            name="hood"
-                            scale={4}
-                            tintColor="#7e22ce"
-                            className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
-                            onClick={() => setIsCharacterModalOpen(true)}
-                        />
-                        <div className="flex flex-col w-full px-1.5 sm:px-2 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">50</span></div>
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Magic</span> <span className="text-zinc-300">7</span></div>
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50 whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Gear</span> <span className="text-zinc-300">4</span></div>
-                            <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
+                        <div className="relative flex">
+                            <Icon
+                                name="hood"
+                                scale={4}
+                                tintColor="#7e22ce"
+                                className="cursor-pointer hover:brightness-110 transition-all active:scale-95"
+                                onClick={() => setIsCharacterModalOpen(true)}
+                            />
+                            <div className="absolute bottom-0 -right-2 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
+                                {moves}
+                            </div>
+                        </div>
+                        <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+                            <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">50/50</span></div>
+                            <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">7</span></div>
+                            <div className="flex justify-between items-center whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">3</span></div>
+                            <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">4</span></div>
+                            <div className="flex justify-between items-center"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
                         </div>
                     </div>
 
@@ -252,18 +259,18 @@ export default function DailyRogueUI() {
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
                         <div className="flex flex-col items-center gap-2">
                             <Icon name="wyvern" scale={4} tintColor="#15803d" />
-                            <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                            <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+                                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">10/10</span></div>
+                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">5</span></div>
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
-                            <div className="flex flex-col w-20 sm:w-24 px-1 text-[10px] sm:text-[11px] tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium">
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>HP</span> <span className="text-zinc-300">10</span></div>
-                                <div className="flex justify-between items-center h-8 border-b border-zinc-800/50"><span>Atk</span> <span className="text-zinc-300">5</span></div>
+                            <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+                                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                <div className="flex justify-between items-center"><span>HP</span> <span className="text-zinc-300">10/10</span></div>
+                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">5</span></div>
                             </div>
                         </div>
 
@@ -338,7 +345,7 @@ export default function DailyRogueUI() {
                                                     variants={itemVariants}
                                                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                                     className={cn(
-                                                        "w-12 h-12 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
+                                                        "w-14 h-14 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
                                                         // Matching (3+ adjacent) Glow - Strong Pink
                                                         (!glowingIndices.includes(index) && isMatching) ? "ring-pink-500" :
                                                             // Selected state
@@ -386,10 +393,10 @@ export default function DailyRogueUI() {
                                                                     // Handle click on empty glowing cell
                                                                     if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as any, index);
                                                                 }}
-                                                                className="w-12 h-12 cursor-pointer"
+                                                                className="w-14 h-14 cursor-pointer"
                                                             />
                                                         ) : (
-                                                            <div className="w-12 h-12" />
+                                                            <div className="w-14 h-14" />
                                                         )
                                                     )}
                                                 </motion.div>
