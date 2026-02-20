@@ -452,7 +452,11 @@ export default function DailyRogueUI() {
                         </div>
                     </div>
 
-                    <div className="hidden" />
+                    {/* Donation Placeholder */}
+                    <div className="absolute bottom-6 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
+                        <i className="ra ra-coffee-mug text-lg" />
+                        <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
+                    </div>
 
                     <div className="absolute bottom-6 right-6 z-50">
                         <Sprite
@@ -462,7 +466,7 @@ export default function DailyRogueUI() {
                             className="cursor-pointer hover:scale-105 transition-transform"
                             onClick={() => setIsScrollWindowOpen(true)}
                         />
-                        <div className="absolute -bottom-1 -left-1 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
+                        <div className="absolute bottom-0 -left-1 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
                             {keptScrolls.length}
                         </div>
                     </div>
