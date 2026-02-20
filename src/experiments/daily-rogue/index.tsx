@@ -34,6 +34,9 @@ export default function DailyRogueUI() {
     const [enemy2MaxHp] = useState(10);
     const [enemy2Atk] = useState(5);
 
+    const [enemy1Visible, setEnemy1Visible] = useState(true);
+    const [enemy2Visible, setEnemy2Visible] = useState(true);
+
     const [engageProgress, setEngageProgress] = useState(0);
     const engageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -74,12 +77,20 @@ export default function DailyRogueUI() {
                 setEnemy1Anim('hurt');
                 await delay(400);
                 setEnemy1Anim('idle');
+                if (e1HP === 0) {
+                    await delay(50);
+                    setEnemy1Visible(false);
+                }
             } else {
                 e2HP = Math.max(0, e2HP - pAtk);
                 setEnemy2Hp(e2HP);
                 setEnemy2Anim('hurt');
                 await delay(400);
                 setEnemy2Anim('idle');
+                if (e2HP === 0) {
+                    await delay(50);
+                    setEnemy2Visible(false);
+                }
             }
 
             if (e1HP === 0 && e2HP === 0) break;
@@ -438,44 +449,60 @@ export default function DailyRogueUI() {
 
                     {/* Right Section */}
                     <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
-                        <div className="flex flex-col items-center gap-2">
-                            <motion.div animate={enemy1Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                                <Icon name="wyvern" scale={4} tintColor="#15803d" />
-                            </motion.div>
-                            <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
-                                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center">
-                                    <span>HP</span>
-                                    <motion.span
-                                        animate={enemy1Anim === 'hurt' ? "hurt" : "idle"}
-                                        variants={hpVariants}
-                                        className="text-zinc-300 inline-block origin-right"
-                                    >
-                                        {enemy1Hp}/{enemy1MaxHp}
-                                    </motion.span>
-                                </div>
-                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy1Atk}</span></div>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-center gap-2">
-                            <motion.div animate={enemy2Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                                <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
-                            </motion.div>
-                            <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
-                                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
-                                <div className="flex justify-between items-center">
-                                    <span>HP</span>
-                                    <motion.span
-                                        animate={enemy2Anim === 'hurt' ? "hurt" : "idle"}
-                                        variants={hpVariants}
-                                        className="text-zinc-300 inline-block origin-right"
-                                    >
-                                        {enemy2Hp}/{enemy2MaxHp}
-                                    </motion.span>
-                                </div>
-                                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy2Atk}</span></div>
-                            </div>
-                        </div>
+                        <AnimatePresence>
+                            {enemy1Visible && (
+                                <motion.div
+                                    className="flex flex-col items-center gap-2"
+                                    initial={{ opacity: 1 }}
+                                    exit={{ opacity: 0, transition: { duration: 1 } }}
+                                >
+                                    <motion.div animate={enemy1Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                                        <Icon name="wyvern" scale={4} tintColor="#15803d" />
+                                    </motion.div>
+                                    <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+                                        <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                        <div className="flex justify-between items-center">
+                                            <span>HP</span>
+                                            <motion.span
+                                                animate={enemy1Anim === 'hurt' ? "hurt" : "idle"}
+                                                variants={hpVariants}
+                                                className="text-zinc-300 inline-block origin-right"
+                                            >
+                                                {enemy1Hp}/{enemy1MaxHp}
+                                            </motion.span>
+                                        </div>
+                                        <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy1Atk}</span></div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                        <AnimatePresence>
+                            {enemy2Visible && (
+                                <motion.div
+                                    className="flex flex-col items-center gap-2"
+                                    initial={{ opacity: 1 }}
+                                    exit={{ opacity: 0, transition: { duration: 1 } }}
+                                >
+                                    <motion.div animate={enemy2Anim} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                                        <Icon name="octopus" scale={4} tintColor="#f9a8d4" />
+                                    </motion.div>
+                                    <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+                                        <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">1</span></div>
+                                        <div className="flex justify-between items-center">
+                                            <span>HP</span>
+                                            <motion.span
+                                                animate={enemy2Anim === 'hurt' ? "hurt" : "idle"}
+                                                variants={hpVariants}
+                                                className="text-zinc-300 inline-block origin-right"
+                                            >
+                                                {enemy2Hp}/{enemy2MaxHp}
+                                            </motion.span>
+                                        </div>
+                                        <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy2Atk}</span></div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         {/* New Action Buttons */}
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">
@@ -484,6 +511,9 @@ export default function DailyRogueUI() {
                                 onPointerDown={handlePointerDown}
                                 onPointerUp={handlePointerUpOrLeave}
                                 onPointerLeave={handlePointerUpOrLeave}
+                                onPointerCancel={handlePointerUpOrLeave}
+                                onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                style={{ WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
                                 disabled={isBattleRunning}
                                 className={cn(
                                     "relative overflow-hidden w-full max-w-xs h-12 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md focus:outline-none transition-colors text-zinc-300 text-sm tracking-[0.35em] font-semibold uppercase flex items-center justify-center text-center leading-none whitespace-nowrap select-none touch-none",
@@ -492,7 +522,7 @@ export default function DailyRogueUI() {
                                 title="Attack"
                             >
                                 <div
-                                    className="absolute left-0 top-0 bottom-0 bg-red-900/50 transition-all duration-75 ease-linear pointer-events-none"
+                                    className="absolute left-0 top-0 bottom-0 bg-red-500 transition-all duration-75 ease-linear pointer-events-none"
                                     style={{ width: `${engageProgress}%` }}
                                 />
                                 <span className="relative z-10">ENGAGE</span>
