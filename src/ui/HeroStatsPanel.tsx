@@ -7,6 +7,8 @@ interface HeroStatsPanelProps {
     playerHp: number;
     playerMaxHp: number;
     playerBaseAtk: number;
+    playerMagic: number;
+    playerGear: number;
     gold: number;
     moves: number;
     isBattleRunning: boolean;
@@ -29,6 +31,8 @@ export function HeroStatsPanel({
     playerHp,
     playerMaxHp,
     playerBaseAtk,
+    playerMagic,
+    playerGear,
     gold,
     moves,
     isBattleRunning,
@@ -63,9 +67,9 @@ export function HeroStatsPanel({
                         {playerHp}/{playerMaxHp}
                     </motion.span>
                 </div>
-                <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">7</span></div>
-                <div className="flex justify-between items-center whitespace-nowrap"><span>Base Atk</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
-                <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">4</span></div>
+                <div className="flex justify-between items-center whitespace-nowrap"><span>Attack</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
+                <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">{playerMagic}</span></div>
+                <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">{playerGear}</span></div>
                 <div className="flex justify-between items-center"><span>Experience</span> <span className="text-zinc-300">{moves}</span></div>
                 <div className="flex justify-between items-center"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
             </div>

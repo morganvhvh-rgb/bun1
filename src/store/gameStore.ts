@@ -20,6 +20,8 @@ interface GameState {
     playerHp: number;
     playerMaxHp: number;
     playerBaseAtk: number;
+    playerMagic: number;
+    playerGear: number;
 
     enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
     enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
@@ -75,6 +77,8 @@ export const useGameStore = create<GameState>()(
             playerHp: 50,
             playerMaxHp: 50,
             playerBaseAtk: 5,
+            playerMagic: 7,
+            playerGear: 4,
 
             enemy1: { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
             enemy2: { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
@@ -153,6 +157,28 @@ export const useGameStore = create<GameState>()(
                     if (emptySlotIndex !== undefined) {
                         state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                         state.keptIcons[emptySlotIndex] = item.name;
+
+                        switch (item.name) {
+                            case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 6); break;
+                            case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 10); break;
+                            case 'crab-claw': state.playerMaxHp += 1; state.playerHp += 1; break;
+                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += 4; state.playerHp += 4; break;
+                            case 'clover': state.moves += 1; state.playerMagic += 1; break;
+                            case 'pine-tree': state.moves += 1; break;
+                            case 'zigzag-leaf': state.moves = Math.max(0, state.moves - 3); state.playerMagic += 5; break;
+                            case 'axe': state.playerBaseAtk += 2; state.playerGear += 1; break;
+                            case 'relic-blade':
+                            case 'crossbow':
+                            case 'daggers': state.playerBaseAtk += 1; state.playerGear += 1; break;
+                            case 'shield':
+                            case 'knight-helmet': state.playerGear += 2; break;
+                            case 'crystal-wand':
+                            case 'fairy-wand': state.playerMagic += 5; break;
+                            case 'gold-bar':
+                            case 'gem-pendant': state.gold += 10; break;
+                            case 'bell':
+                            case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
+                        }
                     }
                 }
             }),
@@ -189,8 +215,16 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
-                state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
-                state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                if (state.enemy1.name === 'wyvern') {
+                    state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                } else if (state.enemy1.name === 'monster-skull') {
+                    state.enemy1 = { name: 'hydra', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'spider-face', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                } else {
+                    state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                }
             }),
 
             resetGame: () => set((state) => {
@@ -204,6 +238,8 @@ export const useGameStore = create<GameState>()(
                 state.playerHp = 50;
                 state.playerMaxHp = 50;
                 state.playerBaseAtk = 5;
+                state.playerMagic = 7;
+                state.playerGear = 4;
                 state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
                 state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
             }),

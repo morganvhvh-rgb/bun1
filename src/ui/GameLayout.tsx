@@ -18,6 +18,8 @@ export function GameLayout() {
         playerHp,
         playerMaxHp,
         playerBaseAtk,
+        playerMagic,
+        playerGear,
         enemy1,
         enemy2,
         unlockedSections,
@@ -339,6 +341,8 @@ export function GameLayout() {
                         playerHp={playerHp}
                         playerMaxHp={playerMaxHp}
                         playerBaseAtk={playerBaseAtk}
+                        playerMagic={playerMagic}
+                        playerGear={playerGear}
                         gold={gold}
                         moves={moves}
                         isBattleRunning={isBattleRunning}

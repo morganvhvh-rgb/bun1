@@ -6,6 +6,8 @@ export const ICON_MAP = {
     "octopus": "octopus",
     "monster-skull": "monster-skull",
     "snail": "snail",
+    "hydra": "hydra",
+    "spider-face": "spider-face",
 
     // Food
     "apple": "apple",
@@ -73,6 +75,8 @@ export const ICON_THEME: Record<IconName, string> = {
     "octopus": "#f9a8d4", // Light Pink (Enemy)
     "monster-skull": "#ef4444", // Red (Enemy)
     "snail": "#eab308", // Yellow (Enemy)
+    "hydra": "#d4af37", // Gold (Enemy)
+    "spider-face": "#581c87", // Dark Purple (Enemy)
 
     // Food (Red)
     "apple": "#ef4444",
@@ -119,6 +123,8 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "octopus": "Enemy",
     "monster-skull": "Enemy",
     "snail": "Enemy",
+    "hydra": "Enemy",
+    "spider-face": "Enemy",
 
     "apple": "Heal 6 HP",
     "meat": "Heal 10 HP",
@@ -157,6 +163,8 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "octopus": "Enemy",
     "monster-skull": "Enemy",
     "snail": "Enemy",
+    "hydra": "Enemy",
+    "spider-face": "Enemy",
 
     "apple": "Food",
     "meat": "Food",
