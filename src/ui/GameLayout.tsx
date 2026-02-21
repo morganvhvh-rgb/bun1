@@ -93,7 +93,7 @@ export function GameLayout() {
             await delay(200);
             setPlayerAnim('idle');
 
-            let target = enemy1HpRef.current > 0 ? 1 : 2;
+            const target = enemy1HpRef.current > 0 ? 1 : 2;
             if (target === 1) {
                 applyBattleDamage('enemy1', pAtk);
                 setEnemy1Anim('hurt');
@@ -462,7 +462,7 @@ export function GameLayout() {
                                 selectedIndex={selectedIndex}
                                 isShaking={isShaking}
                                 onIconClick={handleIconClick}
-                                onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as any, index); }}
+                                onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
                             />
 
                             <div className="flex flex-col gap-3 mt-[1.875rem]">

@@ -110,7 +110,21 @@ export const useGameStore = create<GameState>()(
                 const pCoords = getCoordinates(fromIndex);
                 const tCoords = getCoordinates(toIndex);
 
-                const targetHasKey = state.grid[toIndex]?.name === 'key';
+                const targetItem = state.grid[toIndex];
+                const targetHasKey = targetItem?.name === 'key';
+
+                if (targetItem) {
+                    const category = ICON_CATEGORIES[targetItem.name];
+                    if (category === 'Treasure' || category === 'Nature') {
+                        switch (targetItem.name) {
+                            case 'clover': state.moves += 1; state.playerMagic += 1; break;
+                            case 'pine-tree': state.moves += 1; break;
+                            case 'zigzag-leaf': state.moves -= 3; state.playerMagic += 5; break;
+                            case 'gold-bar':
+                            case 'gem-pendant': state.gold += 10; break;
+                        }
+                    }
+                }
 
                 // Clear path logically
                 if (pCoords.row === tCoords.row) { // Horizontal
@@ -163,9 +177,6 @@ export const useGameStore = create<GameState>()(
                             case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 10); break;
                             case 'crab-claw': state.playerMaxHp += 1; state.playerHp += 1; break;
                             case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += 4; state.playerHp += 4; break;
-                            case 'clover': state.moves += 1; state.playerMagic += 1; break;
-                            case 'pine-tree': state.moves += 1; break;
-                            case 'zigzag-leaf': state.moves = Math.max(0, state.moves - 3); state.playerMagic += 5; break;
                             case 'axe': state.playerBaseAtk += 2; state.playerGear += 1; break;
                             case 'relic-blade':
                             case 'crossbow':
@@ -174,8 +185,6 @@ export const useGameStore = create<GameState>()(
                             case 'knight-helmet': state.playerGear += 2; break;
                             case 'crystal-wand':
                             case 'fairy-wand': state.playerMagic += 5; break;
-                            case 'gold-bar':
-                            case 'gem-pendant': state.gold += 10; break;
                             case 'bell':
                             case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                         }
