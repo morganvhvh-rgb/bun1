@@ -7,6 +7,11 @@ export interface GridItem {
     name: IconName;
 }
 
+export interface KeptIcon {
+    name: IconName;
+    battleCount: number;
+}
+
 export interface CharacterStats {
     hp: number;
     maxHp: number;

@@ -390,8 +390,8 @@ export function GameLayout() {
                                                     <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                                 </div>
                                             )}
-                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[0]} scale={3} tintColor={ICON_THEME[keptIcons[0] as IconName]} /></div>}
-                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[1]} scale={3} tintColor={ICON_THEME[keptIcons[1] as IconName]} /></div>}
+                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[0].battleCount}</span><Icon name={keptIcons[0].name} scale={3} tintColor={ICON_THEME[keptIcons[0].name as IconName]} /></div>}
+                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[1].battleCount}</span><Icon name={keptIcons[1].name} scale={3} tintColor={ICON_THEME[keptIcons[1].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -417,8 +417,8 @@ export function GameLayout() {
                                                     <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
                                                 </div>
                                             )}
-                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[2]} scale={3} tintColor={ICON_THEME[keptIcons[2] as IconName]} /></div>}
-                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[3]} scale={3} tintColor={ICON_THEME[keptIcons[3] as IconName]} /></div>}
+                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[2].battleCount}</span><Icon name={keptIcons[2].name} scale={3} tintColor={ICON_THEME[keptIcons[2].name as IconName]} /></div>}
+                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[3].battleCount}</span><Icon name={keptIcons[3].name} scale={3} tintColor={ICON_THEME[keptIcons[3].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -444,8 +444,8 @@ export function GameLayout() {
                                                     <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
                                                 </div>
                                             )}
-                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[4]} scale={3} tintColor={ICON_THEME[keptIcons[4] as IconName]} /></div>}
-                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center"><Icon name={keptIcons[5]} scale={3} tintColor={ICON_THEME[keptIcons[5] as IconName]} /></div>}
+                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[4].battleCount}</span><Icon name={keptIcons[4].name} scale={3} tintColor={ICON_THEME[keptIcons[4].name as IconName]} /></div>}
+                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[5].battleCount}</span><Icon name={keptIcons[5].name} scale={3} tintColor={ICON_THEME[keptIcons[5].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>

@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { GridItem, IconName } from '@/types/game';
+import type { GridItem, IconName, KeptIcon } from '@/types/game';
 import { ICON_KEYS, ICON_CATEGORIES } from '@/lib/constants';
 
 interface GameState {
     // Grid State
     grid: (GridItem | null)[];
-    keptIcons: (IconName | null)[];
+    keptIcons: (KeptIcon | null)[];
     keptScrolls: IconName[];
     unlockedSections: { 0: boolean; 1: boolean; 2: boolean };
     isUnlockingMode: boolean;
@@ -74,11 +74,11 @@ export const useGameStore = create<GameState>()(
             moves: 0,
 
             // Battle Stats
-            playerHp: 50,
-            playerMaxHp: 50,
-            playerBaseAtk: 5,
-            playerMagic: 7,
-            playerGear: 4,
+            playerHp: 60,
+            playerMaxHp: 60,
+            playerBaseAtk: 8,
+            playerMagic: 0,
+            playerGear: 0,
 
             enemy1: { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
             enemy2: { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
@@ -170,7 +170,7 @@ export const useGameStore = create<GameState>()(
                     const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
                     if (emptySlotIndex !== undefined) {
                         state.grid = state.grid.map(s => s?.id === item.id ? null : s);
-                        state.keptIcons[emptySlotIndex] = item.name;
+                        state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 3 };
 
                         switch (item.name) {
                             case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 6); break;
@@ -224,6 +224,16 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
+                for (let i = 0; i < state.keptIcons.length; i++) {
+                    const icon = state.keptIcons[i];
+                    if (icon !== null) {
+                        icon.battleCount -= 1;
+                        if (icon.battleCount <= 0) {
+                            state.keptIcons[i] = null;
+                        }
+                    }
+                }
+
                 if (state.enemy1.name === 'wyvern') {
                     state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
                     state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
@@ -244,11 +254,11 @@ export const useGameStore = create<GameState>()(
                 state.isUnlockingMode = false;
                 state.gold = 100;
                 state.moves = 0;
-                state.playerHp = 50;
-                state.playerMaxHp = 50;
-                state.playerBaseAtk = 5;
-                state.playerMagic = 7;
-                state.playerGear = 4;
+                state.playerHp = 60;
+                state.playerMaxHp = 60;
+                state.playerBaseAtk = 8;
+                state.playerMagic = 0;
+                state.playerGear = 0;
                 state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
                 state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
             }),
