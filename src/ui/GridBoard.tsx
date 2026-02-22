@@ -2,7 +2,32 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
 import { ICON_THEME, ICON_CATEGORIES, ICON_STATS } from '@/lib/constants';
-import type { GridItem } from '@/types/game';
+import type { GridItem, IconName } from '@/types/game';
+
+const getStatText = (name: IconName, isBoosted: boolean) => {
+    if (!isBoosted) return ICON_STATS[name] || "???";
+
+    switch (name) {
+        case 'apple': return "Heal 12 HP";
+        case 'meat': return "Heal 20 HP";
+        case 'crab-claw': return "+2 Max HP +2 HP";
+        case 'brandy-bottle': return "-50% HP & +8 Max HP";
+        case 'clover': return "+2 EXP +2 Magic";
+        case 'pine-tree': return "+2 EXP";
+        case 'zigzag-leaf': return "-3 EXP +10 Magic";
+        case 'axe': return "+4 ATK +2 Gear";
+        case 'relic-blade':
+        case 'crossbow':
+        case 'daggers': return "+2 ATK +2 Gear";
+        case 'shield':
+        case 'knight-helmet': return "+4 Gear";
+        case 'crystal-wand':
+        case 'fairy-wand': return "+10 Magic";
+        case 'gold-bar': return "+20 gold";
+        case 'gem-pendant': return "+20 Gold";
+        default: return ICON_STATS[name] || "???";
+    }
+};
 
 interface GridBoardProps {
     gridIcons: (GridItem | null)[];
@@ -133,10 +158,11 @@ export function GridBoard({
                             <span className="text-zinc-500">{ICON_CATEGORIES[gridIcons[selectedIndex]!.name]}</span>
                         </div>
                         <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
-                            {ICON_STATS[gridIcons[selectedIndex]!.name] || "???"}
+                            {getStatText(gridIcons[selectedIndex]!.name, matchingIndices.has(selectedIndex))}
                         </div>
                         <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
-                            Adds X to Y
+                            {gridIcons[selectedIndex]!.name === 'daggers' ? "first attack happens 3 times / doesnt stack" :
+                                gridIcons[selectedIndex]!.name === 'relic-blade' ? "increase attack by current experience / doesnt stack" : ""}
                         </div>
                     </div>
                 ) : (

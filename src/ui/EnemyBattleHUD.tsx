@@ -66,12 +66,16 @@ function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
 export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, engageProgress, onEngagePointerDown, onEngagePointerUpOrLeave }: EnemyBattleHUDProps) {
     return (
         <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
-            <AnimatePresence>
-                {enemy1.isVisible && <EnemyDisplay enemy={enemy1} />}
-            </AnimatePresence>
-            <AnimatePresence>
-                {enemy2.isVisible && <EnemyDisplay enemy={enemy2} />}
-            </AnimatePresence>
+            <div className="w-24 sm:w-28 flex flex-col items-center">
+                <AnimatePresence>
+                    {enemy1.isVisible && <EnemyDisplay enemy={enemy1} />}
+                </AnimatePresence>
+            </div>
+            <div className="w-24 sm:w-28 flex flex-col items-center">
+                <AnimatePresence>
+                    {enemy2.isVisible && <EnemyDisplay enemy={enemy2} />}
+                </AnimatePresence>
+            </div>
 
             {/* Action Button */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">

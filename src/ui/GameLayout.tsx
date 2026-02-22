@@ -79,7 +79,8 @@ export function GameLayout() {
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-        const pAtk = playerBaseAtk;
+        const hasRelicBlade = keptIcons.some(item => item?.name === 'relic-blade');
+        const pAtk = playerBaseAtk + (hasRelicBlade ? moves : 0);
         const e1AtkVal = enemy1.atk;
         const e2AtkVal = enemy2.atk;
 
@@ -88,29 +89,43 @@ export function GameLayout() {
             return;
         }
 
-        while (playerHpRef.current > 0 && (enemy1HpRef.current > 0 || enemy2HpRef.current > 0)) {
-            setPlayerAnim('attack');
-            await delay(200);
-            setPlayerAnim('idle');
+        const hasDaggers = keptIcons.some(item => item?.name === 'daggers');
+        let isFirstAttack = true;
 
-            const target = enemy1HpRef.current > 0 ? 1 : 2;
-            if (target === 1) {
-                applyBattleDamage('enemy1', pAtk);
-                setEnemy1Anim('hurt');
-                await delay(400);
-                setEnemy1Anim('idle');
-                if (enemy1HpRef.current === 0) {
-                    await delay(50);
-                    setEnemyVisibility('enemy1', false);
+        while (playerHpRef.current > 0 && (enemy1HpRef.current > 0 || enemy2HpRef.current > 0)) {
+            const attackLoops = (isFirstAttack && hasDaggers) ? 3 : 1;
+            isFirstAttack = false;
+
+            for (let i = 0; i < attackLoops; i++) {
+                if (enemy1HpRef.current === 0 && enemy2HpRef.current === 0) break;
+
+                setPlayerAnim('attack');
+                await delay(200);
+                setPlayerAnim('idle');
+
+                const target = enemy1HpRef.current > 0 ? 1 : 2;
+                if (target === 1) {
+                    applyBattleDamage('enemy1', pAtk);
+                    setEnemy1Anim('hurt');
+                    await delay(400);
+                    setEnemy1Anim('idle');
+                    if (enemy1HpRef.current === 0) {
+                        await delay(50);
+                        setEnemyVisibility('enemy1', false);
+                    }
+                } else {
+                    applyBattleDamage('enemy2', pAtk);
+                    setEnemy2Anim('hurt');
+                    await delay(400);
+                    setEnemy2Anim('idle');
+                    if (enemy2HpRef.current === 0) {
+                        await delay(50);
+                        setEnemyVisibility('enemy2', false);
+                    }
                 }
-            } else {
-                applyBattleDamage('enemy2', pAtk);
-                setEnemy2Anim('hurt');
-                await delay(400);
-                setEnemy2Anim('idle');
-                if (enemy2HpRef.current === 0) {
-                    await delay(50);
-                    setEnemyVisibility('enemy2', false);
+
+                if (i < attackLoops - 1) {
+                    await delay(200);
                 }
             }
 
@@ -230,10 +245,12 @@ export function GameLayout() {
     const handleIconClick = (item: GridItem, index: number) => {
         if (isAnimating || isUnlockingMode) return;
 
+        const isBoosted = findMatchingIndices().has(index);
+
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
             const character = gridIcons[activeHoodedIndex];
             if (character && character.name === "hood") {
-                moveCharacter(activeHoodedIndex, index);
+                moveCharacter(activeHoodedIndex, index, isBoosted);
                 resetSelection();
                 setHasMoved(true);
                 return;
@@ -278,7 +295,7 @@ export function GameLayout() {
                 return;
             }
 
-            keepItem(item);
+            keepItem(item, isBoosted);
             resetSelection();
         } else {
             setSelectedIndex(index);
@@ -340,7 +357,7 @@ export function GameLayout() {
                         playerAnim={playerAnim}
                         playerHp={playerHp}
                         playerMaxHp={playerMaxHp}
-                        playerBaseAtk={playerBaseAtk}
+                        playerBaseAtk={playerBaseAtk + (keptIcons.some(i => i?.name === 'relic-blade') ? moves : 0)}
                         playerMagic={playerMagic}
                         playerGear={playerGear}
                         gold={gold}
@@ -376,18 +393,18 @@ export function GameLayout() {
                                 >
                                     {!unlockedSections[0] ? (
                                         <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
-                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
+                                            <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                             {isUnlockingMode ? (
-                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                                <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
                                             ) : (
-                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                                <span className="text-[10px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
                                             )}
                                         </div>
                                     ) : (
                                         <>
                                             {!keptIcons[0] && !keptIcons[1] && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
-                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
+                                                    <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                                 </div>
                                             )}
                                             {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[0].battleCount}</span><Icon name={keptIcons[0].name} scale={3} tintColor={ICON_THEME[keptIcons[0].name as IconName]} /></div>}
@@ -403,18 +420,18 @@ export function GameLayout() {
                                 >
                                     {!unlockedSections[1] ? (
                                         <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
-                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
+                                            <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
                                             {isUnlockingMode ? (
-                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                                <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
                                             ) : (
-                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                                <span className="text-[10px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
                                             )}
                                         </div>
                                     ) : (
                                         <>
                                             {!keptIcons[2] && !keptIcons[3] && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
-                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
+                                                    <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
                                                 </div>
                                             )}
                                             {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[2].battleCount}</span><Icon name={keptIcons[2].name} scale={3} tintColor={ICON_THEME[keptIcons[2].name as IconName]} /></div>}
@@ -430,18 +447,18 @@ export function GameLayout() {
                                 >
                                     {!unlockedSections[2] ? (
                                         <div className={`absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors ${isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/50' : ''}`} style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}>
-                                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
+                                            <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
                                             {isUnlockingMode ? (
-                                                <span className="text-[8.5px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
+                                                <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">UNLOCK?</span>
                                             ) : (
-                                                <span className="text-[8.5px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
+                                                <span className="text-[10px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">LOCKED</span>
                                             )}
                                         </div>
                                     ) : (
                                         <>
                                             {!keptIcons[4] && !keptIcons[5] && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
-                                                    <span className="text-[10px] font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
+                                                    <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
                                                 </div>
                                             )}
                                             {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[4].battleCount}</span><Icon name={keptIcons[4].name} scale={3} tintColor={ICON_THEME[keptIcons[4].name as IconName]} /></div>}

@@ -29,8 +29,8 @@ interface GameState {
     // Actions
     spinBoard: () => void;
     shuffleBoard: () => void;
-    moveCharacter: (fromIndex: number, toIndex: number) => void;
-    keepItem: (item: GridItem) => void;
+    moveCharacter: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
+    keepItem: (item: GridItem, isBoosted?: boolean) => void;
     keepScroll: (item: GridItem) => void;
     unlockSection: (sectionId: 0 | 1 | 2) => void;
     resetBattleTarget: () => void;
@@ -100,7 +100,7 @@ export const useGameStore = create<GameState>()(
                 state.grid = newArr;
             }),
 
-            moveCharacter: (fromIndex, toIndex) => set((state) => {
+            moveCharacter: (fromIndex, toIndex, isBoosted = false) => set((state) => {
                 const character = state.grid[fromIndex];
                 if (!character || character.name !== "hood") return;
 
@@ -117,11 +117,11 @@ export const useGameStore = create<GameState>()(
                     const category = ICON_CATEGORIES[targetItem.name];
                     if (category === 'Treasure' || category === 'Nature') {
                         switch (targetItem.name) {
-                            case 'clover': state.moves += 1; state.playerMagic += 1; break;
-                            case 'pine-tree': state.moves += 1; break;
-                            case 'zigzag-leaf': state.moves -= 3; state.playerMagic += 5; break;
+                            case 'clover': state.moves += (isBoosted ? 2 : 1); state.playerMagic += (isBoosted ? 2 : 1); break;
+                            case 'pine-tree': state.moves += (isBoosted ? 2 : 1); break;
+                            case 'zigzag-leaf': state.moves -= 3; state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'gold-bar':
-                            case 'gem-pendant': state.gold += 10; break;
+                            case 'gem-pendant': state.gold += (isBoosted ? 20 : 10); break;
                         }
                     }
                 }
@@ -147,7 +147,7 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            keepItem: (item) => set((state) => {
+            keepItem: (item, isBoosted = false) => set((state) => {
                 if (item.name === 'key') return;
 
                 const category = ICON_CATEGORIES[item.name];
@@ -173,18 +173,18 @@ export const useGameStore = create<GameState>()(
                         state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 3 };
 
                         switch (item.name) {
-                            case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 6); break;
-                            case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + 10); break;
-                            case 'crab-claw': state.playerMaxHp += 1; state.playerHp += 1; break;
-                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += 4; state.playerHp += 4; break;
-                            case 'axe': state.playerBaseAtk += 2; state.playerGear += 1; break;
+                            case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
+                            case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
+                            case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); state.playerHp += (isBoosted ? 2 : 1); break;
+                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
+                            case 'axe': state.playerBaseAtk += (isBoosted ? 4 : 2); state.playerGear += (isBoosted ? 2 : 1); break;
                             case 'relic-blade':
                             case 'crossbow':
-                            case 'daggers': state.playerBaseAtk += 1; state.playerGear += 1; break;
+                            case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                             case 'shield':
-                            case 'knight-helmet': state.playerGear += 2; break;
+                            case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
                             case 'crystal-wand':
-                            case 'fairy-wand': state.playerMagic += 5; break;
+                            case 'fairy-wand': state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'bell':
                             case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                         }
