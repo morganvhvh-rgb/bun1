@@ -266,6 +266,11 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
+                if (state.battleCount >= 4) {
+                    state.battleCount = 5;
+                    return;
+                }
+
                 for (let i = 0; i < state.keptIcons.length; i++) {
                     const icon = state.keptIcons[i];
                     if (icon !== null) {
@@ -284,9 +289,9 @@ export const useGameStore = create<GameState>()(
                 } else if (state.enemy1.name === 'monster-skull') {
                     state.enemy1 = { name: 'hydra', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                     state.enemy2 = { name: 'spider-face', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
-                } else {
-                    state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                } else if (state.enemy1.name === 'hydra') {
+                    state.enemy1 = { name: 'eye-monster', hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'octopus', hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: 1 };
                 }
 
                 state.battleCount += 1;

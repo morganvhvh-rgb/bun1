@@ -8,6 +8,7 @@ export const ICON_MAP = {
     "snail": "snail",
     "hydra": "hydra",
     "spider-face": "spider-face",
+    "eye-monster": "eye-monster",
 
     // Food
     "apple": "apple",
@@ -77,6 +78,7 @@ export const ICON_THEME: Record<IconName, string> = {
     "snail": "#eab308", // Yellow (Enemy)
     "hydra": "#d4af37", // Gold (Enemy)
     "spider-face": "#581c87", // Dark Purple (Enemy)
+    "eye-monster": "#84cc16", // Lime Green (Enemy)
 
     // Food (Red)
     "apple": "#ef4444",
@@ -125,6 +127,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "snail": "Enemy",
     "hydra": "Enemy",
     "spider-face": "Enemy",
+    "eye-monster": "Enemy",
 
     "apple": "Heal 6 HP",
     "meat": "Heal 10 HP",
@@ -165,6 +168,7 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "snail": "Enemy",
     "hydra": "Enemy",
     "spider-face": "Enemy",
+    "eye-monster": "Enemy",
 
     "apple": "Food",
     "meat": "Food",
