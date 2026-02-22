@@ -350,6 +350,7 @@ export function GameLayout() {
                         enemy2={{ ...enemy2, animStatus: enemy2Anim }}
                         isBattleRunning={isBattleRunning}
                         battleCount={battleCount}
+                        isDisabled={playerHp === 0}
                         onEngage={() => {
                             if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
                                 handleBattleSequence();
