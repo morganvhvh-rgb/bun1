@@ -12,6 +12,9 @@ interface GameState {
     unlockedSections: { 0: boolean; 1: boolean; 2: boolean };
     isUnlockingMode: boolean;
 
+    // Progression
+    levelUpPerks: string[];
+
     // Stats & Resources
     gold: number;
     moves: number;
@@ -41,6 +44,7 @@ interface GameState {
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
     setEnemyVisibility: (target: 'enemy1' | 'enemy2', isVisible: boolean) => void;
+    applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
 }
 
 const generateRandomIcons = (): GridItem[] => {
@@ -71,6 +75,7 @@ export const useGameStore = create<GameState>()(
             keptScrolls: [],
             unlockedSections: { 0: false, 1: false, 2: false },
             isUnlockingMode: false,
+            levelUpPerks: [],
 
             gold: 100,
             moves: 0,
@@ -119,11 +124,12 @@ export const useGameStore = create<GameState>()(
 
                 if (targetItem) {
                     const category = ICON_CATEGORIES[targetItem.name];
+                    const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
                     if (category === 'Treasure' || category === 'Nature') {
                         switch (targetItem.name) {
-                            case 'clover': state.moves += (isBoosted ? 2 : 1); state.playerMagic += (isBoosted ? 2 : 1); break;
-                            case 'pine-tree': state.moves += (isBoosted ? 2 : 1); break;
-                            case 'zigzag-leaf': state.moves -= 3; state.playerMagic += (isBoosted ? 10 : 5); break;
+                            case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
+                            case 'pine-tree': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); break;
+                            case 'zigzag-leaf': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'gold-bar':
                             case 'gem-pendant': state.gold += (isBoosted ? 20 : 10); break;
                         }
@@ -243,6 +249,22 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
+            applyLevelUp: (perk) => set((state) => {
+                if (state.moves < 10) return;
+                state.moves -= 10;
+
+                if (perk === "full_heal_max_hp") {
+                    state.playerMaxHp += 10;
+                    state.playerHp = state.playerMaxHp;
+                    state.levelUpPerks.push(perk);
+                } else if (perk === "nature_2x_exp") {
+                    state.levelUpPerks.push(perk);
+                } else if (perk === "full_heal") {
+                    state.playerHp = state.playerMaxHp;
+                    state.levelUpPerks.push(perk);
+                }
+            }),
+
             resetBattleTarget: () => set((state) => {
                 for (let i = 0; i < state.keptIcons.length; i++) {
                     const icon = state.keptIcons[i];
@@ -276,6 +298,7 @@ export const useGameStore = create<GameState>()(
                 state.keptScrolls = [];
                 state.unlockedSections = { 0: false, 1: false, 2: false };
                 state.isUnlockingMode = false;
+                state.levelUpPerks = [];
                 state.gold = 100;
                 state.moves = 0;
                 state.playerHp = 60;

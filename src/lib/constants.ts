@@ -149,7 +149,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "gold-bar": "+10 gold",
     "gem-pendant": "+10 Gold",
 
-    "key": "???",
+    "key": "unlock symbol inventory",
     "scroll-unfurled": "???",
     "book": "???",
 

@@ -4,17 +4,19 @@ import { Icon } from './Icon';
 import { ICON_THEME, ICON_CATEGORIES, ICON_STATS, ICON_EXTRA_EFFECTS } from '@/lib/constants';
 import type { GridItem, IconName } from '@/types/game';
 
-const getStatText = (name: IconName, isBoosted: boolean) => {
+const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: string[]) => {
     if (!isBoosted) return ICON_STATS[name] || "???";
+
+    const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
 
     switch (name) {
         case 'apple': return "Heal 12 HP";
         case 'meat': return "Heal 20 HP";
         case 'crab-claw': return "+2 Max HP +2 HP";
         case 'brandy-bottle': return "-50% HP & +8 Max HP";
-        case 'clover': return "+2 EXP +2 Magic";
-        case 'pine-tree': return "+2 EXP";
-        case 'zigzag-leaf': return "-3 EXP +10 Magic";
+        case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
+        case 'pine-tree': return `+${2 * expMultiplier} EXP`;
+        case 'zigzag-leaf': return `-${3 * expMultiplier} EXP +10 Magic`;
         case 'axe': return "+4 ATK +2 Gear";
         case 'relic-blade':
         case 'crossbow':
@@ -40,6 +42,7 @@ interface GridBoardProps {
     isShaking: boolean;
     onIconClick: (item: GridItem, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
+    levelUpPerks: string[];
 }
 
 export function GridBoard({
@@ -52,7 +55,8 @@ export function GridBoard({
     selectedEquippedItem,
     isShaking,
     onIconClick,
-    onEmptyGlowClick
+    onEmptyGlowClick,
+    levelUpPerks
 }: GridBoardProps) {
 
     const containerVariants = {
@@ -64,12 +68,11 @@ export function GridBoard({
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.5, rotate: -180 },
-        show: { opacity: 1, scale: 1, rotate: 0 },
+        hidden: { opacity: 0, scale: 0.5 },
+        show: { opacity: 1, scale: 1 },
         shake: {
             opacity: 1,
             scale: 1,
-            rotate: [0, -10, 10, -10, 10, 0],
             transition: { duration: 0.4 }
         }
     };
@@ -163,7 +166,7 @@ export function GridBoard({
                             <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
                         <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
-                            {getStatText(displayItem.name, isDisplayItemBoosted)}
+                            {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
                         <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
                             {ICON_EXTRA_EFFECTS[displayItem.name] || ""}
