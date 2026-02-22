@@ -615,7 +615,7 @@ export function GameLayout() {
                                                     const spacing = 40;
                                                     const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
 
-                                                    const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -15 : 10;
+                                                    const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
                                                     const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
 
                                                     return (
@@ -636,15 +636,16 @@ export function GameLayout() {
                                                     );
                                                 })}
 
-                                                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                                                    <AnimatePresence>
-                                                        {scrollStage === 'faded' && revealedScrollColor && (
-                                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-sm text-zinc-300 font-bold uppercase tracking-widest leading-none text-center">
-                                                                {revealedScrollColor.replace('scroll-', '')}
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
+                                            </div>
+
+                                            <div className="absolute bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none">
+                                                <AnimatePresence>
+                                                    {scrollStage === 'faded' && revealedScrollColor && (
+                                                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-sm text-zinc-100 font-black uppercase tracking-[0.2em] leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                                                            {revealedScrollColor.replace('scroll-', '')}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
                                         </div>
 
