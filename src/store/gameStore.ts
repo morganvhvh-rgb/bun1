@@ -23,6 +23,7 @@ interface GameState {
     playerMagic: number;
     playerGear: number;
     isFirstEnemyAttack: boolean;
+    battleCount: number;
 
     enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
     enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
@@ -81,6 +82,7 @@ export const useGameStore = create<GameState>()(
             playerMagic: 0,
             playerGear: 0,
             isFirstEnemyAttack: true,
+            battleCount: 1,
 
             enemy1: { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
             enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
@@ -264,6 +266,8 @@ export const useGameStore = create<GameState>()(
                     state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                     state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                 }
+
+                state.battleCount += 1;
             }),
 
             resetGame: () => set((state) => {
@@ -280,6 +284,7 @@ export const useGameStore = create<GameState>()(
                 state.playerMagic = 0;
                 state.playerGear = 0;
                 state.isFirstEnemyAttack = true;
+                state.battleCount = 1;
                 state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                 state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
             }),

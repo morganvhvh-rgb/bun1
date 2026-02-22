@@ -6,7 +6,7 @@ import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
 import { GridBoard } from './GridBoard';
 import { ICON_THEME, ICON_CATEGORIES } from '@/lib/constants';
-import type { GridItem, IconName } from '@/types/game';
+import type { GridItem, IconName, KeptIcon } from '@/types/game';
 
 export function GameLayout() {
     const {
@@ -32,7 +32,8 @@ export function GameLayout() {
         setEnemyVisibility,
         resetBattleTarget,
         resetGame,
-        unlockSection
+        unlockSection,
+        battleCount
     } = useGameStore();
 
     const totalAttack = useGameStore(selectTotalAttack);
@@ -55,8 +56,13 @@ export function GameLayout() {
     const [enemy2Anim, setEnemy2Anim] = useState<'idle' | 'attack' | 'hurt'>('idle');
     const [isBattleRunning, setIsBattleRunning] = useState(false);
 
-    const [engageProgress, setEngageProgress] = useState(0);
-    const engageIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const [selectedEquippedItem, setSelectedEquippedItem] = useState<GridItem | null>(null);
+
+    const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {
+        e.stopPropagation();
+        setSelectedEquippedItem({ id: `equipped-${icon.name}`, name: icon.name } as GridItem);
+        setSelectedIndex(null);
+    };
 
     // Local refs to sync async loop with zustand state
     const playerHpRef = useRef(playerHp);
@@ -70,10 +76,10 @@ export function GameLayout() {
     }, [playerHp, enemy1.hp, enemy2.hp]);
 
     useEffect(() => {
-        return () => {
-            if (engageIntervalRef.current) clearInterval(engageIntervalRef.current);
-        };
-    }, []);
+        playerHpRef.current = playerHp;
+        enemy1HpRef.current = enemy1.hp;
+        enemy2HpRef.current = enemy2.hp;
+    }, [playerHp, enemy1.hp, enemy2.hp]);
 
     const handleBattleSequence = async () => {
         if (isBattleRunning) return;
@@ -174,35 +180,6 @@ export function GameLayout() {
         setIsBattleRunning(false);
     };
 
-    const handlePointerDown = () => {
-        if (playerHp === 0 || (enemy1.hp === 0 && enemy2.hp === 0 && !isBattleRunning && !enemy1.isVisible && !enemy2.isVisible) || isBattleRunning) return;
-        setEngageProgress(0);
-
-        let progress = 0;
-        engageIntervalRef.current = setInterval(() => {
-            progress += 5;
-            if (progress >= 100) {
-                clearInterval(engageIntervalRef.current!);
-                engageIntervalRef.current = null;
-                setEngageProgress(100);
-                setTimeout(() => {
-                    handleBattleSequence();
-                    setEngageProgress(0);
-                }, 50);
-            } else {
-                setEngageProgress(progress);
-            }
-        }, 50);
-    };
-
-    const handlePointerUpOrLeave = () => {
-        if (engageIntervalRef.current) {
-            clearInterval(engageIntervalRef.current);
-            engageIntervalRef.current = null;
-        }
-        setEngageProgress(0);
-    };
-
     // Hooded Logic State
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activeHoodedIndex, setActiveHoodedIndex] = useState<number | null>(null);
@@ -212,6 +189,7 @@ export function GameLayout() {
 
     const resetSelection = () => {
         setSelectedIndex(null);
+        setSelectedEquippedItem(null);
         setGlowingIndices([]);
         setActiveHoodedIndex(null);
     };
@@ -299,6 +277,7 @@ export function GameLayout() {
             resetSelection();
         } else {
             setSelectedIndex(index);
+            setSelectedEquippedItem(null);
             setGlowingIndices([]);
             setActiveHoodedIndex(null);
         }
@@ -370,9 +349,12 @@ export function GameLayout() {
                         enemy1={{ ...enemy1, animStatus: enemy1Anim }}
                         enemy2={{ ...enemy2, animStatus: enemy2Anim }}
                         isBattleRunning={isBattleRunning}
-                        engageProgress={engageProgress}
-                        onEngagePointerDown={handlePointerDown}
-                        onEngagePointerUpOrLeave={handlePointerUpOrLeave}
+                        battleCount={battleCount}
+                        onEngage={() => {
+                            if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
+                                handleBattleSequence();
+                            }
+                        }}
                     />
 
                     <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
@@ -407,8 +389,8 @@ export function GameLayout() {
                                                     <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Food/Item</span>
                                                 </div>
                                             )}
-                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[0].battleCount}</span><Icon name={keptIcons[0].name} scale={3} tintColor={ICON_THEME[keptIcons[0].name as IconName]} /></div>}
-                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[1].battleCount}</span><Icon name={keptIcons[1].name} scale={3} tintColor={ICON_THEME[keptIcons[1].name as IconName]} /></div>}
+                                            {keptIcons[0] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[0]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[0].battleCount}</span><Icon name={keptIcons[0].name} scale={3} tintColor={ICON_THEME[keptIcons[0].name as IconName]} /></div>}
+                                            {keptIcons[1] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[1]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[1].battleCount}</span><Icon name={keptIcons[1].name} scale={3} tintColor={ICON_THEME[keptIcons[1].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -434,8 +416,8 @@ export function GameLayout() {
                                                     <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Armor/Magic</span>
                                                 </div>
                                             )}
-                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[2].battleCount}</span><Icon name={keptIcons[2].name} scale={3} tintColor={ICON_THEME[keptIcons[2].name as IconName]} /></div>}
-                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[3].battleCount}</span><Icon name={keptIcons[3].name} scale={3} tintColor={ICON_THEME[keptIcons[3].name as IconName]} /></div>}
+                                            {keptIcons[2] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[2]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[2].battleCount}</span><Icon name={keptIcons[2].name} scale={3} tintColor={ICON_THEME[keptIcons[2].name as IconName]} /></div>}
+                                            {keptIcons[3] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[3]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[3].battleCount}</span><Icon name={keptIcons[3].name} scale={3} tintColor={ICON_THEME[keptIcons[3].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -461,8 +443,8 @@ export function GameLayout() {
                                                     <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">Weapon/Music</span>
                                                 </div>
                                             )}
-                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[4].battleCount}</span><Icon name={keptIcons[4].name} scale={3} tintColor={ICON_THEME[keptIcons[4].name as IconName]} /></div>}
-                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative"><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[5].battleCount}</span><Icon name={keptIcons[5].name} scale={3} tintColor={ICON_THEME[keptIcons[5].name as IconName]} /></div>}
+                                            {keptIcons[4] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[4]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[4].battleCount}</span><Icon name={keptIcons[4].name} scale={3} tintColor={ICON_THEME[keptIcons[4].name as IconName]} /></div>}
+                                            {keptIcons[5] && <div className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer" onClick={(e) => handleKeptIconClick(e, keptIcons[5]!)}><span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{keptIcons[5].battleCount}</span><Icon name={keptIcons[5].name} scale={3} tintColor={ICON_THEME[keptIcons[5].name as IconName]} /></div>}
                                         </>
                                     )}
                                 </div>
@@ -477,6 +459,7 @@ export function GameLayout() {
                                 glowingIndices={glowingIndices}
                                 activeHoodedIndex={activeHoodedIndex}
                                 selectedIndex={selectedIndex}
+                                selectedEquippedItem={selectedEquippedItem}
                                 isShaking={isShaking}
                                 onIconClick={handleIconClick}
                                 onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
@@ -491,6 +474,9 @@ export function GameLayout() {
                                 </motion.button>
                             </div>
                         </div>
+
+                        <div className="h-6 mt-2 flex items-center justify-center pointer-events-none w-full max-w-xl px-4">
+                        </div>
                     </div>
 
                     <div className="absolute bottom-6 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
@@ -498,9 +484,11 @@ export function GameLayout() {
                         <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
                     </div>
 
-                    <div className="absolute bottom-6 right-6 z-50">
-                        <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform" onClick={() => setIsScrollWindowOpen(true)} />
-                        <div className="absolute bottom-0 -left-1 text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none">
+                    <div className="absolute bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
+                        <div className="pointer-events-auto">
+                            <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
                             {keptScrolls.length}
                         </div>
                     </div>
@@ -561,6 +549,6 @@ export function GameLayout() {
                     </AnimatePresence>
                 </section>
             </main>
-        </div>
+        </div >
     );
 }

@@ -36,6 +36,7 @@ interface GridBoardProps {
     glowingIndices: number[];
     activeHoodedIndex: number | null;
     selectedIndex: number | null;
+    selectedEquippedItem: GridItem | null;
     isShaking: boolean;
     onIconClick: (item: GridItem, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
@@ -48,6 +49,7 @@ export function GridBoard({
     glowingIndices,
     activeHoodedIndex,
     selectedIndex,
+    selectedEquippedItem,
     isShaking,
     onIconClick,
     onEmptyGlowClick
@@ -73,6 +75,9 @@ export function GridBoard({
     };
 
     const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
+
+    const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
+    const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : false;
 
     return (
         <div className="flex flex-col items-center gap-2">
@@ -150,18 +155,18 @@ export function GridBoard({
 
             {/* Info Text */}
             <div className="h-20 flex items-start justify-center text-center">
-                {selectedIndex !== null && gridIcons[selectedIndex] ? (
+                {displayItem ? (
                     <div className="flex flex-col items-center justify-start gap-1">
                         <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
-                            <span className="text-zinc-200">{gridIcons[selectedIndex]!.name.replace(/_/g, ' ')}</span>
+                            <span className="text-zinc-200">{displayItem.name.replace(/_/g, ' ')}</span>
                             <span className="text-zinc-600 mx-2">-</span>
-                            <span className="text-zinc-500">{ICON_CATEGORIES[gridIcons[selectedIndex]!.name]}</span>
+                            <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
                         <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
-                            {getStatText(gridIcons[selectedIndex]!.name, matchingIndices.has(selectedIndex))}
+                            {getStatText(displayItem.name, isDisplayItemBoosted)}
                         </div>
                         <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
-                            {ICON_EXTRA_EFFECTS[gridIcons[selectedIndex]!.name] || ""}
+                            {ICON_EXTRA_EFFECTS[displayItem.name] || ""}
                         </div>
                     </div>
                 ) : (
