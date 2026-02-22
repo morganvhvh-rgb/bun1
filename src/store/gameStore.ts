@@ -28,8 +28,8 @@ interface GameState {
     isFirstEnemyAttack: boolean;
     battleCount: number;
 
-    enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
-    enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
+    enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
+    enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
 
     // Actions
     spinBoard: () => void;
@@ -91,8 +91,8 @@ export const useGameStore = create<GameState>()(
             isFirstEnemyAttack: true,
             battleCount: 1,
 
-            enemy1: { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
-            enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
+            enemy1: { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' },
+            enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' },
 
             spinBoard: () => set((state) => {
                 if (state.gold < 2) return;
@@ -302,14 +302,14 @@ export const useGameStore = create<GameState>()(
                 state.isFirstEnemyAttack = true;
 
                 if (state.enemy1.name === 'wyvern') {
-                    state.enemy1 = { name: 'monster-skull', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'snail', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                    state.enemy1 = { name: 'monster-skull', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                    state.enemy2 = { name: 'snail', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
                 } else if (state.enemy1.name === 'monster-skull') {
-                    state.enemy1 = { name: 'hydra', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'spider-face', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                    state.enemy1 = { name: 'hydra', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                    state.enemy2 = { name: 'spider-face', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
                 } else if (state.enemy1.name === 'hydra') {
-                    state.enemy1 = { name: 'eye-monster', hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'octopus', hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: 1 };
+                    state.enemy1 = { name: 'eye-monster', hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'enemy' };
+                    state.enemy2 = { name: 'octopus', hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: 1, type: 'enemy' };
                 }
 
                 state.battleCount += 1;
@@ -331,8 +331,8 @@ export const useGameStore = create<GameState>()(
                 state.playerGear = 0;
                 state.isFirstEnemyAttack = true;
                 state.battleCount = 1;
-                state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
-                state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
             }),
 
         })),

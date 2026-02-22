@@ -47,6 +47,7 @@ export const ICON_MAP = {
     "scroll-blue": "scroll-unfurled",
     "scroll-pink": "scroll-unfurled",
     "book": "book",
+    "spades-card": "spades-card",
 
     // Music
     "bell": "bell",
@@ -69,7 +70,7 @@ export const ICON_KEYS: IconName[] = [
     // Treasure
     "gold-bar", "gem-pendant",
     // Special
-    "key", "scroll-unfurled", "book",
+    "key", "scroll-unfurled", "book", "spades-card",
     // Music
     "bell", "ocarina",
 ];
@@ -120,7 +121,10 @@ export const ICON_THEME: Record<IconName, string> = {
     "scroll-orange": "#c2410c",
     "scroll-blue": "#1d4ed8",
     "scroll-pink": "#be185d",
-    "book": "#a16207",
+
+    // Item (White)
+    "book": "#ffffff",
+    "spades-card": "#ffffff",
 
     // Music (Orange)
     "bell": "#f97316",
@@ -167,6 +171,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "scroll-blue": "???",
     "scroll-pink": "???",
     "book": "???",
+    "spades-card": "???",
 
     "bell": "-1 ATK",
     "ocarina": "-1 ATK",
@@ -212,6 +217,7 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "scroll-blue": "Special",
     "scroll-pink": "Special",
     "book": "Item",
+    "spades-card": "Item",
 
     "bell": "Music",
     "ocarina": "Music",

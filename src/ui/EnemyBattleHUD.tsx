@@ -11,6 +11,7 @@ interface EnemyProps {
     maxHp: number;
     atk: number;
     lvl: number;
+    type: string;
     isVisible: boolean;
     animStatus: 'idle' | 'attack' | 'hurt';
 }
@@ -47,7 +48,6 @@ function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
                 <Icon name={enemy.name} scale={4} tintColor={ICON_THEME[enemy.name]} />
             </motion.div>
             <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
-                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">{enemy.lvl}</span></div>
                 <div className="flex justify-between items-center">
                     <span>HP</span>
                     <motion.span
@@ -59,6 +59,8 @@ function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
                     </motion.span>
                 </div>
                 <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy.atk}</span></div>
+                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">{enemy.lvl}</span></div>
+                <div className="flex justify-between items-center"><span>Type</span> <span className="text-zinc-300">{enemy.type}</span></div>
             </div>
         </motion.div>
     );
