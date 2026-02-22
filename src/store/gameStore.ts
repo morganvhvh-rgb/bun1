@@ -164,6 +164,7 @@ export const useGameStore = create<GameState>()(
 
             keepItem: (item, isBoosted = false) => set((state) => {
                 if (item.name === 'key') return;
+                if (state.gold < 2) return;
 
                 const category = ICON_CATEGORIES[item.name];
                 let targetSlots: number[] = [];
@@ -184,6 +185,7 @@ export const useGameStore = create<GameState>()(
                 if (targetSlots.length > 0) {
                     const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
                     if (emptySlotIndex !== undefined) {
+                        state.gold -= 2;
                         state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                         state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 

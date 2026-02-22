@@ -26,13 +26,13 @@ interface EnemyBattleHUDProps {
 
 const enemyIconVariants: Variants = {
     idle: { scale: 1, x: 0, y: 0 },
-    attack: { scale: 1.3, x: -20, y: 10, transition: { duration: 0.2, ease: "easeOut" } },
-    hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.4 } }
+    attack: { scale: 1.3, x: -20, y: 10, transition: { duration: 0.15, ease: "easeOut" } },
+    hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
 };
 
 const hpVariants: Variants = {
     idle: { color: '#d4d4d8', scale: 1 },
-    hurt: { color: '#ef4444', scale: [1, 1.5, 1], transition: { duration: 0.4 } }
+    hurt: { color: '#ef4444', scale: [1, 1.5, 1], transition: { duration: 0.25 } }
 };
 
 function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
@@ -41,7 +41,7 @@ function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
         <motion.div
             className="flex flex-col items-center gap-2"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 1 } }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
         >
             <motion.div animate={enemy.animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
                 <Icon name={enemy.name} scale={4} tintColor={ICON_THEME[enemy.name]} />

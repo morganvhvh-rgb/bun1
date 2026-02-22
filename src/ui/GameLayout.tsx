@@ -141,74 +141,74 @@ export function GameLayout() {
                 if (enemy1HpRef.current === 0 && enemy2HpRef.current === 0) break;
 
                 setPlayerAnim('attack');
-                await delay(200);
+                await delay(120);
                 setPlayerAnim('idle');
 
                 const target = enemy1HpRef.current > 0 ? 1 : 2;
                 if (target === 1) {
                     applyBattleDamage('enemy1', pAtk);
                     setEnemy1Anim('hurt');
-                    await delay(400);
+                    await delay(250);
                     setEnemy1Anim('idle');
                     if (enemy1HpRef.current === 0) {
-                        await delay(50);
+                        await delay(20);
                         setEnemyVisibility('enemy1', false);
                     }
                 } else {
                     applyBattleDamage('enemy2', pAtk);
                     setEnemy2Anim('hurt');
-                    await delay(400);
+                    await delay(250);
                     setEnemy2Anim('idle');
                     if (enemy2HpRef.current === 0) {
-                        await delay(50);
+                        await delay(20);
                         setEnemyVisibility('enemy2', false);
                     }
                 }
 
                 if (i < attackLoops - 1) {
-                    await delay(200);
+                    await delay(120);
                 }
             }
 
             if (enemy1HpRef.current === 0 && enemy2HpRef.current === 0) break;
 
-            await delay(200);
+            await delay(120);
 
             if (enemy1HpRef.current > 0) {
                 setEnemy1Anim('attack');
-                await delay(200);
+                await delay(120);
                 setEnemy1Anim('idle');
 
                 applyBattleDamage('player', e1AtkVal);
                 setPlayerAnim('hurt');
-                await delay(400);
+                await delay(250);
                 setPlayerAnim('idle');
             }
 
             if (playerHpRef.current === 0) break;
-            await delay(200);
+            await delay(120);
 
             if (enemy2HpRef.current > 0) {
                 setEnemy2Anim('attack');
-                await delay(200);
+                await delay(120);
                 setEnemy2Anim('idle');
 
                 applyBattleDamage('player', e2AtkVal);
                 setPlayerAnim('hurt');
-                await delay(400);
+                await delay(250);
                 setPlayerAnim('idle');
             }
 
             if (playerHpRef.current === 0) break;
 
-            await delay(200);
+            await delay(120);
         }
 
         if (enemy1HpRef.current === 0 && enemy2HpRef.current === 0) {
             setTimeout(() => {
                 resetBattleTarget();
                 setIsBattleRunning(false);
-            }, 1000);
+            }, 600);
             return;
         }
 
