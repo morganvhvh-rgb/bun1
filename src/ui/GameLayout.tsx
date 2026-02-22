@@ -384,7 +384,7 @@ export function GameLayout() {
                     <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                 </section>
 
-                <div className="h-1 bg-zinc-700 w-full shrink-0 z-10" />
+                <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
                 <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2 overflow-hidden">
                     <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
@@ -537,7 +537,7 @@ export function GameLayout() {
                                                     </div>
                                                     <div className="flex flex-col">
                                                         <div className="text-zinc-300 font-bold uppercase text-xs tracking-wider">
-                                                            {scrollName.replace('scroll-', '')} Scroll
+                                                            {scrollName.replace('-scroll', '')} Scroll
                                                         </div>
                                                         <div className="text-[10px] text-zinc-500">
                                                             Does X to Y twice
@@ -583,7 +583,7 @@ export function GameLayout() {
                                                 {availableScrolls.map((color, i) => {
                                                     const isRevealed = revealedScrollColor === color;
 
-                                                    const spacing = 40;
+                                                    const spacing = availableScrolls.length > 5 ? 30 : 40;
                                                     const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
 
                                                     const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
@@ -613,7 +613,7 @@ export function GameLayout() {
                                                 <AnimatePresence>
                                                     {scrollStage === 'faded' && revealedScrollColor && (
                                                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-sm text-zinc-100 font-black uppercase tracking-[0.2em] leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                                                            {revealedScrollColor.replace('scroll-', '')}
+                                                            {revealedScrollColor.replace('-scroll', '')}
                                                         </motion.div>
                                                     )}
                                                 </AnimatePresence>

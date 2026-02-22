@@ -136,8 +136,8 @@ export const useGameStore = create<GameState>()(
                             case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
                             case 'pine-tree': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); break;
                             case 'zigzag-leaf': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
-                            case 'gold-bar':
-                            case 'gem-pendant': state.gold += (isBoosted ? 20 : 10); break;
+                            case 'gold-bar': state.gold += (isBoosted ? 28 : 14); break;
+                            case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
                         }
                     }
                 }
@@ -194,12 +194,12 @@ export const useGameStore = create<GameState>()(
                             case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
                             case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
                             case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); break;
-                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
-                            case 'axe': state.playerBaseAtk += (isBoosted ? 4 : 2); state.playerGear += (isBoosted ? 2 : 1); break;
+                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
+                            case 'axe': state.playerBaseAtk += (isBoosted ? 6 : 3); state.playerGear += (isBoosted ? 4 : 2); break;
                             case 'relic-blade':
-                            case 'crossbow':
                             case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
-                            case 'shield':
+                            case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
+                            case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
                             case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
                             case 'crystal-wand':
                             case 'fairy-wand': state.playerMagic += (isBoosted ? 10 : 5); break;

@@ -42,10 +42,14 @@ export const ICON_MAP = {
     // Item
     "key": "key",
     "scroll-unfurled": "scroll-unfurled",
-    "scroll-purple": "scroll-unfurled",
-    "scroll-orange": "scroll-unfurled",
-    "scroll-blue": "scroll-unfurled",
-    "scroll-pink": "scroll-unfurled",
+    "item-scroll": "scroll-unfurled",
+    "food-scroll": "scroll-unfurled",
+    "armor-scroll": "scroll-unfurled",
+    "magic-scroll": "scroll-unfurled",
+    "weapon-scroll": "scroll-unfurled",
+    "music-scroll": "scroll-unfurled",
+    "special-scroll": "scroll-unfurled",
+    "nature-scroll": "scroll-unfurled",
     "book": "book",
     "spades-card": "spades-card",
 
@@ -117,10 +121,14 @@ export const ICON_THEME: Record<IconName, string> = {
     // Special (Brown)
     "key": "#a16207",
     "scroll-unfurled": "#a16207",
-    "scroll-purple": "#7e22ce",
-    "scroll-orange": "#c2410c",
-    "scroll-blue": "#1d4ed8",
-    "scroll-pink": "#be185d",
+    "item-scroll": "#ffffff",
+    "food-scroll": "#ef4444",
+    "armor-scroll": "#3b82f6",
+    "magic-scroll": "#ec4899",
+    "weapon-scroll": "#94a3b8",
+    "music-scroll": "#f97316",
+    "special-scroll": "#a16207",
+    "nature-scroll": "#22c55e",
 
     // Item (White)
     "book": "#ffffff",
@@ -144,32 +152,36 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "apple": "Heal 6 HP",
     "meat": "Heal 10 HP",
     "crab-claw": "+1 Max HP",
-    "brandy-bottle": "-50% HP & +4 Max HP",
+    "brandy-bottle": "-25% HP & +4 Max HP",
 
     "clover": "+1 EXP +1 Magic",
     "pine-tree": "+1 EXP",
     "zigzag-leaf": "-3 EXP +5 Magic",
 
-    "axe": "+2 ATK +1 Gear",
+    "axe": "+3 ATK +2 Gear",
     "relic-blade": "+1 ATK +1 Gear",
-    "crossbow": "+1 ATK +1 Gear",
+    "crossbow": "+1 ATK +4 Gear",
     "daggers": "+1 ATK +1 Gear",
 
-    "shield": "+2 Gear",
+    "shield": "+5 Gear",
     "knight-helmet": "+2 Gear",
 
     "crystal-wand": "+5 Magic",
     "fairy-wand": "+5 Magic",
 
-    "gold-bar": "+10 gold",
-    "gem-pendant": "+10 Gold",
+    "gold-bar": "+14 gold",
+    "gem-pendant": "+8 Gold +2 Gear",
 
     "key": "unlock symbol inventory",
     "scroll-unfurled": "???",
-    "scroll-purple": "???",
-    "scroll-orange": "???",
-    "scroll-blue": "???",
-    "scroll-pink": "???",
+    "item-scroll": "???",
+    "food-scroll": "???",
+    "armor-scroll": "???",
+    "magic-scroll": "???",
+    "weapon-scroll": "???",
+    "music-scroll": "???",
+    "special-scroll": "???",
+    "nature-scroll": "???",
     "book": "???",
     "spades-card": "",
 
@@ -212,10 +224,14 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 
     "key": "Special",
     "scroll-unfurled": "Special",
-    "scroll-purple": "Special",
-    "scroll-orange": "Special",
-    "scroll-blue": "Special",
-    "scroll-pink": "Special",
+    "item-scroll": "Special",
+    "food-scroll": "Special",
+    "armor-scroll": "Special",
+    "magic-scroll": "Special",
+    "weapon-scroll": "Special",
+    "music-scroll": "Special",
+    "special-scroll": "Special",
+    "nature-scroll": "Special",
     "book": "Item",
     "spades-card": "Item",
 
@@ -251,7 +267,8 @@ export const GAME_CONSTANTS = {
 };
 
 export const ALL_SCROLL_COLORS: IconName[] = [
-    "scroll-purple", "scroll-orange", "scroll-blue", "scroll-pink"
+    "item-scroll", "food-scroll", "armor-scroll", "magic-scroll",
+    "weapon-scroll", "music-scroll", "special-scroll", "nature-scroll"
 ];
 
 export const INITIAL_ENEMIES = {
