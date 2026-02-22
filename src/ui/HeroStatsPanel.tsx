@@ -14,6 +14,7 @@ interface HeroStatsPanelProps {
     moves: number;
     isBattleRunning: boolean;
     onCharacterClick: () => void;
+    onReset: () => void;
 }
 
 const playerIconVariants: Variants = {
@@ -37,7 +38,8 @@ export function HeroStatsPanel({
     gold,
     moves,
     isBattleRunning,
-    onCharacterClick
+    onCharacterClick,
+    onReset
 }: HeroStatsPanelProps) {
     const [showGoldCost, setShowGoldCost] = useState(false);
     const [goldKey, setGoldKey] = useState(0);
@@ -108,6 +110,12 @@ export function HeroStatsPanel({
                     <span>{gold}</span>
                 </div>
             </div>
+            <button
+                onClick={onReset}
+                className="w-full mt-auto py-1.5 bg-red-950/30 hover:bg-red-900/40 text-red-500 rounded text-[10px] uppercase tracking-widest font-bold border border-red-900/30 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)]"
+            >
+                Reset
+            </button>
         </div>
     );
 }

@@ -360,6 +360,11 @@ export function GameLayout() {
                         moves={moves}
                         isBattleRunning={isBattleRunning}
                         onCharacterClick={() => !isBattleRunning && setIsCharacterModalOpen(true)}
+                        onReset={() => {
+                            resetGame();
+                            resetSelection();
+                            setSpinKey(prev => prev + 1);
+                        }}
                     />
 
                     <EnemyBattleHUD
@@ -667,19 +672,6 @@ export function GameLayout() {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
-                                    <div className="mt-4 pt-4 border-t border-zinc-800/50">
-                                        <button
-                                            onClick={() => {
-                                                resetGame();
-                                                resetSelection();
-                                                setSpinKey(prev => prev + 1);
-                                                setIsCharacterModalOpen(false);
-                                            }}
-                                            className="w-full py-3 bg-red-950/30 hover:bg-red-900/40 text-red-500 rounded font-bold tracking-widest uppercase transition-colors text-sm border border-red-900/30"
-                                        >
-                                            Reset Game
-                                        </button>
                                     </div>
                                 </motion.div>
                             </>
