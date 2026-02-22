@@ -180,7 +180,7 @@ export const useGameStore = create<GameState>()(
                     const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
                     if (emptySlotIndex !== undefined) {
                         state.grid = state.grid.map(s => s?.id === item.id ? null : s);
-                        state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 3 };
+                        state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
                         switch (item.name) {
                             case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
@@ -276,6 +276,9 @@ export const useGameStore = create<GameState>()(
                     if (icon !== null) {
                         icon.battleCount -= 1;
                         if (icon.battleCount <= 0) {
+                            if (icon.name === 'apple') {
+                                state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (icon.isBoosted ? 12 : 6));
+                            }
                             state.keptIcons[i] = null;
                         }
                     }

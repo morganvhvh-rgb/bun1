@@ -10,6 +10,7 @@ export interface GridItem {
 export interface KeptIcon {
     name: IconName;
     battleCount: number;
+    isBoosted?: boolean;
 }
 
 export interface CharacterStats {

@@ -202,6 +202,7 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 };
 
 export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
+    "apple": "also heal when symbol is removed",
     "daggers": "first attack happens 3 times / doesnt stack",
     "relic-blade": "increase attack by current experience / doesnt stack",
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
