@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
-import { ICON_THEME, ICON_CATEGORIES, ICON_STATS } from '@/lib/constants';
+import { ICON_THEME, ICON_CATEGORIES, ICON_STATS, ICON_EXTRA_EFFECTS } from '@/lib/constants';
 import type { GridItem, IconName } from '@/types/game';
 
 const getStatText = (name: IconName, isBoosted: boolean) => {
@@ -161,8 +161,7 @@ export function GridBoard({
                             {getStatText(gridIcons[selectedIndex]!.name, matchingIndices.has(selectedIndex))}
                         </div>
                         <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
-                            {gridIcons[selectedIndex]!.name === 'daggers' ? "first attack happens 3 times / doesnt stack" :
-                                gridIcons[selectedIndex]!.name === 'relic-blade' ? "increase attack by current experience / doesnt stack" : ""}
+                            {ICON_EXTRA_EFFECTS[gridIcons[selectedIndex]!.name] || ""}
                         </div>
                     </div>
                 ) : (

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers } from '@/store/gameStore';
 import { Icon } from './Icon';
 import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
@@ -17,7 +17,6 @@ export function GameLayout() {
         moves,
         playerHp,
         playerMaxHp,
-        playerBaseAtk,
         playerMagic,
         playerGear,
         enemy1,
@@ -35,6 +34,9 @@ export function GameLayout() {
         resetGame,
         unlockSection
     } = useGameStore();
+
+    const totalAttack = useGameStore(selectTotalAttack);
+    const hasDaggers = useGameStore(selectHasDaggers);
 
     const handleInventoryClick = (sectionId: 0 | 1 | 2) => {
         if (isUnlockingMode && !unlockedSections[sectionId]) {
@@ -79,8 +81,7 @@ export function GameLayout() {
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-        const hasRelicBlade = keptIcons.some(item => item?.name === 'relic-blade');
-        const pAtk = playerBaseAtk + (hasRelicBlade ? moves : 0);
+        const pAtk = totalAttack;
         const e1AtkVal = enemy1.atk;
         const e2AtkVal = enemy2.atk;
 
@@ -89,7 +90,6 @@ export function GameLayout() {
             return;
         }
 
-        const hasDaggers = keptIcons.some(item => item?.name === 'daggers');
         let isFirstAttack = true;
 
         while (playerHpRef.current > 0 && (enemy1HpRef.current > 0 || enemy2HpRef.current > 0)) {
@@ -357,7 +357,7 @@ export function GameLayout() {
                         playerAnim={playerAnim}
                         playerHp={playerHp}
                         playerMaxHp={playerMaxHp}
-                        playerBaseAtk={playerBaseAtk + (keptIcons.some(i => i?.name === 'relic-blade') ? moves : 0)}
+                        playerBaseAtk={totalAttack}
                         playerMagic={playerMagic}
                         playerGear={playerGear}
                         gold={gold}

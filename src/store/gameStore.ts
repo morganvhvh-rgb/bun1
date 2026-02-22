@@ -22,6 +22,7 @@ interface GameState {
     playerBaseAtk: number;
     playerMagic: number;
     playerGear: number;
+    isFirstEnemyAttack: boolean;
 
     enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
     enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number };
@@ -79,9 +80,10 @@ export const useGameStore = create<GameState>()(
             playerBaseAtk: 8,
             playerMagic: 0,
             playerGear: 0,
+            isFirstEnemyAttack: true,
 
-            enemy1: { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
-            enemy2: { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 },
+            enemy1: { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
+            enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
 
             spinBoard: () => set((state) => {
                 if (state.gold < 1) return;
@@ -207,7 +209,23 @@ export const useGameStore = create<GameState>()(
 
             applyBattleDamage: (target, amount) => set((state) => {
                 if (target === 'player') {
-                    state.playerHp = Math.max(0, state.playerHp - amount);
+                    let finalDamage = amount;
+
+                    if (state.playerGear > 3) {
+                        const helmetCount = state.keptIcons.filter(item => item?.name === 'knight-helmet').length;
+                        finalDamage = Math.max(0, finalDamage - helmetCount);
+                    }
+
+                    if (state.isFirstEnemyAttack) {
+                        const hasShield = state.keptIcons.some(item => item?.name === 'shield');
+                        if (hasShield) {
+                            state.playerGear = Math.max(0, state.playerGear - finalDamage);
+                            finalDamage = 0;
+                        }
+                    }
+
+                    state.isFirstEnemyAttack = false;
+                    state.playerHp = Math.max(0, state.playerHp - finalDamage);
                 } else if (target === 'enemy1') {
                     state.enemy1.hp = Math.max(0, state.enemy1.hp - amount);
                 } else if (target === 'enemy2') {
@@ -234,15 +252,17 @@ export const useGameStore = create<GameState>()(
                     }
                 }
 
+                state.isFirstEnemyAttack = true;
+
                 if (state.enemy1.name === 'wyvern') {
-                    state.enemy1 = { name: 'monster-skull', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'snail', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy1 = { name: 'monster-skull', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'snail', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                 } else if (state.enemy1.name === 'monster-skull') {
-                    state.enemy1 = { name: 'hydra', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'spider-face', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy1 = { name: 'hydra', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'spider-face', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                 } else {
-                    state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
-                    state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                    state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                    state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
                 }
             }),
 
@@ -259,8 +279,9 @@ export const useGameStore = create<GameState>()(
                 state.playerBaseAtk = 8;
                 state.playerMagic = 0;
                 state.playerGear = 0;
-                state.enemy1 = { name: 'wyvern', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
-                state.enemy2 = { name: 'octopus', hp: 10, maxHp: 10, atk: 5, isVisible: true, lvl: 1 };
+                state.isFirstEnemyAttack = true;
+                state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
+                state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 };
             }),
 
         })),
@@ -270,3 +291,9 @@ export const useGameStore = create<GameState>()(
         }
     )
 );
+
+export const selectTotalAttack = (state: GameState) =>
+    state.playerBaseAtk + (state.keptIcons.some(item => item?.name === 'relic-blade') ? state.moves : 0);
+
+export const selectHasDaggers = (state: GameState) =>
+    state.keptIcons.some(item => item?.name === 'daggers');
