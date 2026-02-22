@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { GridItem, IconName, KeptIcon } from '@/types/game';
-import { ICON_KEYS, ICON_CATEGORIES } from '@/lib/constants';
+import { ICON_KEYS, ICON_CATEGORIES, GAME_CONSTANTS, INITIAL_ENEMIES } from '@/lib/constants';
+import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
     // Grid State
@@ -79,30 +80,30 @@ export const useGameStore = create<GameState>()(
             isUnlockingMode: false,
             levelUpPerks: [],
 
-            gold: 100,
-            moves: 0,
+            gold: GAME_CONSTANTS.INITIAL_GOLD,
+            moves: GAME_CONSTANTS.INITIAL_MOVES,
 
             // Battle Stats
-            playerHp: 60,
-            playerMaxHp: 60,
-            playerBaseAtk: 8,
-            playerMagic: 0,
-            playerGear: 0,
+            playerHp: GAME_CONSTANTS.INITIAL_PLAYER_HP,
+            playerMaxHp: GAME_CONSTANTS.INITIAL_PLAYER_HP,
+            playerBaseAtk: GAME_CONSTANTS.INITIAL_PLAYER_ATK,
+            playerMagic: GAME_CONSTANTS.INITIAL_PLAYER_MAGIC,
+            playerGear: GAME_CONSTANTS.INITIAL_PLAYER_GEAR,
             isFirstEnemyAttack: true,
             battleCount: 1,
 
-            enemy1: { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' },
-            enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' },
+            enemy1: { ...INITIAL_ENEMIES.wyvern },
+            enemy2: { ...INITIAL_ENEMIES.octopus },
 
             spinBoard: () => set((state) => {
-                if (state.gold < 2) return;
-                state.gold -= 2;
+                if (state.gold < GAME_CONSTANTS.SPIN_COST) return;
+                state.gold -= GAME_CONSTANTS.SPIN_COST;
                 state.grid = generateRandomIcons();
             }),
 
             shuffleBoard: () => set((state) => {
-                if (state.gold < 2) return;
-                state.gold -= 2;
+                if (state.gold < GAME_CONSTANTS.SHUFFLE_COST) return;
+                state.gold -= GAME_CONSTANTS.SHUFFLE_COST;
                 const newArr = [...state.grid];
                 for (let i = newArr.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -115,11 +116,8 @@ export const useGameStore = create<GameState>()(
                 const character = state.grid[fromIndex];
                 if (!character || character.name !== "hood") return;
 
-                if (state.gold < 2) return;
-                state.gold -= 2;
-
-                const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
-                const getIndex = (row: number, col: number) => row * 4 + col;
+                if (state.gold < GAME_CONSTANTS.MOVE_COST) return;
+                state.gold -= GAME_CONSTANTS.MOVE_COST;
 
                 const pCoords = getCoordinates(fromIndex);
                 const tCoords = getCoordinates(toIndex);
@@ -164,7 +162,7 @@ export const useGameStore = create<GameState>()(
 
             keepItem: (item, isBoosted = false) => set((state) => {
                 if (item.name === 'key') return;
-                if (state.gold < 2) return;
+                if (state.gold < GAME_CONSTANTS.KEEP_ITEM_COST) return;
 
                 const category = ICON_CATEGORIES[item.name];
                 let targetSlots: number[] = [];
@@ -185,7 +183,7 @@ export const useGameStore = create<GameState>()(
                 if (targetSlots.length > 0) {
                     const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
                     if (emptySlotIndex !== undefined) {
-                        state.gold -= 2;
+                        state.gold -= GAME_CONSTANTS.KEEP_ITEM_COST;
                         state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                         state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
@@ -214,7 +212,7 @@ export const useGameStore = create<GameState>()(
             }),
 
             addKeptScroll: (name) => set((state) => {
-                if (state.keptScrolls.length < 6) {
+                if (state.keptScrolls.length < GAME_CONSTANTS.MAX_KEPT_SCROLLS) {
                     state.keptScrolls.push(name);
                 }
             }),
@@ -265,8 +263,8 @@ export const useGameStore = create<GameState>()(
             }),
 
             applyLevelUp: (perk) => set((state) => {
-                if (state.moves < 10) return;
-                state.moves -= 10;
+                if (state.moves < GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) return;
+                state.moves -= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED;
 
                 if (perk === "full_heal_max_hp") {
                     state.playerMaxHp += 10;
@@ -281,8 +279,8 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
-                if (state.battleCount >= 4) {
-                    state.battleCount = 5;
+                if (state.battleCount >= GAME_CONSTANTS.MAX_BATTLES) {
+                    state.battleCount = GAME_CONSTANTS.MAX_BATTLES + 1;
                     return;
                 }
 
@@ -301,15 +299,21 @@ export const useGameStore = create<GameState>()(
 
                 state.isFirstEnemyAttack = true;
 
-                if (state.enemy1.name === 'wyvern') {
-                    state.enemy1 = { name: 'monster-skull', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
-                    state.enemy2 = { name: 'snail', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                if (state.battleCount === 4) {
+                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: 50, maxHp: 50, atk: 11, lvl: 2 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 50, maxHp: 50, atk: 11, lvl: 2 };
+                } else if (state.enemy1.name === 'wyvern') {
+                    const isLvl2 = state.enemy1.lvl === 2;
+                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: isLvl2 ? 50 : INITIAL_ENEMIES.snail.hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES.snail.maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'monster-skull') {
-                    state.enemy1 = { name: 'hydra', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
-                    state.enemy2 = { name: 'spider-face', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                    const isLvl2 = state.enemy1.lvl === 2;
+                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: isLvl2 ? 50 : INITIAL_ENEMIES.hydra.hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES.hydra.maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'hydra') {
-                    state.enemy1 = { name: 'eye-monster', hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'enemy' };
-                    state.enemy2 = { name: 'octopus', hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: 1, type: 'enemy' };
+                    const isLvl2 = state.enemy1.lvl === 2;
+                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].hp, maxHp: isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].maxHp, atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: isLvl2 ? 2 : 1 };
                 }
 
                 state.battleCount += 1;
@@ -322,17 +326,17 @@ export const useGameStore = create<GameState>()(
                 state.unlockedSections = { 0: true, 1: false, 2: false };
                 state.isUnlockingMode = false;
                 state.levelUpPerks = [];
-                state.gold = 100;
-                state.moves = 0;
-                state.playerHp = 60;
-                state.playerMaxHp = 60;
-                state.playerBaseAtk = 8;
-                state.playerMagic = 0;
-                state.playerGear = 0;
+                state.gold = GAME_CONSTANTS.INITIAL_GOLD;
+                state.moves = GAME_CONSTANTS.INITIAL_MOVES;
+                state.playerHp = GAME_CONSTANTS.INITIAL_PLAYER_HP;
+                state.playerMaxHp = GAME_CONSTANTS.INITIAL_PLAYER_HP;
+                state.playerBaseAtk = GAME_CONSTANTS.INITIAL_PLAYER_ATK;
+                state.playerMagic = GAME_CONSTANTS.INITIAL_PLAYER_MAGIC;
+                state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
                 state.isFirstEnemyAttack = true;
                 state.battleCount = 1;
-                state.enemy1 = { name: 'wyvern', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
-                state.enemy2 = { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'enemy' };
+                state.enemy1 = { ...INITIAL_ENEMIES.wyvern };
+                state.enemy2 = { ...INITIAL_ENEMIES.octopus };
             }),
 
         })),
@@ -348,3 +352,6 @@ export const selectTotalAttack = (state: GameState) =>
 
 export const selectHasDaggers = (state: GameState) =>
     state.keptIcons.some(item => item?.name === 'daggers');
+
+export const selectCrossbowCount = (state: GameState) =>
+    state.keptIcons.filter(item => item?.name === 'crossbow').length;

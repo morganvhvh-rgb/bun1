@@ -229,4 +229,36 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "relic-blade": "increase attack by current experience / doesnt stack",
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
+    "crossbow": "+10 atk against flying enemies / stacks",
+};
+
+export const GAME_CONSTANTS = {
+    INITIAL_PLAYER_HP: 60,
+    INITIAL_PLAYER_ATK: 8,
+    INITIAL_PLAYER_MAGIC: 0,
+    INITIAL_PLAYER_GEAR: 0,
+    INITIAL_GOLD: 100,
+    INITIAL_MOVES: 0,
+    SPIN_COST: 2,
+    SHUFFLE_COST: 2,
+    MOVE_COST: 2,
+    KEEP_ITEM_COST: 2,
+    SCROLL_COST: 20,
+    MAX_KEPT_SCROLLS: 6,
+    MAX_BATTLES: 8,
+    LEVEL_UP_MOVES_REQUIRED: 10,
+};
+
+export const ALL_SCROLL_COLORS: IconName[] = [
+    "scroll-purple", "scroll-orange", "scroll-blue", "scroll-pink"
+];
+
+export const INITIAL_ENEMIES = {
+    wyvern: { name: 'wyvern' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'flying' },
+    octopus: { name: 'octopus' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'monster-skull': { name: 'monster-skull' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'evil' },
+    snail: { name: 'snail' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    hydra: { name: 'hydra' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'spider-face': { name: 'spider-face' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'eye-monster': { name: 'eye-monster' as IconName, hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'flying / boss' },
 };

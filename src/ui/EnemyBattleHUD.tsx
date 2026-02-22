@@ -129,7 +129,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 exit={{ opacity: 0 }}
                                 className="absolute inset-0 flex items-center justify-center text-red-500 text-sm tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
                             >
-                                {battleCount === 4 ? "BOSS BATTLE" : battleCount > 4 ? "VICTORY" : `BATTLE ${battleCount}`}
+                                {battleCount === 4 || battleCount === 8 ? "BOSS BATTLE" : battleCount > 8 ? "VICTORY" : `BATTLE ${battleCount}`}
                             </motion.span>
                         ) : (
                             <motion.div

@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore, selectTotalAttack, selectHasDaggers } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount } from '@/store/gameStore';
 import { Icon } from './Icon';
 import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
 import { GridBoard } from './GridBoard';
-import { ICON_THEME, ICON_CATEGORIES } from '@/lib/constants';
+import { ICON_THEME, ICON_CATEGORIES, GAME_CONSTANTS, ALL_SCROLL_COLORS } from '@/lib/constants';
+import { findMatchingIndices, getCoordinates, getIndex } from '@/lib/utils';
 import type { GridItem, IconName, KeptIcon } from '@/types/game';
 
 export function GameLayout() {
@@ -42,6 +43,7 @@ export function GameLayout() {
 
     const totalAttack = useGameStore(selectTotalAttack);
     const hasDaggers = useGameStore(selectHasDaggers);
+    const crossbowCount = useGameStore(selectCrossbowCount);
 
     const handleInventoryClick = (sectionId: 0 | 1 | 2) => {
         if (isUnlockingMode && !unlockedSections[sectionId]) {
@@ -70,8 +72,8 @@ export function GameLayout() {
     const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
 
     const handleBuyScroll = () => {
-        if (gold < 20 || !pendingScrollId || scrollStage !== 'initial') return;
-        spendGold(20);
+        if (gold < GAME_CONSTANTS.SCROLL_COST || !pendingScrollId || scrollStage !== 'initial') return;
+        spendGold(GAME_CONSTANTS.SCROLL_COST);
         const savedId = pendingScrollId;
         setPendingScrollId(null);
         setScrollStage('lifting');
@@ -146,7 +148,8 @@ export function GameLayout() {
 
                 const target = enemy1HpRef.current > 0 ? 1 : 2;
                 if (target === 1) {
-                    applyBattleDamage('enemy1', pAtk);
+                    const bonusAtk = enemy1.type.includes('flying') ? (crossbowCount * 10) : 0;
+                    applyBattleDamage('enemy1', pAtk + bonusAtk);
                     setEnemy1Anim('hurt');
                     await delay(250);
                     setEnemy1Anim('idle');
@@ -155,7 +158,8 @@ export function GameLayout() {
                         setEnemyVisibility('enemy1', false);
                     }
                 } else {
-                    applyBattleDamage('enemy2', pAtk);
+                    const bonusAtk = enemy2.type.includes('flying') ? (crossbowCount * 10) : 0;
+                    applyBattleDamage('enemy2', pAtk + bonusAtk);
                     setEnemy2Anim('hurt');
                     await delay(250);
                     setEnemy2Anim('idle');
@@ -230,7 +234,7 @@ export function GameLayout() {
     };
 
     const handleSpin = () => {
-        if (gold < 2 || isUnlockingMode) return;
+        if (gold < GAME_CONSTANTS.SPIN_COST || isUnlockingMode) return;
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
@@ -240,7 +244,7 @@ export function GameLayout() {
     };
 
     const handleVary = () => {
-        if (gold < 2 || isUnlockingMode) return;
+        if (gold < GAME_CONSTANTS.SHUFFLE_COST || isUnlockingMode) return;
         shuffleBoard();
         resetSelection();
         setHasMoved(false);
@@ -252,13 +256,10 @@ export function GameLayout() {
         }, 400);
     };
 
-    const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
-    const getIndex = (row: number, col: number) => row * 4 + col;
-
     const handleIconClick = (item: GridItem, index: number) => {
         if (isAnimating || isUnlockingMode) return;
 
-        const isBoosted = findMatchingIndices().has(index);
+        const isBoosted = findMatchingIndices(gridIcons).has(index);
 
         if (glowingIndices.includes(index) && activeHoodedIndex !== null) {
             const character = gridIcons[activeHoodedIndex];
@@ -297,7 +298,6 @@ export function GameLayout() {
             }
 
             if (item.name === 'scroll-unfurled') {
-                const ALL_SCROLL_COLORS: IconName[] = ["scroll-purple", "scroll-orange", "scroll-blue", "scroll-pink"];
                 const available = ALL_SCROLL_COLORS.filter(c => !keptScrolls.includes(c));
 
                 if (available.length > 0) {
@@ -335,42 +335,7 @@ export function GameLayout() {
         }
     };
 
-    const findMatchingIndices = () => {
-        const matches = new Set<number>();
-        const visited = new Set<number>();
 
-        for (let i = 0; i < gridIcons.length; i++) {
-            if (visited.has(i) || !gridIcons[i]) continue;
-
-            const name = gridIcons[i]!.name;
-            const group = [i];
-            const queue = [i];
-            visited.add(i);
-
-            while (queue.length > 0) {
-                const current = queue.shift()!;
-                const { row, col } = getCoordinates(current);
-
-                const neighbors = [
-                    { r: row - 1, c: col }, { r: row + 1, c: col }, { r: row, c: col - 1 }, { r: row, c: col + 1 }
-                ];
-
-                for (const n of neighbors) {
-                    if (n.r >= 0 && n.r < 3 && n.c >= 0 && n.c < 4) {
-                        const nIdx = getIndex(n.r, n.c);
-                        if (!visited.has(nIdx) && gridIcons[nIdx]?.name === name) {
-                            visited.add(nIdx);
-                            group.push(nIdx);
-                            queue.push(nIdx);
-                        }
-                    }
-                }
-            }
-
-            if (group.length >= 3) group.forEach(idx => matches.add(idx));
-        }
-        return matches;
-    };
 
     const controlButtonClass = "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -402,7 +367,7 @@ export function GameLayout() {
                         enemy2={{ ...enemy2, animStatus: enemy2Anim }}
                         isBattleRunning={isBattleRunning}
                         battleCount={battleCount}
-                        isDisabled={playerHp === 0 || battleCount > 4}
+                        isDisabled={playerHp === 0 || battleCount > GAME_CONSTANTS.MAX_BATTLES}
                         onEngage={() => {
                             if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
                                 handleBattleSequence();
@@ -508,7 +473,7 @@ export function GameLayout() {
                             <GridBoard
                                 gridIcons={gridIcons}
                                 spinKey={spinKey}
-                                matchingIndices={findMatchingIndices()}
+                                matchingIndices={findMatchingIndices(gridIcons)}
                                 glowingIndices={glowingIndices}
                                 activeHoodedIndex={activeHoodedIndex}
                                 selectedIndex={selectedIndex}
@@ -520,10 +485,10 @@ export function GameLayout() {
                             />
 
                             <div className="flex flex-col gap-3 mt-[1.875rem]">
-                                <motion.button onClick={handleSpin} disabled={gold < 2 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
+                                <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
-                                <motion.button onClick={handleVary} disabled={gold < 2 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
+                                <motion.button onClick={handleVary} disabled={gold < GAME_CONSTANTS.SHUFFLE_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
                                     <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
                             </div>
@@ -597,8 +562,8 @@ export function GameLayout() {
 
                                         <div className="flex justify-center mb-6">
                                             {scrollStage === 'initial' ? (
-                                                <button onClick={handleBuyScroll} disabled={gold < 20} className={`py-3 px-6 w-full rounded font-bold uppercase tracking-widest text-sm transition-colors border ${gold >= 20 ? 'bg-zinc-800 hover:bg-zinc-700 text-yellow-500 border-yellow-900/50' : 'bg-red-950/20 text-red-500/50 border-red-900/30 cursor-not-allowed'}`}>
-                                                    Buy Scroll {gold < 20 ? '(Need 20g)' : '(20g)'}
+                                                <button onClick={handleBuyScroll} disabled={gold < GAME_CONSTANTS.SCROLL_COST} className={`py-3 px-6 w-full rounded font-bold uppercase tracking-widest text-sm transition-colors border ${gold >= GAME_CONSTANTS.SCROLL_COST ? 'bg-zinc-800 hover:bg-zinc-700 text-yellow-500 border-yellow-900/50' : 'bg-red-950/20 text-red-500/50 border-red-900/30 cursor-not-allowed'}`}>
+                                                    Buy Scroll {gold < GAME_CONSTANTS.SCROLL_COST ? `(Need ${GAME_CONSTANTS.SCROLL_COST}g)` : `(${GAME_CONSTANTS.SCROLL_COST}g)`}
                                                 </button>
                                             ) : (
                                                 <div className="py-3 px-6 w-full text-center rounded font-bold uppercase tracking-widest text-sm bg-zinc-800 text-zinc-500 border border-zinc-700 opacity-50">
@@ -666,7 +631,7 @@ export function GameLayout() {
                                         <button onClick={() => setIsCharacterModalOpen(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
                                     </div>
                                     <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto">
-                                        {moves >= 10 ? (
+                                        {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED ? (
                                             <div className="flex flex-col gap-3 w-full">
                                                 <h3 className="text-green-500 font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
                                                 {levelUpPerks.length === 0 ? (
