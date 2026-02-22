@@ -73,7 +73,7 @@ export const useGameStore = create<GameState>()(
             grid: generateRandomIcons(),
             keptIcons: [null, null, null, null, null, null],
             keptScrolls: [],
-            unlockedSections: { 0: false, 1: false, 2: false },
+            unlockedSections: { 0: true, 1: false, 2: false },
             isUnlockingMode: false,
             levelUpPerks: [],
 
@@ -93,14 +93,14 @@ export const useGameStore = create<GameState>()(
             enemy2: { name: 'octopus', hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1 },
 
             spinBoard: () => set((state) => {
-                if (state.gold < 1) return;
-                state.gold -= 1;
+                if (state.gold < 2) return;
+                state.gold -= 2;
                 state.grid = generateRandomIcons();
             }),
 
             shuffleBoard: () => set((state) => {
-                if (state.gold < 1) return;
-                state.gold -= 1;
+                if (state.gold < 2) return;
+                state.gold -= 2;
                 const newArr = [...state.grid];
                 for (let i = newArr.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -112,6 +112,9 @@ export const useGameStore = create<GameState>()(
             moveCharacter: (fromIndex, toIndex, isBoosted = false) => set((state) => {
                 const character = state.grid[fromIndex];
                 if (!character || character.name !== "hood") return;
+
+                if (state.gold < 2) return;
+                state.gold -= 2;
 
                 const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
                 const getIndex = (row: number, col: number) => row * 4 + col;
@@ -185,7 +188,7 @@ export const useGameStore = create<GameState>()(
                         switch (item.name) {
                             case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
                             case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
-                            case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); state.playerHp += (isBoosted ? 2 : 1); break;
+                            case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); break;
                             case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp / 2)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
                             case 'axe': state.playerBaseAtk += (isBoosted ? 4 : 2); state.playerGear += (isBoosted ? 2 : 1); break;
                             case 'relic-blade':
@@ -304,7 +307,7 @@ export const useGameStore = create<GameState>()(
                 state.grid = generateRandomIcons();
                 state.keptIcons = [null, null, null, null, null, null];
                 state.keptScrolls = [];
-                state.unlockedSections = { 0: false, 1: false, 2: false };
+                state.unlockedSections = { 0: true, 1: false, 2: false };
                 state.isUnlockingMode = false;
                 state.levelUpPerks = [];
                 state.gold = 100;

@@ -197,7 +197,7 @@ export function GameLayout() {
     };
 
     const handleSpin = () => {
-        if (gold < 1 || isUnlockingMode) return;
+        if (gold < 2 || isUnlockingMode) return;
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
@@ -207,7 +207,7 @@ export function GameLayout() {
     };
 
     const handleVary = () => {
-        if (gold < 1 || isUnlockingMode) return;
+        if (gold < 2 || isUnlockingMode) return;
         shuffleBoard();
         resetSelection();
         setHasMoved(false);
@@ -470,10 +470,10 @@ export function GameLayout() {
                             />
 
                             <div className="flex flex-col gap-3 mt-[1.875rem]">
-                                <motion.button onClick={handleSpin} disabled={gold < 1 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
+                                <motion.button onClick={handleSpin} disabled={gold < 2 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
-                                <motion.button onClick={handleVary} disabled={gold < 1 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
+                                <motion.button onClick={handleVary} disabled={gold < 2 || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
                                     <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
                             </div>

@@ -1,4 +1,5 @@
-import { motion, type Variants } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
 
@@ -38,6 +39,23 @@ export function HeroStatsPanel({
     isBattleRunning,
     onCharacterClick
 }: HeroStatsPanelProps) {
+    const [showGoldCost, setShowGoldCost] = useState(false);
+    const [goldKey, setGoldKey] = useState(0);
+    const prevGoldRef = useRef(gold);
+
+    useEffect(() => {
+        if (gold < prevGoldRef.current) {
+            setShowGoldCost(true);
+            setGoldKey(k => k + 1);
+
+            const timer = setTimeout(() => {
+                setShowGoldCost(false);
+            }, 800);
+            return () => clearTimeout(timer);
+        }
+        prevGoldRef.current = gold;
+    }, [gold]);
+
     return (
         <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
             <div className="relative flex">
@@ -71,7 +89,24 @@ export function HeroStatsPanel({
                 <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">{playerMagic}</span></div>
                 <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">{playerGear}</span></div>
                 <div className="flex justify-between items-center"><span>Experience</span> <span className="text-zinc-300">{moves}</span></div>
-                <div className="flex justify-between items-center"><span>Gold</span> <span className="text-zinc-300">{gold}</span></div>
+                <div className="flex justify-between items-center relative text-yellow-500">
+                    <span>Gold</span>
+                    <AnimatePresence>
+                        {showGoldCost && (
+                            <motion.span
+                                key={goldKey}
+                                initial={{ opacity: 1, y: 0 }}
+                                animate={{ opacity: 0, y: -10 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.8, ease: "easeOut" }}
+                                className="absolute left-1/2 -translate-x-1/2 text-red-500 pointer-events-none z-50"
+                            >
+                                -2
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                    <span>{gold}</span>
+                </div>
             </div>
         </div>
     );
