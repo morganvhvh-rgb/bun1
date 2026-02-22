@@ -121,14 +121,14 @@ export const ICON_THEME: Record<IconName, string> = {
     // Special (Brown)
     "key": "#a16207",
     "scroll-unfurled": "#a16207",
-    "item-scroll": "#ffffff",
-    "food-scroll": "#ef4444",
-    "armor-scroll": "#3b82f6",
-    "magic-scroll": "#ec4899",
-    "weapon-scroll": "#94a3b8",
-    "music-scroll": "#f97316",
-    "special-scroll": "#a16207",
-    "nature-scroll": "#22c55e",
+    "item-scroll": "#d4d4d8", // zinc-300
+    "food-scroll": "#b91c1c", // red-700
+    "armor-scroll": "#1d4ed8", // blue-700
+    "magic-scroll": "#be185d", // pink-700
+    "weapon-scroll": "#475569", // slate-600
+    "music-scroll": "#c2410c", // orange-700
+    "special-scroll": "#713f12", // yellow-900 (dark brown)
+    "nature-scroll": "#15803d", // green-700
 
     // Item (White)
     "book": "#ffffff",

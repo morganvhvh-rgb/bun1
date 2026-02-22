@@ -583,7 +583,7 @@ export function GameLayout() {
                                                 {availableScrolls.map((color, i) => {
                                                     const isRevealed = revealedScrollColor === color;
 
-                                                    const spacing = availableScrolls.length > 5 ? 30 : 40;
+                                                    const spacing = availableScrolls.length > 5 ? 25 : 35;
                                                     const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
 
                                                     const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
@@ -592,17 +592,17 @@ export function GameLayout() {
                                                     return (
                                                         <motion.div
                                                             key={color}
-                                                            className="absolute"
+                                                            className="absolute drop-shadow-[2px_4px_0_rgba(0,0,0,1)]"
                                                             initial={{ x: xPos, y: 10, opacity: 1 }}
                                                             animate={{
                                                                 y: yPos,
                                                                 x: xPos,
                                                                 opacity: opacity,
-                                                                zIndex: isRevealed ? 50 : i
+                                                                zIndex: i
                                                             }}
                                                             transition={{ duration: 0.6, ease: "easeOut" }}
                                                         >
-                                                            <Icon name={color} scale={5} tintColor={ICON_THEME[color]} />
+                                                            <Icon name={color} scale={4} tintColor={ICON_THEME[color]} />
                                                         </motion.div>
                                                     );
                                                 })}
