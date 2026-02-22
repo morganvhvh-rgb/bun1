@@ -102,8 +102,11 @@ export const useGameStore = create<GameState>()(
             }),
 
             shuffleBoard: () => set((state) => {
-                if (state.gold < GAME_CONSTANTS.SHUFFLE_COST) return;
-                state.gold -= GAME_CONSTANTS.SHUFFLE_COST;
+                const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
+                const cost = (hasSpadesCard && state.moves > 3) ? 0 : GAME_CONSTANTS.SHUFFLE_COST;
+
+                if (state.gold < cost) return;
+                state.gold -= cost;
                 const newArr = [...state.grid];
                 for (let i = newArr.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -355,3 +358,8 @@ export const selectHasDaggers = (state: GameState) =>
 
 export const selectCrossbowCount = (state: GameState) =>
     state.keptIcons.filter(item => item?.name === 'crossbow').length;
+
+export const selectShuffleCost = (state: GameState) => {
+    const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
+    return (hasSpadesCard && state.moves < 3) ? 0 : GAME_CONSTANTS.SHUFFLE_COST;
+};

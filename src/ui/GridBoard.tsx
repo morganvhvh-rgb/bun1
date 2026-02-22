@@ -173,8 +173,16 @@ export function GridBoard({
                         <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
                             {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
-                        <div className="text-xs font-medium tracking-wider uppercase text-zinc-500">
-                            {ICON_EXTRA_EFFECTS[displayItem.name] || ""}
+                        <div className="text-xs font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center min-h-[16px]">
+                            {ICON_EXTRA_EFFECTS[displayItem.name] ? (
+                                ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
+                                    <span className="flex items-center gap-1">
+                                        <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 14 }} /> costs 0 if experience is {'<'}3
+                                    </span>
+                                ) : (
+                                    ICON_EXTRA_EFFECTS[displayItem.name]
+                                )
+                            ) : ""}
                         </div>
                     </div>
                 ) : (

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectShuffleCost } from '@/store/gameStore';
 import { Icon } from './Icon';
 import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
@@ -44,6 +44,7 @@ export function GameLayout() {
     const totalAttack = useGameStore(selectTotalAttack);
     const hasDaggers = useGameStore(selectHasDaggers);
     const crossbowCount = useGameStore(selectCrossbowCount);
+    const shuffleCost = useGameStore(selectShuffleCost);
 
     const handleInventoryClick = (sectionId: 0 | 1 | 2) => {
         if (isUnlockingMode && !unlockedSections[sectionId]) {
@@ -244,7 +245,7 @@ export function GameLayout() {
     };
 
     const handleVary = () => {
-        if (gold < GAME_CONSTANTS.SHUFFLE_COST || isUnlockingMode) return;
+        if (gold < shuffleCost || isUnlockingMode) return;
         shuffleBoard();
         resetSelection();
         setHasMoved(false);
@@ -493,7 +494,7 @@ export function GameLayout() {
                                 <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
-                                <motion.button onClick={handleVary} disabled={gold < GAME_CONSTANTS.SHUFFLE_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
+                                <motion.button onClick={handleVary} disabled={gold < shuffleCost || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
                                     <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
                             </div>
@@ -632,11 +633,13 @@ export function GameLayout() {
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCharacterModalOpen(false)} className="fixed inset-0 bg-black/50 z-[60]" />
                                 <motion.div initial={{ y: "-100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed top-0 left-0 right-0 h-[50dvh] bg-zinc-900 border-b border-zinc-700 rounded-b-3xl shadow-2xl z-[70] flex flex-col p-6">
                                     <div className="flex justify-between items-center mb-4">
-                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Character</h2>
+                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">
+                                            Character <span className="text-zinc-500 ml-2">Lvl {1 + levelUpPerks.length}</span>
+                                        </h2>
                                         <button onClick={() => setIsCharacterModalOpen(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
                                     </div>
                                     <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto">
-                                        {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED ? (
+                                        {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED && (
                                             <div className="flex flex-col gap-3 w-full">
                                                 <h3 className="text-green-500 font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
                                                 {levelUpPerks.length === 0 ? (
@@ -653,10 +656,6 @@ export function GameLayout() {
                                                         Full Heal
                                                     </button>
                                                 )}
-                                            </div>
-                                        ) : (
-                                            <div className="flex-1 flex flex-col items-center justify-center opacity-50">
-                                                More character options coming soon...
                                             </div>
                                         )}
 

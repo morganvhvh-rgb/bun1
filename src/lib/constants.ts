@@ -171,7 +171,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "scroll-blue": "???",
     "scroll-pink": "???",
     "book": "???",
-    "spades-card": "???",
+    "spades-card": "",
 
     "bell": "-1 ATK",
     "ocarina": "-1 ATK",
@@ -230,6 +230,7 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
+    "spades-card": "[perspective-dice-random icon] costs 0 if experience is <3",
 };
 
 export const GAME_CONSTANTS = {
