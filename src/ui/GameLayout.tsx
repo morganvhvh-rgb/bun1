@@ -28,13 +28,15 @@ export function GameLayout() {
         shuffleBoard,
         moveCharacter,
         keepItem,
-        keepScroll,
+        removeGridItem,
+        addKeptScroll,
         applyBattleDamage,
         setEnemyVisibility,
         resetBattleTarget,
         resetGame,
         applyLevelUp,
         unlockSection,
+        spendGold,
         battleCount
     } = useGameStore();
 
@@ -59,6 +61,37 @@ export function GameLayout() {
     const [isBattleRunning, setIsBattleRunning] = useState(false);
 
     const [selectedEquippedItem, setSelectedEquippedItem] = useState<GridItem | null>(null);
+
+    // Scroll Popup States
+    const [isScrollTypePopupOpen, setIsScrollTypePopupOpen] = useState(false);
+    const [scrollStage, setScrollStage] = useState<'initial' | 'lifting' | 'faded'>('initial');
+    const [availableScrolls, setAvailableScrolls] = useState<IconName[]>([]);
+    const [revealedScrollColor, setRevealedScrollColor] = useState<IconName | null>(null);
+    const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
+
+    const handleBuyScroll = () => {
+        if (gold < 20 || !pendingScrollId || scrollStage !== 'initial') return;
+        spendGold(20);
+        const savedId = pendingScrollId;
+        setPendingScrollId(null);
+        setScrollStage('lifting');
+
+        setTimeout(() => {
+            setScrollStage('faded');
+            if (revealedScrollColor) addKeptScroll(revealedScrollColor);
+            removeGridItem(savedId);
+
+            setTimeout(() => {
+                setIsScrollTypePopupOpen(false);
+            }, 2000);
+        }, 500);
+    };
+
+    const handleCloseScrollPopup = () => {
+        if (scrollStage !== 'initial') return;
+        setIsScrollTypePopupOpen(false);
+        setPendingScrollId(null);
+    };
 
     const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {
         e.stopPropagation();
@@ -264,8 +297,25 @@ export function GameLayout() {
             }
 
             if (item.name === 'scroll-unfurled') {
-                keepScroll(item);
-                resetSelection();
+                const ALL_SCROLL_COLORS: IconName[] = ["scroll-purple", "scroll-orange", "scroll-blue", "scroll-pink"];
+                const available = ALL_SCROLL_COLORS.filter(c => !keptScrolls.includes(c));
+
+                if (available.length > 0) {
+                    resetSelection();
+
+                    const shuffledAvailable = [...available].sort(() => Math.random() - 0.5);
+                    const targetColor = shuffledAvailable[Math.floor(Math.random() * shuffledAvailable.length)];
+
+                    setIsScrollTypePopupOpen(true);
+                    setScrollStage('initial');
+                    setAvailableScrolls(shuffledAvailable);
+                    setRevealedScrollColor(targetColor);
+                    setPendingScrollId(item.id);
+
+                } else {
+                    removeGridItem(item.id);
+                    resetSelection();
+                }
                 return;
             }
 
@@ -509,15 +559,96 @@ export function GameLayout() {
                                     </div>
                                     <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto">
                                         {keptScrolls.length > 0 ? (
-                                            keptScrolls.map((_, i) => (
-                                                <div key={i} className="text-zinc-400">
-                                                    Scroll {i + 1} - Does X to Y twice
+                                            keptScrolls.map((scrollName, i) => (
+                                                <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-900/30 px-2 transition-colors rounded-lg">
+                                                    <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                                        <Icon name={scrollName} scale={2} tintColor={ICON_THEME[scrollName]} />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <div className="text-zinc-300 font-bold uppercase text-xs tracking-wider">
+                                                            {scrollName.replace('scroll-', '')} Scroll
+                                                        </div>
+                                                        <div className="text-[10px] text-zinc-500">
+                                                            Does X to Y twice
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="opacity-50">No scrolls collected</div>
+                                            <div className="opacity-50 text-center mt-4 pt-4">No scrolls collected</div>
                                         )}
                                     </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Scroll Type Popup Modal */}
+                    <AnimatePresence>
+                        {isScrollTypePopupOpen && (
+                            <>
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-6" onClick={handleCloseScrollPopup}>
+                                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-6 relative overflow-hidden w-full max-w-sm min-h-[380px]" onClick={e => e.stopPropagation()}>
+
+                                        <div className="flex justify-between items-center mb-4">
+                                            <h2 className="text-zinc-100 font-bold uppercase tracking-widest leading-none">SCROLL TYPE</h2>
+                                            <button onClick={handleCloseScrollPopup} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
+                                        </div>
+
+                                        <div className="flex justify-center mb-6">
+                                            {scrollStage === 'initial' ? (
+                                                <button onClick={handleBuyScroll} disabled={gold < 20} className={`py-3 px-6 w-full rounded font-bold uppercase tracking-widest text-sm transition-colors border ${gold >= 20 ? 'bg-zinc-800 hover:bg-zinc-700 text-yellow-500 border-yellow-900/50' : 'bg-red-950/20 text-red-500/50 border-red-900/30 cursor-not-allowed'}`}>
+                                                    Buy Scroll {gold < 20 ? '(Need 20g)' : '(20g)'}
+                                                </button>
+                                            ) : (
+                                                <div className="py-3 px-6 w-full text-center rounded font-bold uppercase tracking-widest text-sm bg-zinc-800 text-zinc-500 border border-zinc-700 opacity-50">
+                                                    Unlocking...
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex-1 min-h-[12rem] border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-4">
+                                            <div className="relative flex w-full h-full items-center justify-center">
+                                                {availableScrolls.map((color, i) => {
+                                                    const isRevealed = revealedScrollColor === color;
+
+                                                    const spacing = 40;
+                                                    const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
+
+                                                    const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -15 : 10;
+                                                    const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
+
+                                                    return (
+                                                        <motion.div
+                                                            key={color}
+                                                            className="absolute"
+                                                            initial={{ x: xPos, y: 10, opacity: 1 }}
+                                                            animate={{
+                                                                y: yPos,
+                                                                x: xPos,
+                                                                opacity: opacity,
+                                                                zIndex: isRevealed ? 50 : i
+                                                            }}
+                                                            transition={{ duration: 0.6, ease: "easeOut" }}
+                                                        >
+                                                            <Icon name={color} scale={5} tintColor={ICON_THEME[color]} />
+                                                        </motion.div>
+                                                    );
+                                                })}
+
+                                                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                                                    <AnimatePresence>
+                                                        {scrollStage === 'faded' && revealedScrollColor && (
+                                                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-sm text-zinc-300 font-bold uppercase tracking-widest leading-none text-center">
+                                                                {revealedScrollColor.replace('scroll-', '')}
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </motion.div>
                                 </motion.div>
                             </>
                         )}
@@ -576,6 +707,7 @@ export function GameLayout() {
                                             onClick={() => {
                                                 resetGame();
                                                 resetSelection();
+                                                setSpinKey(prev => prev + 1);
                                                 setIsCharacterModalOpen(false);
                                             }}
                                             className="w-full py-3 bg-red-950/30 hover:bg-red-900/40 text-red-500 rounded font-bold tracking-widest uppercase transition-colors text-sm border border-red-900/30"

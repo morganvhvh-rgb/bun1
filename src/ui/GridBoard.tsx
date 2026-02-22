@@ -5,14 +5,19 @@ import { ICON_THEME, ICON_CATEGORIES, ICON_STATS, ICON_EXTRA_EFFECTS } from '@/l
 import type { GridItem, IconName } from '@/types/game';
 
 const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: string[]) => {
-    if (!isBoosted) return ICON_STATS[name] || "???";
-
     const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
+
+    if (!isBoosted) {
+        if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
+        if (name === 'pine-tree') return `+${1 * expMultiplier} EXP`;
+        if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
+        return ICON_STATS[name] || "???";
+    }
 
     switch (name) {
         case 'apple': return "Heal 12 HP";
         case 'meat': return "Heal 20 HP";
-        case 'crab-claw': return "+2 Max HP +2 HP";
+        case 'crab-claw': return "+2 Max HP";
         case 'brandy-bottle': return "-50% HP & +8 Max HP";
         case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
         case 'pine-tree': return `+${2 * expMultiplier} EXP`;

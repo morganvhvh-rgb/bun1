@@ -42,6 +42,10 @@ export const ICON_MAP = {
     // Item
     "key": "key",
     "scroll-unfurled": "scroll-unfurled",
+    "scroll-purple": "scroll-unfurled",
+    "scroll-orange": "scroll-unfurled",
+    "scroll-blue": "scroll-unfurled",
+    "scroll-pink": "scroll-unfurled",
     "book": "book",
 
     // Music
@@ -112,6 +116,10 @@ export const ICON_THEME: Record<IconName, string> = {
     // Special (Brown)
     "key": "#a16207",
     "scroll-unfurled": "#a16207",
+    "scroll-purple": "#7e22ce",
+    "scroll-orange": "#c2410c",
+    "scroll-blue": "#1d4ed8",
+    "scroll-pink": "#be185d",
     "book": "#a16207",
 
     // Music (Orange)
@@ -154,6 +162,10 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
 
     "key": "unlock symbol inventory",
     "scroll-unfurled": "???",
+    "scroll-purple": "???",
+    "scroll-orange": "???",
+    "scroll-blue": "???",
+    "scroll-pink": "???",
     "book": "???",
 
     "bell": "-1 ATK",
@@ -195,6 +207,10 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 
     "key": "Special",
     "scroll-unfurled": "Special",
+    "scroll-purple": "Special",
+    "scroll-orange": "Special",
+    "scroll-blue": "Special",
+    "scroll-pink": "Special",
     "book": "Item",
 
     "bell": "Music",

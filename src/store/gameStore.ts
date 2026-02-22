@@ -36,8 +36,10 @@ interface GameState {
     shuffleBoard: () => void;
     moveCharacter: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
     keepItem: (item: GridItem, isBoosted?: boolean) => void;
-    keepScroll: (item: GridItem) => void;
+    removeGridItem: (id: string) => void;
+    addKeptScroll: (name: IconName) => void;
     unlockSection: (sectionId: 0 | 1 | 2) => void;
+    spendGold: (amount: number) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
 
@@ -205,10 +207,14 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            keepScroll: (item) => set((state) => {
-                if (state.keptScrolls.length >= 6) return;
-                state.grid = state.grid.map(s => s?.id === item.id ? null : s);
-                state.keptScrolls.push(item.name);
+            removeGridItem: (id) => set((state) => {
+                state.grid = state.grid.map(s => s?.id === id ? null : s);
+            }),
+
+            addKeptScroll: (name) => set((state) => {
+                if (state.keptScrolls.length < 6) {
+                    state.keptScrolls.push(name);
+                }
             }),
 
             unlockSection: (sectionId) => set((state) => {
@@ -216,6 +222,10 @@ export const useGameStore = create<GameState>()(
                     state.unlockedSections[sectionId] = true;
                     state.isUnlockingMode = false;
                 }
+            }),
+
+            spendGold: (amount) => set((state) => {
+                state.gold = Math.max(0, state.gold - amount);
             }),
 
             applyBattleDamage: (target, amount) => set((state) => {
