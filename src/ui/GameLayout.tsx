@@ -368,7 +368,7 @@ export function GameLayout() {
 
 
 
-    const controlButtonClass = "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
+    const controlButtonClass = "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-14 h-14 disabled:opacity-50 disabled:cursor-not-allowed";
 
     return (
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
@@ -527,7 +527,7 @@ export function GameLayout() {
                                 />
                             </div>
 
-                            <div className="flex flex-col gap-3 mt-5">
+                            <div className="flex flex-col gap-3 ml-2">
                                 <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 32 }} />
                                 </motion.button>

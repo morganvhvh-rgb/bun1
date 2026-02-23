@@ -124,7 +124,7 @@ export function HeroStatsPanel({
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="relative w-full my-auto py-1.5 bg-red-950/30 text-zinc-400 rounded text-[10px] uppercase tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500"
+                className="relative w-full mt-auto mb-2 py-1.5 bg-red-950/30 text-zinc-400 rounded text-[10px] uppercase tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500"
             >
                 <div
                     className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
