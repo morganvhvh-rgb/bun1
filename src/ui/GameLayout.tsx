@@ -727,9 +727,6 @@ export function GameLayout() {
                 </section>
             </main>
 
-            {/* Permanent blank nav-safe area */}
-            <div className="w-full shrink-0 bg-black" style={{ height: 48 }} aria-hidden="true" />
-
         </div >
     );
 }

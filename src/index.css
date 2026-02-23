@@ -2,52 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-/* THE MOBILE HARD RESET */
-:root {
-  /* Prevents the "bounce" effect when scrolling past the edge */
-  overscroll-behavior: none;
-
-  /* Disables the 300ms tap delay on mobile */
-  touch-action: manipulation;
-
-  /* Prevents long-press text selection */
-  -webkit-user-select: none;
-  user-select: none;
-
-  /* Removes the blue highlight box when tapping buttons on Android/iOS */
-  -webkit-tap-highlight-color: transparent;
-}
-
 html,
 body {
+  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
   background-color: #000;
 }
 
-/*
- * THE VIEWPORT CONTAINER
- * ----------------------
- * position: fixed + inset: 0 is the ONLY fully reliable way to fill
- * exactly the browser's usable viewport. Unlike vh/dvh/innerHeight,
- * the browser's own layout engine resolves fixed inset:0 correctly —
- * it already knows where system nav bars, browser chrome, and safe
- * areas begin, so bottom:0 always means "the top edge of the nav bar."
- *
- * This works on: Android gesture nav, Android 3-button nav, iOS Safari,
- * iOS PWA, Samsung Internet, Firefox, and every other mobile browser.
- */
 #root {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
   overflow: hidden;
 }
 
-/* Allow text selection only on specific inputs if you have them */
+body {
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 input,
 textarea {
   user-select: text;
