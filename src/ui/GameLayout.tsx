@@ -511,26 +511,28 @@ export function GameLayout() {
                         </div>
 
                         <div className="flex flex-row items-start justify-center gap-4 w-full max-w-2xl px-4 flex-1 min-h-0">
-                            <GridBoard
-                                gridIcons={gridIcons}
-                                spinKey={spinKey}
-                                matchingIndices={findMatchingIndices(gridIcons)}
-                                glowingIndices={glowingIndices}
-                                activeHoodedIndex={activeHoodedIndex}
-                                selectedIndex={selectedIndex}
-                                selectedEquippedItem={selectedEquippedItem}
-                                isShaking={isShaking}
-                                onIconClick={handleIconClick}
-                                onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
-                                levelUpPerks={levelUpPerks}
-                            />
+                            <div className="min-w-0">
+                                <GridBoard
+                                    gridIcons={gridIcons}
+                                    spinKey={spinKey}
+                                    matchingIndices={findMatchingIndices(gridIcons)}
+                                    glowingIndices={glowingIndices}
+                                    activeHoodedIndex={activeHoodedIndex}
+                                    selectedIndex={selectedIndex}
+                                    selectedEquippedItem={selectedEquippedItem}
+                                    isShaking={isShaking}
+                                    onIconClick={handleIconClick}
+                                    onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
+                                    levelUpPerks={levelUpPerks}
+                                />
+                            </div>
 
                             <div className="flex flex-col gap-3 mt-5">
                                 <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
-                                    <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
+                                    <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 32 }} />
                                 </motion.button>
                                 <motion.button onClick={handleVary} disabled={gold < shuffleCost || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
-                                    <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
+                                    <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 32 }} />
                                 </motion.button>
                                 <motion.button
                                     type="button"
@@ -539,8 +541,8 @@ export function GameLayout() {
                                     className={`${controlButtonClass} relative`}
                                     title="Scrolls"
                                 >
-                                    <Icon name="scroll-unfurled" scale={2} tintColor="#a16207" />
-                                    <div className="absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-zinc-100 text-zinc-900 text-[10px] font-black leading-none flex items-center justify-center border border-zinc-700 pointer-events-none">
+                                    <Icon name="scroll-unfurled" scale={2} tintColor="#a1a1aa" />
+                                    <div className="absolute inset-0 text-white text-base font-black leading-none flex items-center justify-center pointer-events-none">
                                         {keptScrolls.length}
                                     </div>
                                 </motion.button>

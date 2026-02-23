@@ -88,7 +88,7 @@ export function GridBoard({
     const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : false;
 
     return (
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 w-[16.25rem] min-w-0 shrink-0">
             <motion.div
                 key={spinKey}
                 className="grid grid-cols-4 grid-rows-3 gap-3"
@@ -162,21 +162,21 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="h-20 flex items-start justify-center text-center">
+            <div className="h-20 w-full min-w-0 px-1 flex items-start justify-center text-center overflow-hidden">
                 {displayItem ? (
-                    <div className="flex flex-col items-center justify-start gap-1">
-                        <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase">
+                    <div className="flex flex-col items-center justify-start gap-1 w-full min-w-0">
+                        <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words">
                             <span className="text-zinc-200">{displayItem.name.replace(/_/g, ' ')}</span>
                             <span className="text-zinc-600 mx-2">-</span>
                             <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
-                        <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase">
+                        <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words">
                             {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
-                        <div className="text-xs font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center min-h-[16px]">
+                        <div className="text-xs font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center min-h-[16px] w-full min-w-0 leading-tight whitespace-normal break-words">
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
                                 ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
-                                    <span className="flex items-center gap-1">
+                                    <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
                                         <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 14 }} /> costs 1 if experience is {'<'}3
                                     </span>
                                 ) : (
