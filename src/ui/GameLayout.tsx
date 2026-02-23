@@ -510,7 +510,7 @@ export function GameLayout() {
                             </div>
                         </div>
 
-                        <div className="flex flex-row items-start justify-center gap-4 w-full max-w-2xl px-4 flex-1">
+                        <div className="flex flex-row items-start justify-center gap-4 w-full max-w-2xl px-4 flex-1 min-h-0">
                             <GridBoard
                                 gridIcons={gridIcons}
                                 spinKey={spinKey}
@@ -553,6 +553,8 @@ export function GameLayout() {
                                 </button>
                             </div>
                         </div>
+
+                        <div className="h-16 w-full shrink-0" aria-hidden="true" />
                     </div>
 
                     {/* Scroll Window Modal */}
