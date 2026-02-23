@@ -377,7 +377,7 @@ export function GameLayout() {
                 <div className="text-xs text-zinc-400">Sunday, February 15th</div>
             </header>
 
-            <main className="flex-1 flex flex-col relative h-full">
+            <main className="flex-1 flex flex-col relative">
                 <section className="h-[40%] flex bg-zinc-900/50 relative">
 
                     <HeroStatsPanel
