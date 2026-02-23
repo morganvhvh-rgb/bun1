@@ -22,6 +22,8 @@ interface EnemyBattleHUDProps {
     isBattleRunning: boolean;
     battleCount: number;
     isDisabled?: boolean;
+    canConjureMagic?: boolean;
+    sliderResetKey?: number;
     onEngage: () => void;
 }
 
@@ -66,16 +68,15 @@ function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
     );
 }
 
-export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, isDisabled, onEngage }: EnemyBattleHUDProps) {
+export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, isDisabled, canConjureMagic, sliderResetKey, onEngage }: EnemyBattleHUDProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [sliderWidth, setSliderWidth] = useState(0);
     const x = useMotionValue(0);
 
+    // Reset slider on battle state change OR external reset key
     useEffect(() => {
-        if (!isBattleRunning) {
-            x.set(0);
-        }
-    }, [isBattleRunning, battleCount, x]);
+        x.set(0);
+    }, [isBattleRunning, battleCount, sliderResetKey, x]);
 
     useEffect(() => {
         if (containerRef.current) {
@@ -116,7 +117,9 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                         "relative overflow-hidden w-full max-w-xs h-12 rounded-md shadow-inner flex items-center transition-all duration-300",
                         showBattleState
                             ? "bg-red-950/80 border border-red-900 pointer-events-none"
-                            : "bg-zinc-900 border border-zinc-700",
+                            : canConjureMagic
+                                ? "bg-zinc-900 border border-pink-800/50"
+                                : "bg-zinc-900 border border-zinc-700",
                         isDisabled && "opacity-50 grayscale"
                     )}
                 >
@@ -139,14 +142,16 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 exit={{ opacity: 0 }}
                                 className="absolute inset-0 flex items-center justify-end pr-6 pointer-events-none select-none"
                             >
-                                <span className="text-zinc-500 text-xs tracking-[0.2em] font-semibold uppercase leading-tight text-right w-full">START BATTLE</span>
+                                <span className={cn("text-xs tracking-[0.2em] font-semibold uppercase leading-tight text-right w-full text-zinc-500")}>
+                                    {canConjureMagic ? "CONJURE MAGIC" : "START BATTLE"}
+                                </span>
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     {!showBattleState && (
                         <motion.div
-                            className="absolute left-0 top-0 bottom-0 bg-red-500/20 pointer-events-none"
+                            className={cn("absolute left-0 top-0 bottom-0 pointer-events-none", canConjureMagic ? "bg-pink-500/20" : "bg-red-500/20")}
                             style={{ width: x }}
                         />
                     )}
@@ -160,13 +165,21 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                             onDragEnd={(_e, info) => {
                                 if (info.offset.x >= maxDrag - 20) {
                                     onEngage();
-                                } else {
-                                    animate(x, 0, { type: "spring", stiffness: 400, damping: 25 });
                                 }
+                                animate(x, 0, { type: "spring", stiffness: 400, damping: 25 });
                             }}
-                            className="w-12 h-12 bg-red-600 border border-red-500 flex items-center justify-center cursor-grab active:cursor-grabbing relative z-10 hover:bg-red-500 transition-colors shrink-0 touch-none rounded-sm"
+                            className={cn(
+                                "w-12 h-12 border flex items-center justify-center cursor-grab active:cursor-grabbing relative z-10 transition-colors shrink-0 touch-none rounded-sm",
+                                canConjureMagic
+                                    ? "bg-pink-600 border-pink-500 hover:bg-pink-500"
+                                    : "bg-red-600 border-red-500 hover:bg-red-500"
+                            )}
                         >
-                            <i className="ra ra-sword text-xl text-white pointer-events-none" />
+                            {canConjureMagic ? (
+                                <Icon name="fairy-wand" scale={1.5} tintColor="#fff" className="pointer-events-none" />
+                            ) : (
+                                <i className="ra ra-sword text-xl text-white pointer-events-none" />
+                            )}
                         </motion.div>
                     )}
                 </div>

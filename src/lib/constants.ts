@@ -56,6 +56,11 @@ export const ICON_MAP = {
     // Music
     "bell": "bell",
     "ocarina": "ocarina",
+
+    // Conjure Magic
+    "two-hearts": "two-hearts",
+    "sapphire": "sapphire",
+    "lightning-trio": "lightning-trio",
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;
@@ -137,6 +142,11 @@ export const ICON_THEME: Record<IconName, string> = {
     // Music (Orange)
     "bell": "#f97316",
     "ocarina": "#f97316",
+
+    // Conjure Magic
+    "two-hearts": "#ec4899",
+    "sapphire": "#3b82f6",
+    "lightning-trio": "#eab308",
 };
 
 export const ICON_STATS: Partial<Record<IconName, string>> = {
@@ -237,6 +247,11 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 
     "bell": "Music",
     "ocarina": "Music",
+
+    // Conjure Magic
+    "two-hearts": "Magic",
+    "sapphire": "Magic",
+    "lightning-trio": "Magic",
 };
 
 export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
@@ -246,7 +261,8 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
-    "spades-card": "[perspective-dice-random icon] costs 0 if experience is <3",
+    "spades-card": "[perspective-dice-random icon] costs 1 if experience is <3",
+    "fairy-wand": "if 2 wands equipped, conjure magic before battle",
 };
 
 export const GAME_CONSTANTS = {
@@ -254,12 +270,12 @@ export const GAME_CONSTANTS = {
     INITIAL_PLAYER_ATK: 8,
     INITIAL_PLAYER_MAGIC: 0,
     INITIAL_PLAYER_GEAR: 0,
-    INITIAL_GOLD: 100,
+    INITIAL_GOLD: 200,
     INITIAL_MOVES: 0,
-    SPIN_COST: 2,
-    SHUFFLE_COST: 2,
-    MOVE_COST: 2,
-    KEEP_ITEM_COST: 2,
+    SPIN_COST: 3,
+    SHUFFLE_COST: 3,
+    MOVE_COST: 3,
+    KEEP_ITEM_COST: 3,
     SCROLL_COST: 20,
     MAX_KEPT_SCROLLS: 6,
     MAX_BATTLES: 8,

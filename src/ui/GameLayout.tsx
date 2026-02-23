@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectShuffleCost } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectShuffleCost, selectHasTwoFairyWands } from '@/store/gameStore';
 import { Icon } from './Icon';
 import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
 import { GridBoard } from './GridBoard';
+import { ConjureMagicModal } from './ConjureMagicModal';
 import { ICON_THEME, ICON_CATEGORIES, GAME_CONSTANTS, ALL_SCROLL_COLORS } from '@/lib/constants';
 import { findMatchingIndices, getCoordinates, getIndex } from '@/lib/utils';
 import type { GridItem, IconName, KeptIcon } from '@/types/game';
@@ -38,13 +39,17 @@ export function GameLayout() {
         applyLevelUp,
         unlockSection,
         spendGold,
-        battleCount
+        battleCount,
+        conjureMagicUsed,
+        applyConjureMagic
     } = useGameStore();
 
     const totalAttack = useGameStore(selectTotalAttack);
     const hasDaggers = useGameStore(selectHasDaggers);
     const crossbowCount = useGameStore(selectCrossbowCount);
     const shuffleCost = useGameStore(selectShuffleCost);
+    const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
+    const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
 
     const handleInventoryClick = (sectionId: 0 | 1 | 2) => {
         if (isUnlockingMode && !unlockedSections[sectionId]) {
@@ -62,8 +67,12 @@ export function GameLayout() {
     const [enemy1Anim, setEnemy1Anim] = useState<'idle' | 'attack' | 'hurt'>('idle');
     const [enemy2Anim, setEnemy2Anim] = useState<'idle' | 'attack' | 'hurt'>('idle');
     const [isBattleRunning, setIsBattleRunning] = useState(false);
+    const [sliderResetKey, setSliderResetKey] = useState(0);
 
     const [selectedEquippedItem, setSelectedEquippedItem] = useState<GridItem | null>(null);
+
+    // Conjure Magic Popup
+    const [isConjureMagicOpen, setIsConjureMagicOpen] = useState(false);
 
     // Scroll Popup States
     const [isScrollTypePopupOpen, setIsScrollTypePopupOpen] = useState(false);
@@ -364,6 +373,7 @@ export function GameLayout() {
                         onReset={() => {
                             resetGame();
                             resetSelection();
+                            setSliderResetKey(prev => prev + 1);
                             setSpinKey(prev => prev + 1);
                         }}
                     />
@@ -374,8 +384,12 @@ export function GameLayout() {
                         isBattleRunning={isBattleRunning}
                         battleCount={battleCount}
                         isDisabled={playerHp === 0 || battleCount > GAME_CONSTANTS.MAX_BATTLES}
+                        canConjureMagic={canConjureMagic}
+                        sliderResetKey={sliderResetKey}
                         onEngage={() => {
-                            if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
+                            if (canConjureMagic) {
+                                setIsConjureMagicOpen(true);
+                            } else if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
                                 handleBattleSequence();
                             }
                         }}
@@ -623,6 +637,19 @@ export function GameLayout() {
                                     </motion.div>
                                 </motion.div>
                             </>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Conjure Magic Modal */}
+                    <AnimatePresence>
+                        {isConjureMagicOpen && (
+                            <ConjureMagicModal
+                                isOpen={isConjureMagicOpen}
+                                onClose={() => setIsConjureMagicOpen(false)}
+                                onResult={(winner) => {
+                                    applyConjureMagic(winner);
+                                }}
+                            />
                         )}
                     </AnimatePresence>
 

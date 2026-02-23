@@ -27,6 +27,7 @@ interface GameState {
     playerMagic: number;
     playerGear: number;
     isFirstEnemyAttack: boolean;
+    conjureMagicUsed: boolean;
     battleCount: number;
 
     enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
@@ -48,6 +49,7 @@ interface GameState {
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
     setEnemyVisibility: (target: 'enemy1' | 'enemy2', isVisible: boolean) => void;
     applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
+    applyConjureMagic: (result: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
 }
 
 const generateRandomIcons = (): GridItem[] => {
@@ -90,6 +92,7 @@ export const useGameStore = create<GameState>()(
             playerMagic: GAME_CONSTANTS.INITIAL_PLAYER_MAGIC,
             playerGear: GAME_CONSTANTS.INITIAL_PLAYER_GEAR,
             isFirstEnemyAttack: true,
+            conjureMagicUsed: false,
             battleCount: 1,
 
             enemy1: { ...INITIAL_ENEMIES.wyvern },
@@ -103,7 +106,7 @@ export const useGameStore = create<GameState>()(
 
             shuffleBoard: () => set((state) => {
                 const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
-                const cost = (hasSpadesCard && state.moves > 3) ? 0 : GAME_CONSTANTS.SHUFFLE_COST;
+                const cost = (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
 
                 if (state.gold < cost) return;
                 state.gold -= cost;
@@ -301,6 +304,7 @@ export const useGameStore = create<GameState>()(
                 }
 
                 state.isFirstEnemyAttack = true;
+                state.conjureMagicUsed = false;
 
                 if (state.battleCount === 4) {
                     state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: 50, maxHp: 50, atk: 11, lvl: 2 };
@@ -337,9 +341,30 @@ export const useGameStore = create<GameState>()(
                 state.playerMagic = GAME_CONSTANTS.INITIAL_PLAYER_MAGIC;
                 state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
                 state.isFirstEnemyAttack = true;
+                state.conjureMagicUsed = false;
                 state.battleCount = 1;
                 state.enemy1 = { ...INITIAL_ENEMIES.wyvern };
                 state.enemy2 = { ...INITIAL_ENEMIES.octopus };
+            }),
+
+            applyConjureMagic: (result) => set((state) => {
+                if (state.conjureMagicUsed) return;
+                const magic = state.playerMagic;
+                switch (result) {
+                    case 'two-hearts':
+                        state.playerHp = Math.min(state.playerMaxHp, state.playerHp + magic);
+                        break;
+                    case 'sapphire':
+                        state.gold += magic;
+                        break;
+                    case 'lightning-trio':
+                        state.enemy1.hp = Math.max(0, state.enemy1.hp - magic);
+                        if (state.enemy2.isVisible) {
+                            state.enemy2.hp = Math.max(0, state.enemy2.hp - magic);
+                        }
+                        break;
+                }
+                state.conjureMagicUsed = true;
             }),
 
         })),
@@ -361,5 +386,8 @@ export const selectCrossbowCount = (state: GameState) =>
 
 export const selectShuffleCost = (state: GameState) => {
     const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
-    return (hasSpadesCard && state.moves < 3) ? 0 : GAME_CONSTANTS.SHUFFLE_COST;
+    return (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
 };
+
+export const selectHasTwoFairyWands = (state: GameState) =>
+    state.keptIcons.filter(item => item?.name === 'fairy-wand').length >= 2;

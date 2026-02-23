@@ -177,7 +177,7 @@ export function GridBoard({
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
                                 ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
                                     <span className="flex items-center gap-1">
-                                        <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 14 }} /> costs 0 if experience is {'<'}3
+                                        <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 14 }} /> costs 1 if experience is {'<'}3
                                     </span>
                                 ) : (
                                     ICON_EXTRA_EFFECTS[displayItem.name]
