@@ -54,7 +54,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             style={{ width: 'clamp(7.5rem, calc(var(--cell) * 2.5), 10rem)', padding: 'var(--gap)' }}
         >
             {/* Hero Icon */}
-            <div className="relative flex shrink-0">
+            <div className="relative flex shrink-0 mt-1">
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"

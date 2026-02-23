@@ -23,7 +23,7 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
     if (!isVisible) return null;
     return (
         <motion.div className="flex flex-col items-center h-full" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.3 } }}>
-            <div className="shrink-0">
+            <div className="shrink-0 mt-1">
                 <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
                     <Icon name={name} scale={4} tintColor={ICON_THEME[name]} />
                 </motion.div>
@@ -79,10 +79,10 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderRese
         <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
             {/* Enemy columns */}
             <div className="flex-1 flex items-stretch justify-center min-h-0" style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}>
-                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(6rem, 36%, 9rem)' }}>
+                <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
                     <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
                 </div>
-                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5.5rem, 32%, 8rem)' }}>
+                <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
                     <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
                 </div>
             </div>
