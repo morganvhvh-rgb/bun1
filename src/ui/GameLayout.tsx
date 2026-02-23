@@ -421,7 +421,7 @@ export function GameLayout() {
 
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
-                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2 overflow-hidden">
+                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2">
                     <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
 
                         {/* Kept Icons Row */}
@@ -727,8 +727,6 @@ export function GameLayout() {
                 </section>
             </main>
 
-            {/* Nav Bar Spacer — blank dead zone so content never hides behind Android 3-button nav */}
-            <div className="w-full shrink-0 bg-zinc-950" style={{ height: 48 }} aria-hidden="true" />
         </div >
     );
 }

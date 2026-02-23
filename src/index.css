@@ -4,9 +4,6 @@
 
 /* THE MOBILE HARD RESET */
 :root {
-  /* Permanent blank area reserved for browser nav controls */
-  --mobile-bottom-buffer: 48px;
-
   /* Prevents the "bounce" effect when scrolling past the edge */
   overscroll-behavior: none;
 
@@ -46,7 +43,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 48px;
   overflow: hidden;
 }
 
