@@ -41,7 +41,7 @@ export function HeroStatsPanel({
     onCharacterClick,
     onReset
 }: HeroStatsPanelProps) {
-    const RESET_HOLD_MS = 2000;
+    const RESET_HOLD_MS = 1000;
     const [resetProgress, setResetProgress] = useState(0);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resetStartRef = useRef<number>(0);

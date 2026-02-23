@@ -78,7 +78,7 @@ export const useGameStore = create<GameState>()(
             grid: generateRandomIcons(),
             keptIcons: [null, null, null, null, null, null],
             keptScrolls: [],
-            unlockedSections: { 0: true, 1: false, 2: false },
+            unlockedSections: { 0: true, 1: true, 2: false },
             isUnlockingMode: false,
             levelUpPerks: [],
 
@@ -330,7 +330,7 @@ export const useGameStore = create<GameState>()(
                 state.grid = generateRandomIcons();
                 state.keptIcons = [null, null, null, null, null, null];
                 state.keptScrolls = [];
-                state.unlockedSections = { 0: true, 1: false, 2: false };
+                state.unlockedSections = { 0: true, 1: true, 2: false };
                 state.isUnlockingMode = false;
                 state.levelUpPerks = [];
                 state.gold = GAME_CONSTANTS.INITIAL_GOLD;

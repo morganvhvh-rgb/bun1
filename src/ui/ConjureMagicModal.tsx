@@ -144,7 +144,7 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                                                     : undefined,
                                             }}
                                         >
-                                            <Icon name={iconName} scale={2} />
+                                            <Icon name={iconName} scale={4} />
                                         </div>
                                     ))}
                                 </motion.div>
