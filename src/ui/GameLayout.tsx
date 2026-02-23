@@ -539,12 +539,12 @@ export function GameLayout() {
                         </div>
                     </div>
 
-                    <div className="absolute bottom-6 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
+                    <div className="absolute bottom-8 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
                         <i className="ra ra-coffee-mug text-lg" />
                         <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
                     </div>
 
-                    <div className="absolute bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
+                    <div className="absolute bottom-8 right-6 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
                         <div className="pointer-events-auto">
                             <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
                         </div>

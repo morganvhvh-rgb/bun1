@@ -349,7 +349,9 @@ export const useGameStore = create<GameState>()(
 
             applyConjureMagic: (result) => set((state) => {
                 if (state.conjureMagicUsed) return;
-                const magic = state.playerMagic;
+                const hasBook = state.keptIcons.some(item => item?.name === 'book');
+                const multiplier = hasBook ? 2 : 1;
+                const magic = state.playerMagic * multiplier;
                 switch (result) {
                     case 'two-hearts':
                         state.playerHp = Math.min(state.playerMaxHp, state.playerHp + magic);

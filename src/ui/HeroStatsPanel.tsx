@@ -1,3 +1,4 @@
+import { useState, useRef, useCallback } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
@@ -40,6 +41,43 @@ export function HeroStatsPanel({
     onCharacterClick,
     onReset
 }: HeroStatsPanelProps) {
+    const RESET_HOLD_MS = 2000;
+    const [resetProgress, setResetProgress] = useState(0);
+    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const resetStartRef = useRef<number>(0);
+    const resetRafRef = useRef<number>(0);
+
+    const clearResetHold = useCallback(() => {
+        if (resetTimerRef.current) {
+            clearTimeout(resetTimerRef.current);
+            resetTimerRef.current = null;
+        }
+        if (resetRafRef.current) {
+            cancelAnimationFrame(resetRafRef.current);
+            resetRafRef.current = 0;
+        }
+        setResetProgress(0);
+    }, []);
+
+    const tickProgress = useCallback(() => {
+        const elapsed = Date.now() - resetStartRef.current;
+        const pct = Math.min(elapsed / RESET_HOLD_MS, 1);
+        setResetProgress(pct);
+        if (pct < 1) {
+            resetRafRef.current = requestAnimationFrame(tickProgress);
+        }
+    }, []);
+
+    const startResetHold = useCallback(() => {
+        resetStartRef.current = Date.now();
+        setResetProgress(0);
+        tickProgress();
+        resetTimerRef.current = setTimeout(() => {
+            setResetProgress(1);
+            onReset();
+            clearResetHold();
+        }, RESET_HOLD_MS);
+    }, [onReset, tickProgress, clearResetHold]);
 
 
     return (
@@ -81,10 +119,21 @@ export function HeroStatsPanel({
                 </div>
             </div>
             <button
-                onClick={onReset}
-                className="w-full my-auto py-1.5 bg-red-950/30 hover:bg-red-900/40 text-red-500 rounded text-[10px] uppercase tracking-widest font-bold border border-red-900/30 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)]"
+                onPointerDown={startResetHold}
+                onPointerUp={clearResetHold}
+                onPointerLeave={clearResetHold}
+                onPointerCancel={clearResetHold}
+                onContextMenu={(e) => e.preventDefault()}
+                className="relative w-full my-auto py-1.5 bg-red-950/30 text-zinc-400 rounded text-[10px] uppercase tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500"
             >
-                Reset
+                <div
+                    className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
+                    style={{
+                        transform: `scaleX(${resetProgress})`,
+                        transition: resetProgress === 0 ? 'transform 0.15s ease-out' : 'none'
+                    }}
+                />
+                <span className="relative z-10">Reset</span>
             </button>
         </div>
     );

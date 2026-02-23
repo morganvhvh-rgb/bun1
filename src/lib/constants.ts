@@ -192,7 +192,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "music-scroll": "???",
     "special-scroll": "???",
     "nature-scroll": "???",
-    "book": "???",
+    "book": "Conjure Magic x2",
     "spades-card": "",
 
     "bell": "-1 ATK",
@@ -263,6 +263,7 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "crossbow": "+10 atk against flying enemies / stacks",
     "spades-card": "[perspective-dice-random icon] costs 1 if experience is <3",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
+    "book": "conjure magic effect applies twice",
 };
 
 export const GAME_CONSTANTS = {
