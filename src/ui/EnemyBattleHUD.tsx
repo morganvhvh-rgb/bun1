@@ -46,11 +46,11 @@ function EnemyColumn({ enemy }: { enemy: EnemyProps }) {
                 </motion.div>
             </div>
 
-            {/* Stats — flex-1 + justify-evenly to match hero panel rows */}
+            {/* Stats — justify-evenly with 2 invisible spacers to match hero's 6 rows */}
             <div
                 className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
                 style={{
-                    fontSize: 'clamp(9px, 2.6vw, 12px)',
+                    fontSize: 'clamp(10px, 2.8vw, 13px)',
                     letterSpacing: '0.08em',
                     padding: '0 2px',
                 }}
@@ -65,9 +65,12 @@ function EnemyColumn({ enemy }: { enemy: EnemyProps }) {
                         {enemy.hp}/{enemy.maxHp}
                     </motion.span>
                 </div>
-                <div className="flex justify-between items-center"><span>Atk</span> <span className="text-zinc-300">{enemy.atk}</span></div>
-                <div className="flex justify-between items-center"><span>Lvl</span> <span className="text-zinc-300">{enemy.lvl}</span></div>
+                <div className="flex justify-between items-center"><span>ATK</span> <span className="text-zinc-300">{enemy.atk}</span></div>
+                <div className="flex justify-between items-center"><span>LVL</span> <span className="text-zinc-300">{enemy.lvl}</span></div>
                 <div className="flex justify-between items-center"><span>Type</span> <span className="text-zinc-300">{enemy.type}</span></div>
+                {/* Invisible spacers — match hero panel's 6 rows so justify-evenly aligns */}
+                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
+                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
             </div>
         </motion.div>
     );
@@ -106,7 +109,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                 style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}
             >
                 <div className="flex flex-col items-center min-w-0"
-                    style={{ width: 'clamp(5rem, 30%, 7rem)' }}
+                    style={{ width: 'clamp(5.5rem, 34%, 8rem)' }}
                 >
                     <AnimatePresence>
                         {enemy1.isVisible && <EnemyColumn enemy={enemy1} />}

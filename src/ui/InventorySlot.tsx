@@ -64,19 +64,19 @@ export function InventorySlot({
                 >
                     <span
                         className="font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none"
-                        style={{ fontSize: 'clamp(8px, 2.2vw, 11px)' }}
+                        style={{ fontSize: 'clamp(9px, 2.5vw, 12px)' }}
                     >
                         {label}
                     </span>
                     {isUnlockingMode ? (
                         <span className="font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse"
-                            style={{ fontSize: 'clamp(7px, 2vw, 10px)' }}
+                            style={{ fontSize: 'clamp(8px, 2.3vw, 11px)' }}
                         >
                             UNLOCK?
                         </span>
                     ) : (
                         <span className="font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none"
-                            style={{ fontSize: 'clamp(7px, 2vw, 10px)' }}
+                            style={{ fontSize: 'clamp(8px, 2.3vw, 11px)' }}
                         >
                             LOCKED
                         </span>
@@ -88,7 +88,7 @@ export function InventorySlot({
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5">
                             <span
                                 className="font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none"
-                                style={{ fontSize: 'clamp(8px, 2.2vw, 11px)' }}
+                                style={{ fontSize: 'clamp(9px, 2.5vw, 12px)' }}
                             >
                                 {label}
                             </span>

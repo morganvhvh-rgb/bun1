@@ -99,7 +99,7 @@ export function HeroStatsPanel({
             <div
                 className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
                 style={{
-                    fontSize: 'clamp(9px, 2.6vw, 12px)',
+                    fontSize: 'clamp(10px, 2.8vw, 13px)',
                     letterSpacing: '0.08em',
                     padding: '0 2px',
                 }}
@@ -114,10 +114,10 @@ export function HeroStatsPanel({
                         {playerHp}/{playerMaxHp}
                     </motion.span>
                 </div>
-                <div className="flex justify-between items-center whitespace-nowrap"><span>Attack</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
+                <div className="flex justify-between items-center whitespace-nowrap"><span>ATK</span> <span className="text-zinc-300">{playerBaseAtk}</span></div>
                 <div className="flex justify-between items-center"><span>Magic</span> <span className="text-zinc-300">{playerMagic}</span></div>
                 <div className="flex justify-between items-center"><span>Gear</span> <span className="text-zinc-300">{playerGear}</span></div>
-                <div className="flex justify-between items-center"><span>Experience</span> <span className="text-zinc-300">{moves}</span></div>
+                <div className="flex justify-between items-center"><span>EXP</span> <span className="text-zinc-300">{moves}</span></div>
                 <div className="flex justify-between items-center relative text-yellow-500">
                     <span>Gold</span>
                     <span>{gold}</span>
@@ -131,8 +131,9 @@ export function HeroStatsPanel({
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="relative w-full bg-red-950/30 text-zinc-400 rounded text-[9px] uppercase tracking-[0.15em] font-bold border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
-                style={{ height: 'clamp(1.5rem, 4dvh, 2rem)' }}
+                className="relative w-full bg-red-950/30 text-zinc-400 rounded uppercase tracking-[0.15em] font-medium border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
+                style={{ height: 'clamp(1.5rem, 4dvh, 2rem)', fontSize: 'clamp(8px, 2.2vw, 11px)' }}
+
             >
                 <div
                     className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
@@ -141,7 +142,7 @@ export function HeroStatsPanel({
                         transition: resetProgress === 0 ? 'transform 0.15s ease-out' : 'none'
                     }}
                 />
-                <span className="relative z-10">Reset</span>
+                <span className="relative z-10">HOLD - RESET</span>
             </button>
         </div>
     );

@@ -134,19 +134,19 @@ export function GridBoard({
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0" style={{ gap: '3px' }}>
                         <div className="font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words"
-                            style={{ fontSize: 'clamp(10px, 2.8vw, 13px)' }}
+                            style={{ fontSize: 'clamp(11px, 3vw, 14px)' }}
                         >
                             <span className="text-zinc-200">{displayItem.name.replace(/_/g, ' ')}</span>
                             <span className="text-zinc-600 mx-1.5">-</span>
                             <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
                         <div className="font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words"
-                            style={{ fontSize: 'clamp(9px, 2.4vw, 11px)' }}
+                            style={{ fontSize: 'clamp(10px, 2.6vw, 12px)' }}
                         >
                             {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
                         <div className="font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words"
-                            style={{ fontSize: 'clamp(9px, 2.2vw, 11px)', minHeight: 14 }}
+                            style={{ fontSize: 'clamp(10px, 2.4vw, 12px)', minHeight: 14 }}
                         >
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
                                 ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
@@ -160,7 +160,7 @@ export function GridBoard({
                         </div>
                     </div>
                 ) : (
-                    <div className="text-zinc-600 uppercase tracking-widest mt-1" style={{ fontSize: 'clamp(9px, 2.4vw, 11px)' }}>
+                    <div className="text-zinc-600 uppercase tracking-widest mt-1" style={{ fontSize: 'clamp(10px, 2.6vw, 12px)' }}>
                         Select an icon
                     </div>
                 )}
