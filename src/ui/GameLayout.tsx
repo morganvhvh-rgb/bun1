@@ -371,7 +371,7 @@ export function GameLayout() {
     const controlButtonClass = "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
 
     return (
-        <div className="w-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden" style={{ height: 'var(--app-height)' }}>
+        <div className="w-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden" style={{ height: 'var(--app-height)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
             <header className="h-14 flex items-center justify-between px-6 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
                 <h1 className="text-base font-bold tracking-wider text-zinc-100 uppercase">Daily Rogue</h1>
                 <div className="text-xs text-zinc-400">Sunday, February 15th</div>
