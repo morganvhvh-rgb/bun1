@@ -162,7 +162,7 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="h-20 w-full min-w-0 px-1 flex items-start justify-center text-center overflow-hidden">
+            <div className="min-h-20 w-full min-w-0 px-1 flex items-start justify-center text-center">
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start gap-1 w-full min-w-0">
                         <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words">
