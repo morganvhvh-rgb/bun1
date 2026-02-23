@@ -51,7 +51,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     return (
         <div
             className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full"
-            style={{ width: 'clamp(6.5rem, calc(var(--cell) * 2.2), 9rem)', padding: 'var(--gap)' }}
+            style={{ width: 'clamp(7.5rem, calc(var(--cell) * 2.5), 10rem)', padding: 'var(--gap)' }}
         >
             {/* Hero Icon */}
             <div className="relative flex shrink-0">

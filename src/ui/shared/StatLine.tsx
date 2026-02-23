@@ -11,7 +11,7 @@ interface StatLineProps {
 
 export function StatLine({ label, value, color, flash }: StatLineProps) {
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center" style={{ gap: '0.4em' }}>
             <span className={color ?? ''}>{label}</span>
             {flash !== undefined ? (
                 <motion.span

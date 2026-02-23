@@ -79,10 +79,10 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderRese
         <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
             {/* Enemy columns */}
             <div className="flex-1 flex items-stretch justify-center min-h-0" style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}>
-                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5.5rem, 34%, 8rem)' }}>
+                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(6rem, 36%, 9rem)' }}>
                     <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
                 </div>
-                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5rem, 30%, 7rem)' }}>
+                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5.5rem, 32%, 8rem)' }}>
                     <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
                 </div>
             </div>

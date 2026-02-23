@@ -61,7 +61,7 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex bg-zinc-900/50 relative overflow-hidden min-h-0" style={{ flex: 2 }}>
+                <section className="flex bg-zinc-900/50 relative overflow-hidden min-h-0" style={{ flex: 2.3 }}>
                     <HeroPanel
                         playerAnim={playerAnim}
                         isBattleRunning={isBattleRunning}
