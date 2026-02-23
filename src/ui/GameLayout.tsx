@@ -535,21 +535,23 @@ export function GameLayout() {
                             </div>
                         </div>
 
-                        <div className="h-2 mt-1 flex items-center justify-center pointer-events-none w-full max-w-xl px-4">
-                        </div>
-                    </div>
-
-                    <div className="absolute bottom-4 left-5 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
-                        <i className="ra ra-coffee-mug text-lg" />
-                        <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
-                    </div>
-
-                    <div className="absolute bottom-4 right-5 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
-                        <div className="pointer-events-auto">
-                            <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
-                        </div>
-                        <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
-                            {keptScrolls.length}
+                        <div className="w-full max-w-2xl px-4 pb-1 mt-1 shrink-0">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2 text-zinc-500 opacity-70">
+                                    <i className="ra ra-coffee-mug text-lg" />
+                                    <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="relative flex items-center justify-center w-16 h-16 hover:scale-105 transition-transform"
+                                    onClick={() => setIsScrollWindowOpen(true)}
+                                >
+                                    <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="relative" />
+                                    <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
+                                        {keptScrolls.length}
+                                    </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
