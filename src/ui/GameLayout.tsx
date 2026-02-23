@@ -371,7 +371,7 @@ export function GameLayout() {
     const controlButtonClass = "bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-md grid place-items-center focus:outline-none transition-colors w-12 h-12 disabled:opacity-50 disabled:cursor-not-allowed";
 
     return (
-        <div className="w-full h-[100dvh] flex flex-col bg-zinc-950 text-white font-mono overflow-hidden" style={{ paddingBottom: 'var(--sai-bottom)' }}>
+        <div className="w-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden" style={{ height: 'var(--app-height)' }}>
             <header className="h-14 flex items-center justify-between px-6 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
                 <h1 className="text-base font-bold tracking-wider text-zinc-100 uppercase">Daily Rogue</h1>
                 <div className="text-xs text-zinc-400">Sunday, February 15th</div>
@@ -558,7 +558,7 @@ export function GameLayout() {
                         {isScrollWindowOpen && (
                             <>
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsScrollWindowOpen(false)} className="fixed inset-0 bg-black/50 z-[60]" />
-                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 h-[50dvh] bg-zinc-900 border-t border-zinc-700 rounded-t-3xl shadow-2xl z-[70] flex flex-col p-6" style={{ paddingBottom: 'calc(1.5rem + var(--sai-bottom))' }}>
+                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 rounded-t-3xl shadow-2xl z-[70] flex flex-col p-6" style={{ height: 'calc(var(--app-height) * 0.5)' }}>
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Scroll Content</h2>
                                         <button onClick={() => setIsScrollWindowOpen(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
@@ -679,7 +679,7 @@ export function GameLayout() {
                         {isCharacterModalOpen && (
                             <>
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCharacterModalOpen(false)} className="fixed inset-0 bg-black/50 z-[60]" />
-                                <motion.div initial={{ y: "-100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed top-0 left-0 right-0 h-[50dvh] bg-zinc-900 border-b border-zinc-700 rounded-b-3xl shadow-2xl z-[70] flex flex-col p-6">
+                                <motion.div initial={{ y: "-100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed top-0 left-0 right-0 bg-zinc-900 border-b border-zinc-700 rounded-b-3xl shadow-2xl z-[70] flex flex-col p-6" style={{ height: 'calc(var(--app-height) * 0.5)' }}>
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-zinc-100 font-bold uppercase tracking-widest">
                                             Character <span className="text-zinc-500 ml-2">Lvl {1 + levelUpPerks.length}</span>
