@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { GridItem } from '@/types/game';
+import type { GridItem, IconName } from '@/types/game';
+import { ICON_STATS } from '@/lib/constants';
 
 /**
  * Merges Tailwind classes safely.
@@ -49,4 +50,36 @@ export const findMatchingIndices = (gridIcons: (GridItem | null)[], columns: num
         if (group.length >= 3) group.forEach(idx => matches.add(idx));
     }
     return matches;
+};
+
+export const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: string[]): string => {
+    const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
+
+    if (!isBoosted) {
+        if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
+        if (name === 'pine-tree') return `+${1 * expMultiplier} EXP`;
+        if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
+        return ICON_STATS[name] || "???";
+    }
+
+    switch (name) {
+        case 'apple': return "Heal 12 HP";
+        case 'meat': return "Heal 20 HP";
+        case 'crab-claw': return "+2 Max HP";
+        case 'brandy-bottle': return "-50% HP & +8 Max HP";
+        case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
+        case 'pine-tree': return `+${2 * expMultiplier} EXP`;
+        case 'zigzag-leaf': return `-${3 * expMultiplier} EXP +10 Magic`;
+        case 'axe': return "+4 ATK +2 Gear";
+        case 'relic-blade':
+        case 'crossbow':
+        case 'daggers': return "+2 ATK +2 Gear";
+        case 'shield':
+        case 'knight-helmet': return "+4 Gear";
+        case 'crystal-wand':
+        case 'fairy-wand': return "+10 Magic";
+        case 'gold-bar': return "+20 gold";
+        case 'gem-pendant': return "+20 Gold";
+        default: return ICON_STATS[name] || "???";
+    }
 };

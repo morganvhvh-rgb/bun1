@@ -63,7 +63,7 @@ export const ICON_MAP = {
     "lightning-trio": "lightning-trio",
 } as const;
 
-export type IconName = keyof typeof ICON_MAP;
+type IconName = keyof typeof ICON_MAP;
 
 export const ICON_KEYS: IconName[] = [
     // Food

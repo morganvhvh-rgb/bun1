@@ -23,7 +23,7 @@ const EFFECT_LABELS: Record<string, string> = {
 };
 
 /** Colors the symbols pulse through during the waiting phase */
-const PULSE_COLORS = ['#ec4899', '#a855f7', '#2dd4bf', '#3b82f6', '#ffffff'];
+
 
 /** Generate sparkle positions for one session */
 function generateSparkles(count: number) {
@@ -189,21 +189,7 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                 </div>
             </div>
 
-            {/* Keyframe animations */}
-            <style>{`
-                @keyframes conjure-color-pulse {
-                    0%   { color: ${PULSE_COLORS[0]}; }
-                    20%  { color: ${PULSE_COLORS[1]}; }
-                    40%  { color: ${PULSE_COLORS[2]}; }
-                    60%  { color: ${PULSE_COLORS[3]}; }
-                    80%  { color: ${PULSE_COLORS[4]}; }
-                    100% { color: ${PULSE_COLORS[0]}; }
-                }
-                @keyframes conjure-sparkle {
-                    0%, 100% { opacity: 0; transform: scale(0.5); }
-                    50% { opacity: 0.85; transform: scale(1); }
-                }
-            `}</style>
+
         </>
     );
 }

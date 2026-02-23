@@ -1,40 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from './Icon';
-import { ICON_THEME, ICON_CATEGORIES, ICON_STATS, ICON_EXTRA_EFFECTS } from '@/lib/constants';
-import type { GridItem, IconName } from '@/types/game';
+import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS } from '@/lib/constants';
+import type { GridItem } from '@/types/game';
 
-const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: string[]) => {
-    const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
 
-    if (!isBoosted) {
-        if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
-        if (name === 'pine-tree') return `+${1 * expMultiplier} EXP`;
-        if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
-        return ICON_STATS[name] || "???";
-    }
-
-    switch (name) {
-        case 'apple': return "Heal 12 HP";
-        case 'meat': return "Heal 20 HP";
-        case 'crab-claw': return "+2 Max HP";
-        case 'brandy-bottle': return "-50% HP & +8 Max HP";
-        case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
-        case 'pine-tree': return `+${2 * expMultiplier} EXP`;
-        case 'zigzag-leaf': return `-${3 * expMultiplier} EXP +10 Magic`;
-        case 'axe': return "+4 ATK +2 Gear";
-        case 'relic-blade':
-        case 'crossbow':
-        case 'daggers': return "+2 ATK +2 Gear";
-        case 'shield':
-        case 'knight-helmet': return "+4 Gear";
-        case 'crystal-wand':
-        case 'fairy-wand': return "+10 Magic";
-        case 'gold-bar': return "+20 gold";
-        case 'gem-pendant': return "+20 Gold";
-        default: return ICON_STATS[name] || "???";
-    }
-};
 
 interface GridBoardProps {
     gridIcons: (GridItem | null)[];
@@ -82,7 +52,7 @@ export function GridBoard({
         }
     };
 
-    const getCoordinates = (index: number) => ({ row: Math.floor(index / 4), col: index % 4 });
+
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
     const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : false;

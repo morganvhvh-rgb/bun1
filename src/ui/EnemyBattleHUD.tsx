@@ -1,8 +1,9 @@
-import { motion, AnimatePresence, type Variants, useMotionValue, animate } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Icon } from './Icon';
 import { ICON_THEME } from '@/lib/constants';
+import { enemyIconVariants, hpVariants } from './animations';
 import type { IconName } from '@/types/game';
 
 interface EnemyProps {
@@ -27,16 +28,7 @@ interface EnemyBattleHUDProps {
     onEngage: () => void;
 }
 
-const enemyIconVariants: Variants = {
-    idle: { scale: 1, x: 0, y: 0 },
-    attack: { scale: 1.3, x: -20, y: 10, transition: { duration: 0.15, ease: "easeOut" } },
-    hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
-};
 
-const hpVariants: Variants = {
-    idle: { color: '#d4d4d8', scale: 1 },
-    hurt: { color: '#ef4444', scale: [1, 1.5, 1], transition: { duration: 0.25 } }
-};
 
 function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
     if (!enemy.isVisible) return null;
