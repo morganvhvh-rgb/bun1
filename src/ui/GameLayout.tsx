@@ -543,7 +543,7 @@ export function GameLayout() {
                                 </div>
                                 <button
                                     type="button"
-                                    className="relative flex items-center justify-center w-16 h-16 hover:scale-105 transition-transform"
+                                    className="relative -top-1 flex items-center justify-center w-16 h-16 hover:scale-105 transition-transform"
                                     onClick={() => setIsScrollWindowOpen(true)}
                                 >
                                     <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="relative" />
