@@ -32,14 +32,15 @@ export function ScrollTypeModal({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-6"
+                        className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4"
                         onClick={onClose}
                     >
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.8, opacity: 0 }}
-                            className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-6 relative overflow-hidden w-full max-w-sm min-h-[380px]"
+                            className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
+                            style={{ minHeight: 'min(380px, 60dvh)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-4">

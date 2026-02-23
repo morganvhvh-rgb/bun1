@@ -90,7 +90,7 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
 
             {/* Modal */}
             <div className="fixed inset-0 z-[70] flex items-center justify-center p-6 pointer-events-none">
-                <div className="bg-zinc-900 border border-pink-800/50 rounded-2xl shadow-[0_0_60px_rgba(236,72,153,0.15)] flex flex-col p-6 w-full max-w-sm pointer-events-auto">
+                <div className="bg-zinc-900 border border-pink-800/50 rounded-2xl shadow-[0_0_60px_rgba(236,72,153,0.15)] flex flex-col p-5 w-full max-w-sm pointer-events-auto">
                     {/* Header */}
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-pink-400 font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
@@ -102,10 +102,10 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                         </button>
                     </div>
 
-                    {/* Symbol display area — fixed height */}
+                    {/* Symbol display area */}
                     <div
                         className="border border-zinc-800/50 bg-zinc-950/50 rounded flex items-center justify-center relative overflow-hidden"
-                        style={{ height: 160 }}
+                        style={{ height: 'min(160px, 22dvh)' }}
                     >
                         {/* White sparkles during waiting phase */}
                         {phase === 'waiting' && sparkles.map(s => (

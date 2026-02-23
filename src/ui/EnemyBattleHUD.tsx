@@ -28,20 +28,28 @@ interface EnemyBattleHUDProps {
     onEngage: () => void;
 }
 
-
-
 function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
     if (!enemy.isVisible) return null;
     return (
         <motion.div
-            className="flex flex-col items-center gap-2"
+            className="flex flex-col items-center"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            style={{ gap: 'var(--gap)' }}
         >
             <motion.div animate={enemy.animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                <Icon name={enemy.name} scale={4} tintColor={ICON_THEME[enemy.name]} />
+                <Icon name={enemy.name} scale={3.5} tintColor={ICON_THEME[enemy.name]} />
             </motion.div>
-            <div className="flex flex-col w-24 sm:w-28 px-1 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+            <div
+                className="flex flex-col w-full text-zinc-500 uppercase font-medium"
+                style={{
+                    fontSize: 'clamp(9px, 2.4vw, 11px)',
+                    letterSpacing: '0.06em',
+                    gap: 'clamp(2px, 0.5vw, 5px)',
+                    padding: '0 2px',
+                    width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)',
+                }}
+            >
                 <div className="flex justify-between items-center">
                     <span>HP</span>
                     <motion.span
@@ -84,29 +92,44 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const knobWidth = 48; // h-12 w-12 is 48px
-    const maxDrag = Math.max(0, sliderWidth - knobWidth);
+    const knobSize = 44;
+    const maxDrag = Math.max(0, sliderWidth - knobSize);
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex items-start justify-center gap-3 sm:gap-6 md:gap-12 relative pt-4 px-2 sm:px-3 md:px-0">
-            <div className="w-24 sm:w-28 flex flex-col items-center">
+        <div
+            className="flex-1 flex items-start justify-center relative"
+            style={{
+                gap: 'clamp(8px, 3vw, 2rem)',
+                paddingTop: 'var(--gap)',
+                paddingLeft: 'var(--gap)',
+                paddingRight: 'var(--gap)',
+            }}
+        >
+            {/* Enemy columns */}
+            <div className="flex flex-col items-center" style={{ width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)' }}>
                 <AnimatePresence>
                     {enemy1.isVisible && <EnemyDisplay enemy={enemy1} />}
                 </AnimatePresence>
             </div>
-            <div className="w-24 sm:w-28 flex flex-col items-center">
+            <div className="flex flex-col items-center" style={{ width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)' }}>
                 <AnimatePresence>
                     {enemy2.isVisible && <EnemyDisplay enemy={enemy2} />}
                 </AnimatePresence>
             </div>
 
-            {/* Action Button */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full px-4 flex justify-center">
+            {/* Slide-to-engage button */}
+            <div
+                className="absolute left-1/2 -translate-x-1/2 w-full flex justify-center"
+                style={{
+                    bottom: 'var(--gap)',
+                    padding: `0 var(--gap)`,
+                }}
+            >
                 <div
                     ref={containerRef}
                     className={cn(
-                        "relative overflow-hidden w-full max-w-xs h-12 rounded-md shadow-inner flex items-center transition-all duration-300",
+                        "relative overflow-hidden w-full rounded-md shadow-inner flex items-center transition-all duration-300",
                         showBattleState
                             ? "bg-red-950/80 border border-red-900 pointer-events-none"
                             : canConjureMagic
@@ -114,6 +137,10 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 : "bg-zinc-900 border border-zinc-700",
                         isDisabled && "opacity-50 grayscale"
                     )}
+                    style={{
+                        height: 'clamp(2.5rem, 6dvh, 3rem)',
+                        maxWidth: '18rem',
+                    }}
                 >
                     <AnimatePresence mode="popLayout">
                         {showBattleState ? (
@@ -122,7 +149,8 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 flex items-center justify-center text-red-500 text-sm tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
+                                className="absolute inset-0 flex items-center justify-center text-red-500 tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
+                                style={{ fontSize: 'clamp(11px, 2.8vw, 14px)' }}
                             >
                                 {battleCount === 4 || battleCount === 8 ? "BOSS BATTLE" : battleCount > 8 ? "VICTORY" : `BATTLE ${battleCount}`}
                             </motion.span>
@@ -132,9 +160,11 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 flex items-center justify-end pr-6 pointer-events-none select-none"
+                                className="absolute inset-0 flex items-center justify-end pr-5 pointer-events-none select-none"
                             >
-                                <span className={cn("text-xs tracking-[0.2em] font-semibold uppercase leading-tight text-right w-full text-zinc-500")}>
+                                <span className={cn("tracking-[0.15em] font-semibold uppercase leading-tight text-right w-full text-zinc-500")}
+                                    style={{ fontSize: 'clamp(9px, 2.4vw, 12px)' }}
+                                >
                                     {canConjureMagic ? "CONJURE MAGIC" : "START BATTLE"}
                                 </span>
                             </motion.div>
@@ -153,7 +183,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                             drag="x"
                             dragConstraints={{ left: 0, right: maxDrag }}
                             dragElastic={0}
-                            style={{ x }}
+                            style={{ x, width: knobSize, height: knobSize }}
                             onDragEnd={(_e, info) => {
                                 if (info.offset.x >= maxDrag - 20) {
                                     onEngage();
@@ -161,7 +191,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 animate(x, 0, { type: "spring", stiffness: 400, damping: 25 });
                             }}
                             className={cn(
-                                "w-12 h-12 border flex items-center justify-center cursor-grab active:cursor-grabbing relative z-10 transition-colors shrink-0 touch-none rounded-sm",
+                                "border flex items-center justify-center cursor-grab active:cursor-grabbing relative z-10 transition-colors shrink-0 touch-none rounded-sm",
                                 canConjureMagic
                                     ? "bg-pink-600 border-pink-500 hover:bg-pink-500"
                                     : "bg-red-600 border-red-500 hover:bg-red-500"
@@ -170,7 +200,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                             {canConjureMagic ? (
                                 <Icon name="fairy-wand" scale={1.5} tintColor="#fff" className="pointer-events-none" />
                             ) : (
-                                <i className="ra ra-sword text-xl text-white pointer-events-none" />
+                                <i className="ra ra-sword text-lg text-white pointer-events-none" />
                             )}
                         </motion.div>
                     )}

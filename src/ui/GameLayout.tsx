@@ -202,7 +202,6 @@ export function GameLayout() {
                     setAvailableScrolls(shuffledAvailable);
                     setRevealedScrollColor(targetColor);
                     setPendingScrollId(item.id);
-
                 } else {
                     removeGridItem(item.id);
                     resetSelection();
@@ -228,14 +227,23 @@ export function GameLayout() {
 
     return (
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
-            <header className="h-12 flex items-center justify-between px-4 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
-                <h1 className="text-base font-bold tracking-wider text-zinc-100 uppercase">Daily Rogue</h1>
-                <div className="text-xs text-zinc-400">Sunday, February 15th</div>
+            {/* ─── Header bar ─── */}
+            <header
+                className="flex items-center justify-between border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap"
+                style={{ height: 'clamp(2.25rem, 6dvh, 3rem)', padding: '0 var(--gap)' }}
+            >
+                <h1 className="text-sm font-bold tracking-wider text-zinc-100 uppercase leading-none">Daily Rogue</h1>
+                <div className="text-[11px] text-zinc-400 leading-none">Sunday, February 15th</div>
             </header>
 
+            {/* ─── Main area ─── */}
             <main className="flex-1 min-h-0 flex flex-col relative">
-                <section className="h-[clamp(13.5rem,38%,21rem)] flex bg-zinc-900/50 relative overflow-hidden">
 
+                {/* ═══ TOP: Battle / Stats banner ═══ */}
+                <section
+                    className="flex bg-zinc-900/50 relative overflow-hidden shrink-0"
+                    style={{ height: 'var(--top-h)' }}
+                >
                     <HeroStatsPanel
                         playerAnim={playerAnim}
                         playerHp={playerHp}
@@ -272,62 +280,68 @@ export function GameLayout() {
                         }}
                     />
 
+                    {/* Dot overlay */}
                     <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                 </section>
 
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
-                <section className="flex-1 min-h-0 flex flex-col items-center justify-start bg-zinc-950 relative py-1">
-                    <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
-
-                        {/* Kept Icons Row */}
-                        <div className="w-full flex justify-center items-center shrink-0 mb-3">
-                            <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
-                                {INVENTORY_SECTIONS.map((section, i) => (
-                                    <div key={section.id} className="contents">
-                                        {i > 0 && <div className="w-px h-6 bg-zinc-800 shrink-0 mx-1" />}
-                                        <InventorySlot
-                                            label={section.label}
-                                            slotIndices={section.slots}
-                                            keptIcons={keptIcons}
-                                            isUnlocked={unlockedSections[section.id]}
-                                            isUnlockingMode={isUnlockingMode}
-                                            onUnlock={() => handleInventoryClick(section.id)}
-                                            onKeptIconClick={handleKeptIconClick}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                {/* ═══ BOTTOM: Grid / Inventory / Controls ═══ */}
+                <section className="flex-1 min-h-0 flex flex-col items-center justify-center bg-zinc-950 relative overflow-hidden"
+                    style={{ padding: `var(--gap) 0` }}
+                >
+                    {/* Kept Icons Row */}
+                    <div className="w-full flex justify-center items-center shrink-0"
+                        style={{ marginBottom: 'var(--gap)' }}
+                    >
+                        <div className="flex items-center justify-center" style={{ gap: 'var(--gap)' }}>
+                            {INVENTORY_SECTIONS.map((section, i) => (
+                                <div key={section.id} className="contents">
+                                    {i > 0 && <div className="bg-zinc-800 shrink-0" style={{ width: 1, height: 'var(--cell-sm)', margin: '0 2px' }} />}
+                                    <InventorySlot
+                                        label={section.label}
+                                        slotIndices={section.slots}
+                                        keptIcons={keptIcons}
+                                        isUnlocked={unlockedSections[section.id]}
+                                        isUnlockingMode={isUnlockingMode}
+                                        onUnlock={() => handleInventoryClick(section.id)}
+                                        onKeptIconClick={handleKeptIconClick}
+                                    />
+                                </div>
+                            ))}
                         </div>
+                    </div>
 
-                        <div className="flex flex-row items-start justify-center gap-4 w-full max-w-2xl px-4 flex-1 min-h-0">
-                            <div className="min-w-0">
-                                <GridBoard
-                                    gridIcons={gridIcons}
-                                    spinKey={spinKey}
-                                    matchingIndices={findMatchingIndices(gridIcons)}
-                                    glowingIndices={glowingIndices}
-                                    activeHoodedIndex={activeHoodedIndex}
-                                    selectedIndex={selectedIndex}
-                                    selectedEquippedItem={selectedEquippedItem}
-                                    isShaking={isShaking}
-                                    onIconClick={handleIconClick}
-                                    onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
-                                    levelUpPerks={levelUpPerks}
-                                />
-                            </div>
-
-                            <ControlButtons
-                                gold={gold}
-                                shuffleCost={shuffleCost}
-                                isAnimating={isAnimating}
-                                isUnlockingMode={isUnlockingMode}
-                                keptScrollsCount={keptScrolls.length}
-                                onSpin={handleSpin}
-                                onVary={handleVary}
-                                onScrollsOpen={() => setIsScrollWindowOpen(true)}
+                    {/* Grid + Controls row */}
+                    <div className="flex items-start justify-center flex-1 min-h-0 w-full"
+                        style={{ gap: 'var(--gap)', padding: `0 var(--gap)` }}
+                    >
+                        <div className="min-w-0">
+                            <GridBoard
+                                gridIcons={gridIcons}
+                                spinKey={spinKey}
+                                matchingIndices={findMatchingIndices(gridIcons)}
+                                glowingIndices={glowingIndices}
+                                activeHoodedIndex={activeHoodedIndex}
+                                selectedIndex={selectedIndex}
+                                selectedEquippedItem={selectedEquippedItem}
+                                isShaking={isShaking}
+                                onIconClick={handleIconClick}
+                                onEmptyGlowClick={(index) => { if (activeHoodedIndex !== null) handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
+                                levelUpPerks={levelUpPerks}
                             />
                         </div>
+
+                        <ControlButtons
+                            gold={gold}
+                            shuffleCost={shuffleCost}
+                            isAnimating={isAnimating}
+                            isUnlockingMode={isUnlockingMode}
+                            keptScrollsCount={keptScrolls.length}
+                            onSpin={handleSpin}
+                            onVary={handleVary}
+                            onScrollsOpen={() => setIsScrollWindowOpen(true)}
+                        />
                     </div>
 
                     <ScrollWindowModal

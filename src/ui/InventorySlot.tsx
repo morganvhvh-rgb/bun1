@@ -16,13 +16,17 @@ interface InventorySlotProps {
 function KeptIconDisplay({ icon, onClick }: { icon: KeptIcon; onClick: (e: React.MouseEvent) => void }) {
     return (
         <div
-            className="shrink-0 w-12 h-12 flex items-center justify-center relative cursor-pointer"
+            className="shrink-0 flex items-center justify-center relative cursor-pointer"
+            style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}
             onClick={onClick}
         >
-            <span className="absolute top-1 left-1.5 text-white text-base font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+            <span
+                className="absolute top-0.5 left-1 text-white font-mono font-bold leading-none pointer-events-none z-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                style={{ fontSize: 'clamp(11px, 2.8vw, 14px)' }}
+            >
                 {icon.battleCount}
             </span>
-            <Icon name={icon.name} scale={3} tintColor={ICON_THEME[icon.name]} />
+            <Icon name={icon.name} scale={2.6} tintColor={ICON_THEME[icon.name]} />
         </div>
     );
 }
@@ -42,26 +46,38 @@ export function InventorySlot({
 
     return (
         <div
-            className="flex gap-2 items-center justify-start w-[6.5rem] h-12 relative"
+            className="flex items-center justify-start relative"
+            style={{
+                width: 'calc(var(--cell-sm) * 2 + var(--gap))',
+                height: 'var(--cell-sm)',
+                gap: 'calc(var(--gap) * 0.5)',
+            }}
             onClick={onUnlock}
         >
             {!isUnlocked ? (
                 <div
                     className={cn(
-                        "absolute inset-0 flex flex-col items-center justify-center gap-0.5 mt-0.5 rounded transition-colors",
+                        "absolute inset-0 flex flex-col items-center justify-center gap-0.5 rounded transition-colors",
                         isUnlockingMode && "cursor-pointer hover:bg-zinc-800/50"
                     )}
                     style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}
                 >
-                    <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none">
+                    <span
+                        className="font-bold text-zinc-600 uppercase tracking-widest whitespace-nowrap leading-none"
+                        style={{ fontSize: 'clamp(8px, 2.2vw, 11px)' }}
+                    >
                         {label}
                     </span>
                     {isUnlockingMode ? (
-                        <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse">
+                        <span className="font-bold text-green-500 uppercase tracking-widest whitespace-nowrap leading-none animate-pulse"
+                            style={{ fontSize: 'clamp(7px, 2vw, 10px)' }}
+                        >
                             UNLOCK?
                         </span>
                     ) : (
-                        <span className="text-[10px] font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none">
+                        <span className="font-bold text-red-900/80 uppercase tracking-widest whitespace-nowrap leading-none"
+                            style={{ fontSize: 'clamp(7px, 2vw, 10px)' }}
+                        >
                             LOCKED
                         </span>
                     )}
@@ -69,8 +85,11 @@ export function InventorySlot({
             ) : (
                 <>
                     {!iconA && !iconB && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 mt-0.5">
-                            <span className="text-xs font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5">
+                            <span
+                                className="font-bold text-zinc-700/50 uppercase tracking-widest whitespace-nowrap leading-none"
+                                style={{ fontSize: 'clamp(8px, 2.2vw, 11px)' }}
+                            >
                                 {label}
                             </span>
                         </div>

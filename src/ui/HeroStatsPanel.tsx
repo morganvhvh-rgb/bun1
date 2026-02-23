@@ -18,8 +18,6 @@ interface HeroStatsPanelProps {
     onReset: () => void;
 }
 
-
-
 export function HeroStatsPanel({
     playerAnim,
     playerHp,
@@ -71,26 +69,43 @@ export function HeroStatsPanel({
         }, RESET_HOLD_MS);
     }, [onReset, tickProgress, clearResetHold]);
 
-
     return (
-        <div className="w-[7.25rem] min-w-[7.25rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-3 sm:pt-4 shrink-0">
+        <div
+            className="border-r border-zinc-800 flex flex-col items-center justify-start shrink-0"
+            style={{
+                width: 'clamp(6rem, calc(var(--cell) * 2 + var(--gap) * 2), 9rem)',
+                paddingTop: 'var(--gap)',
+                gap: 'var(--gap)',
+            }}
+        >
+            {/* Hero Icon */}
             <div className="relative flex shrink-0">
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"
-                        scale={4}
+                        scale={3.5}
                         tintColor="#7e22ce"
                         className={cn("cursor-pointer hover:brightness-110 transition-all active:scale-95", isBattleRunning && "pointer-events-none")}
                         onClick={onCharacterClick}
                     />
                 </motion.div>
                 {moves >= 10 && (
-                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
+                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
                         <i className="ra ra-muscle-up" />
                     </div>
                 )}
             </div>
-            <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5 shrink-0">
+
+            {/* Stat lines */}
+            <div
+                className="flex flex-col w-full text-zinc-500 uppercase font-medium shrink-0"
+                style={{
+                    padding: '0 clamp(4px, var(--gap), 10px)',
+                    fontSize: 'clamp(9px, 2.4vw, 11px)',
+                    letterSpacing: '0.06em',
+                    gap: 'clamp(2px, 0.5vw, 5px)',
+                }}
+            >
                 <div className="flex justify-between items-center">
                     <span>HP</span>
                     <motion.span
@@ -110,13 +125,19 @@ export function HeroStatsPanel({
                     <span>{gold}</span>
                 </div>
             </div>
+
+            {/* Reset button */}
             <button
                 onPointerDown={startResetHold}
                 onPointerUp={clearResetHold}
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="relative w-full mt-auto mb-2 min-h-8 py-1.5 px-2 bg-red-950/30 text-zinc-400 rounded text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
+                className="relative w-[calc(100%-8px)] mt-auto mb-1.5 bg-red-950/30 text-zinc-400 rounded text-[9px] uppercase tracking-[0.15em] font-bold border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
+                style={{
+                    height: 'clamp(1.5rem, 4dvh, 2rem)',
+                    padding: '0 6px',
+                }}
             >
                 <div
                     className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"

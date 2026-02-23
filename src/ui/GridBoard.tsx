@@ -4,8 +4,6 @@ import { Icon } from './Icon';
 import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS } from '@/lib/constants';
 import type { GridItem } from '@/types/game';
 
-
-
 interface GridBoardProps {
     gridIcons: (GridItem | null)[];
     spinKey: number;
@@ -52,16 +50,15 @@ export function GridBoard({
         }
     };
 
-
-
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
     const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : false;
 
     return (
-        <div className="flex flex-col items-center gap-2 w-[16.25rem] min-w-0 shrink-0">
+        <div className="flex flex-col items-center shrink-0" style={{ gap: 'var(--gap)', width: 'calc(var(--cell) * 4 + var(--gap) * 3)' }}>
             <motion.div
                 key={spinKey}
-                className="grid grid-cols-4 grid-rows-3 gap-3"
+                className="grid grid-cols-4 grid-rows-3"
+                style={{ gap: 'var(--gap)' }}
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
@@ -90,17 +87,18 @@ export function GridBoard({
                                 animate={isShaking ? "shake" : undefined}
                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    "w-14 h-14 flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
+                                    "flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
                                     (!glowingIndices.includes(index) && isMatching) ? "ring-pink-500" :
                                         (selectedIndex === index && !glowingIndices.includes(index)) ? "ring-white" : "ring-transparent"
                                 )}
+                                style={{ width: 'var(--cell)', height: 'var(--cell)' }}
                             >
                                 {isTarget && (
                                     <div
                                         className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
                                         style={{ transform: `rotate(${arrowRotation}deg)` }}
                                     >
-                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]">
                                             <path d="M12 19V5" />
                                             <path d="M5 12l7-7 7 7" />
                                         </svg>
@@ -110,7 +108,7 @@ export function GridBoard({
                                 {item ? (
                                     <Icon
                                         name={item.name}
-                                        scale={3}
+                                        scale={2.8}
                                         tintColor={ICON_THEME[item.name]}
                                         onClick={() => onIconClick(item, index)}
                                         className={cn(
@@ -120,9 +118,9 @@ export function GridBoard({
                                     />
                                 ) : (
                                     glowingIndices.includes(index) ? (
-                                        <div onClick={() => onEmptyGlowClick(index)} className="w-14 h-14 cursor-pointer" />
+                                        <div onClick={() => onEmptyGlowClick(index)} className="w-full h-full cursor-pointer" />
                                     ) : (
-                                        <div className="w-14 h-14" />
+                                        <div className="w-full h-full" />
                                     )
                                 )}
                             </motion.div>
@@ -132,22 +130,28 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="min-h-20 w-full min-w-0 px-1 flex items-start justify-center text-center">
+            <div className="w-full min-w-0 flex items-start justify-center text-center" style={{ minHeight: 'calc(var(--cell) * 1.2)', padding: '0 2px' }}>
                 {displayItem ? (
-                    <div className="flex flex-col items-center justify-start gap-1 w-full min-w-0">
-                        <div className="text-sm font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words">
+                    <div className="flex flex-col items-center justify-start w-full min-w-0" style={{ gap: '3px' }}>
+                        <div className="font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words"
+                            style={{ fontSize: 'clamp(10px, 2.8vw, 13px)' }}
+                        >
                             <span className="text-zinc-200">{displayItem.name.replace(/_/g, ' ')}</span>
-                            <span className="text-zinc-600 mx-2">-</span>
+                            <span className="text-zinc-600 mx-1.5">-</span>
                             <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
-                        <div className="text-xs font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words">
+                        <div className="font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words"
+                            style={{ fontSize: 'clamp(9px, 2.4vw, 11px)' }}
+                        >
                             {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
-                        <div className="text-xs font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center min-h-[16px] w-full min-w-0 leading-tight whitespace-normal break-words">
+                        <div className="font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words"
+                            style={{ fontSize: 'clamp(9px, 2.2vw, 11px)', minHeight: 14 }}
+                        >
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
                                 ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
                                     <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
-                                        <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 14 }} /> costs 1 if experience is {'<'}3
+                                        <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 12 }} /> costs 1 if experience is {'<'}3
                                     </span>
                                 ) : (
                                     ICON_EXTRA_EFFECTS[displayItem.name]
@@ -156,7 +160,7 @@ export function GridBoard({
                         </div>
                     </div>
                 ) : (
-                    <div className="text-xs text-zinc-600 uppercase tracking-widest mt-1">
+                    <div className="text-zinc-600 uppercase tracking-widest mt-1" style={{ fontSize: 'clamp(9px, 2.4vw, 11px)' }}>
                         Select an icon
                     </div>
                 )}
