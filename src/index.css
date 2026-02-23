@@ -16,31 +16,35 @@
 
   /* Removes the blue highlight box when tapping buttons on Android/iOS */
   -webkit-tap-highlight-color: transparent;
-
-  /*
-   * TRUE visible viewport height — set by JS from window.innerHeight.
-   * This is the ONLY reliable cross-device measurement that excludes
-   * Android nav bars, iOS Safari chrome, keyboard, etc.
-   * Falls back to 100vh if JS hasn't run yet.
-   */
-  --app-height: 100vh;
 }
 
 html,
-body,
-#root {
-  height: 100%;
+body {
   margin: 0;
   padding: 0;
-}
-
-body {
-  /* Locks the body to the screen, preventing accidental scrolling */
-  position: fixed;
-  width: 100%;
   overflow: hidden;
   background-color: #000;
-  /* Prevents white flashes during load */
+}
+
+/*
+ * THE VIEWPORT CONTAINER
+ * ----------------------
+ * position: fixed + inset: 0 is the ONLY fully reliable way to fill
+ * exactly the browser's usable viewport. Unlike vh/dvh/innerHeight,
+ * the browser's own layout engine resolves fixed inset:0 correctly —
+ * it already knows where system nav bars, browser chrome, and safe
+ * areas begin, so bottom:0 always means "the top edge of the nav bar."
+ *
+ * This works on: Android gesture nav, Android 3-button nav, iOS Safari,
+ * iOS PWA, Samsung Internet, Firefox, and every other mobile browser.
+ */
+#root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 /* Allow text selection only on specific inputs if you have them */
