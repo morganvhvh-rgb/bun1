@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from './Icon';
 import type { IconName } from '@/types/game';
@@ -18,6 +18,10 @@ const CONJURE_ICONS: { name: IconName; ring: number; angle: number }[] = [
 
 const RING_RADII = [50, 85, 120]; // px from center for each ring
 const SPIN_DURATION = 5000; // ms before winner is chosen
+const RING_TILT_START = 0; // starting tilt degrees (perfectly flat)
+const RING_TILT_END = 180; // ending tilt degrees (full 180° flip)
+const SPARKLE_COUNT = 18; // number of random sparkle particles
+const CONJURE_PINK = '#ec4899'; // uniform icon color during conjure spin
 
 const EFFECT_LABELS: Record<string, string> = {
     'two-hearts': 'Magic heals HP',
@@ -25,11 +29,26 @@ const EFFECT_LABELS: Record<string, string> = {
     'lightning-trio': 'Magic damages enemies',
 };
 
+/** Generate stable sparkle positions for one session */
+function generateSparkles(count: number) {
+    return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,     // % position
+        top: Math.random() * 100,      // % position
+        size: 1 + Math.random() * 2,   // 1–3px
+        delay: Math.random() * 3,      // 0–3s stagger
+        duration: 0.6 + Math.random() * 1.2, // 0.6–1.8s cycle
+    }));
+}
+
 export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicModalProps) {
     const [phase, setPhase] = useState<'spinning' | 'revealing'>('spinning');
     const [winnerIndex, setWinnerIndex] = useState<number>(0);
     // Track a unique key so re-opening restarts the animation
     const [sessionKey, setSessionKey] = useState(0);
+
+    // Regenerate sparkle positions each session so they feel random
+    const sparkles = useMemo(() => generateSparkles(SPARKLE_COUNT), [sessionKey]);
 
     const startSession = useCallback(() => {
         setPhase('spinning');
@@ -84,111 +103,149 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                         </button>
                     </div>
                     <div className="border border-zinc-800/50 bg-zinc-950/50 rounded flex items-center justify-center relative overflow-hidden" style={{ height: 300 }}>
-                        {/* Radial rings visualization */}
-                        <div className="relative" style={{ width: 260, height: 260 }} key={sessionKey}>
+                        {/* Tilted 3D perspective wrapper — rings appear closer at bottom, farther at top */}
+                        <div
+                            style={{
+                                perspective: 500,
+                                perspectiveOrigin: '50% 40%',
+                            }}
+                        >
+                            {/* Radial rings visualization — tilt ramps up over spin duration */}
+                            <div
+                                className="relative"
+                                style={{
+                                    width: 260,
+                                    height: 260,
+                                    transformStyle: 'preserve-3d',
+                                    animation: phase === 'spinning'
+                                        ? `conjure-tilt-ramp ${SPIN_DURATION}ms ease-in forwards`
+                                        : undefined,
+                                    transform: phase === 'revealing'
+                                        ? `rotateX(${RING_TILT_END}deg)`
+                                        : undefined,
+                                }}
+                                key={sessionKey}
+                            >
 
-                            {/* Ring circles (visual guides) */}
-                            {RING_RADII.map((r, i) => (
-                                <div
-                                    key={`ring-${i}`}
-                                    className="absolute rounded-full border border-pink-900/20"
+                                {/* Ring circles (visual guides) */}
+                                {RING_RADII.map((r, i) => (
+                                    <div
+                                        key={`ring-${i}`}
+                                        className="absolute rounded-full border border-pink-900/20"
+                                        style={{
+                                            width: r * 2,
+                                            height: r * 2,
+                                            left: '50%',
+                                            top: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            opacity: phase === 'revealing' ? 0 : 1,
+                                            transition: 'opacity 0.6s ease-out',
+                                        }}
+                                    />
+                                ))}
+
+                                {/* Center fairy-wand */}
+                                <motion.div
+                                    className="absolute"
                                     style={{
-                                        width: r * 2,
-                                        height: r * 2,
                                         left: '50%',
                                         top: '50%',
                                         transform: 'translate(-50%, -50%)',
-                                        opacity: phase === 'revealing' ? 0 : 1,
-                                        transition: 'opacity 0.6s ease-out',
                                     }}
-                                />
-                            ))}
+                                    animate={phase === 'revealing' ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <Icon name="fairy-wand" scale={2} tintColor="#ec4899" />
+                                </motion.div>
 
-                            {/* Center fairy-wand */}
-                            <motion.div
-                                className="absolute"
-                                style={{
-                                    left: '50%',
-                                    top: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                }}
-                                animate={phase === 'revealing' ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                <Icon name="fairy-wand" scale={2} tintColor="#ec4899" />
-                            </motion.div>
+                                {/* Orbiting icons */}
+                                {CONJURE_ICONS.map((icon, i) => {
+                                    const isWinner = i === winnerIndex;
+                                    const radius = RING_RADII[icon.ring];
 
-                            {/* Orbiting icons */}
-                            {CONJURE_ICONS.map((icon, i) => {
-                                const isWinner = i === winnerIndex;
-                                const radius = RING_RADII[icon.ring];
+                                    // Each icon spins at a different speed
+                                    const spinDurations = [2.5, 3.5, 4.5];
+                                    const spinDuration = spinDurations[icon.ring];
 
-                                // Each icon spins at a different speed
-                                const spinDurations = [2.5, 3.5, 4.5];
-                                const spinDuration = spinDurations[icon.ring];
-
-                                if (phase === 'revealing') {
-                                    if (isWinner) {
-                                        return (
-                                            <motion.div
-                                                key={`icon-${i}`}
-                                                className="absolute z-20"
-                                                style={{
-                                                    left: '50%',
-                                                    top: '50%',
-                                                }}
-                                                initial={false}
-                                                animate={{
-                                                    x: '-50%',
-                                                    y: '-50%',
-                                                    scale: 2.5,
-                                                }}
-                                                transition={{ duration: 0.6, ease: 'easeOut' }}
-                                            >
-                                                <Icon name={icon.name} scale={2} tintColor={ICON_THEME[icon.name]} />
-                                            </motion.div>
-                                        );
-                                    } else {
-                                        return (
-                                            <motion.div
-                                                key={`icon-${i}`}
-                                                className="absolute"
-                                                style={{
-                                                    left: '50%',
-                                                    top: '50%',
-                                                }}
-                                                animate={{ opacity: 0, scale: 0.3 }}
-                                                transition={{ duration: 0.4, ease: 'easeOut' }}
-                                            >
-                                                <Icon name={icon.name} scale={2} tintColor={ICON_THEME[icon.name]} />
-                                            </motion.div>
-                                        );
+                                    if (phase === 'revealing') {
+                                        if (isWinner) {
+                                            return (
+                                                <motion.div
+                                                    key={`icon-${i}`}
+                                                    className="absolute z-20"
+                                                    style={{
+                                                        left: '50%',
+                                                        top: '50%',
+                                                    }}
+                                                    initial={false}
+                                                    animate={{
+                                                        x: '-50%',
+                                                        y: '-50%',
+                                                        scale: 2.5,
+                                                    }}
+                                                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                                                >
+                                                    <Icon name={icon.name} scale={2} tintColor={ICON_THEME[icon.name]} />
+                                                </motion.div>
+                                            );
+                                        } else {
+                                            return (
+                                                <motion.div
+                                                    key={`icon-${i}`}
+                                                    className="absolute"
+                                                    style={{
+                                                        left: '50%',
+                                                        top: '50%',
+                                                    }}
+                                                    animate={{ opacity: 0, scale: 0.3 }}
+                                                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                                                >
+                                                    <Icon name={icon.name} scale={2} tintColor={ICON_THEME[icon.name]} />
+                                                </motion.div>
+                                            );
+                                        }
                                     }
-                                }
 
-                                // Spinning phase: each icon orbits on its ring with CSS animation
-                                return (
-                                    <div
-                                        key={`icon-${i}`}
-                                        className="absolute"
-                                        style={{
-                                            left: '50%',
-                                            top: '50%',
-                                            width: 0,
-                                            height: 0,
-                                            animation: `conjure-spin-${i % 2 === 0 ? 'cw' : 'ccw'} ${spinDuration}s linear infinite`,
-                                        }}
-                                    >
+                                    // Spinning phase: each icon orbits on its ring with CSS animation
+                                    return (
                                         <div
+                                            key={`icon-${i}`}
+                                            className="absolute"
                                             style={{
-                                                transform: `translateX(${radius}px) translateX(-50%) translateY(-50%)`,
+                                                left: '50%',
+                                                top: '50%',
+                                                width: 0,
+                                                height: 0,
+                                                animation: `conjure-spin-${i % 2 === 0 ? 'cw' : 'ccw'} ${spinDuration}s linear infinite`,
                                             }}
                                         >
-                                            <Icon name={icon.name} scale={2} tintColor={ICON_THEME[icon.name]} />
+                                            <div
+                                                style={{
+                                                    transform: `translateX(${radius}px) translateX(-50%) translateY(-50%)`,
+                                                }}
+                                            >
+                                                <Icon name={icon.name} scale={2} tintColor={CONJURE_PINK} />
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+
+                                {/* White pixel sparkles — randomized twinkle particles */}
+                                {phase === 'spinning' && sparkles.map(s => (
+                                    <div
+                                        key={`sparkle-${s.id}`}
+                                        className="absolute rounded-full bg-white pointer-events-none"
+                                        style={{
+                                            width: s.size,
+                                            height: s.size,
+                                            left: `${s.left}%`,
+                                            top: `${s.top}%`,
+                                            opacity: 0,
+                                            animation: `sparkle-twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+                                        }}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
 
@@ -214,7 +271,7 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                 </div>
             </motion.div>
 
-            {/* Keyframe animations for orbiting */}
+            {/* Keyframe animations for orbiting, tilt ramp, + sparkles */}
             <style>{`
                 @keyframes conjure-spin-cw {
                     from { transform: rotate(0deg); }
@@ -223,6 +280,14 @@ export function ConjureMagicModal({ isOpen, onClose, onResult }: ConjureMagicMod
                 @keyframes conjure-spin-ccw {
                     from { transform: rotate(360deg); }
                     to { transform: rotate(0deg); }
+                }
+                @keyframes conjure-tilt-ramp {
+                    from { transform: rotateX(${RING_TILT_START}deg); }
+                    to   { transform: rotateX(${RING_TILT_END}deg); }
+                }
+                @keyframes sparkle-twinkle {
+                    0%, 100% { opacity: 0; }
+                    50% { opacity: 0.9; }
                 }
             `}</style>
         </>
