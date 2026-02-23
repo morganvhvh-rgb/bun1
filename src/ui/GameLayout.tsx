@@ -377,8 +377,8 @@ export function GameLayout() {
                 <div className="text-xs text-zinc-400">Sunday, February 15th</div>
             </header>
 
-            <main className="flex-1 flex flex-col relative">
-                <section className="h-[38%] flex bg-zinc-900/50 relative">
+            <main className="flex-1 min-h-0 flex flex-col relative">
+                <section className="h-[clamp(13.5rem,38%,21rem)] flex bg-zinc-900/50 relative overflow-hidden">
 
                     <HeroStatsPanel
                         playerAnim={playerAnim}
@@ -421,7 +421,7 @@ export function GameLayout() {
 
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
-                <section className="h-[62%] flex flex-col items-center justify-start bg-zinc-950 relative py-1">
+                <section className="flex-1 min-h-0 flex flex-col items-center justify-start bg-zinc-950 relative py-1">
                     <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
 
                         {/* Kept Icons Row */}

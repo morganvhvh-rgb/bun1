@@ -81,8 +81,8 @@ export function HeroStatsPanel({
 
 
     return (
-        <div className="w-[7.5rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-4 shrink-0">
-            <div className="relative flex">
+        <div className="w-[7.25rem] min-w-[7.25rem] sm:w-[8.5rem] md:w-[30%] border-r border-zinc-800 flex flex-col items-center justify-start gap-2 pt-3 sm:pt-4 shrink-0">
+            <div className="relative flex shrink-0">
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"
@@ -98,7 +98,7 @@ export function HeroStatsPanel({
                     </div>
                 )}
             </div>
-            <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5">
+            <div className="flex flex-col w-full px-1.5 sm:px-2 text-xs tracking-wide sm:tracking-widest text-zinc-500 uppercase font-medium gap-1.5 shrink-0">
                 <div className="flex justify-between items-center">
                     <span>HP</span>
                     <motion.span
@@ -124,7 +124,7 @@ export function HeroStatsPanel({
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="relative w-full mt-auto mb-2 py-1.5 bg-red-950/30 text-zinc-400 rounded text-[10px] uppercase tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500"
+                className="relative w-full mt-auto mb-2 min-h-8 py-1.5 px-2 bg-red-950/30 text-zinc-400 rounded text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-widest font-bold border border-zinc-600 transition-colors mx-1 sm:mx-2 max-w-[calc(100%-8px)] sm:max-w-[calc(100%-16px)] overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
             >
                 <div
                     className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
