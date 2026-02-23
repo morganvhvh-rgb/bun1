@@ -138,9 +138,30 @@ export function GameLayout() {
         const e1AtkVal = enemy1.atk;
         const e2AtkVal = enemy2.atk;
 
-        if (playerHpRef.current === 0 || (enemy1HpRef.current === 0 && enemy2HpRef.current === 0)) {
+        if (playerHpRef.current === 0) {
             setIsBattleRunning(false);
             return;
+        }
+
+        // Handle enemies already killed (e.g. by conjure magic lightning-trio)
+        if (enemy1HpRef.current === 0 && enemy2HpRef.current === 0) {
+            await delay(200);
+            if (enemy1.isVisible) setEnemyVisibility('enemy1', false);
+            if (enemy2.isVisible) setEnemyVisibility('enemy2', false);
+            await delay(600);
+            resetBattleTarget();
+            setIsBattleRunning(false);
+            return;
+        }
+
+        // Fade out any individually pre-killed enemies before battle starts
+        if (enemy1HpRef.current === 0 && enemy1.isVisible) {
+            setEnemyVisibility('enemy1', false);
+            await delay(300);
+        }
+        if (enemy2HpRef.current === 0 && enemy2.isVisible) {
+            setEnemyVisibility('enemy2', false);
+            await delay(300);
         }
 
         let isFirstAttack = true;
@@ -389,7 +410,7 @@ export function GameLayout() {
                         onEngage={() => {
                             if (canConjureMagic) {
                                 setIsConjureMagicOpen(true);
-                            } else if (playerHp > 0 && (enemy1.hp > 0 || enemy2.hp > 0)) {
+                            } else if (playerHp > 0) {
                                 handleBattleSequence();
                             }
                         }}
