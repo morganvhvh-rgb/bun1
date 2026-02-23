@@ -6,6 +6,9 @@ import { HeroStatsPanel } from './HeroStatsPanel';
 import { EnemyBattleHUD } from './EnemyBattleHUD';
 import { GridBoard } from './GridBoard';
 import { ConjureMagicModal } from './ConjureMagicModal';
+import { ScrollWindowModal } from './ScrollWindowModal';
+import { ScrollTypeModal } from './ScrollTypeModal';
+import { CharacterModal } from './CharacterModal';
 import { ICON_THEME, ICON_CATEGORIES, GAME_CONSTANTS, ALL_SCROLL_COLORS } from '@/lib/constants';
 import { findMatchingIndices, getCoordinates, getIndex } from '@/lib/utils';
 import type { GridItem, IconName, KeptIcon } from '@/types/game';
@@ -550,113 +553,22 @@ export function GameLayout() {
                         </div>
                     </div>
 
-                    {/* Scroll Window Modal */}
-                    <AnimatePresence>
-                        {isScrollWindowOpen && (
-                            <>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsScrollWindowOpen(false)} className="fixed inset-0 bg-black/50 z-[60]" />
-                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 rounded-t-3xl shadow-2xl z-[70] flex flex-col p-6" style={{ height: '50%' }}>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">Scroll Content</h2>
-                                        <button onClick={() => setIsScrollWindowOpen(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
-                                    </div>
-                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto">
-                                        {keptScrolls.length > 0 ? (
-                                            keptScrolls.map((scrollName, i) => (
-                                                <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-900/30 px-2 transition-colors rounded-lg">
-                                                    <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                                                        <Icon name={scrollName} scale={2} tintColor={ICON_THEME[scrollName]} />
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        <div className="text-zinc-300 font-bold uppercase text-xs tracking-wider">
-                                                            {scrollName.replace('-scroll', '')} Scroll
-                                                        </div>
-                                                        <div className="text-[10px] text-zinc-500">
-                                                            Does X to Y twice
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <div className="opacity-50 text-center mt-4 pt-4">No scrolls collected</div>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            </>
-                        )}
-                    </AnimatePresence>
+                    <ScrollWindowModal
+                        isOpen={isScrollWindowOpen}
+                        keptScrolls={keptScrolls}
+                        onClose={() => setIsScrollWindowOpen(false)}
+                    />
 
-                    {/* Scroll Type Popup Modal */}
-                    <AnimatePresence>
-                        {isScrollTypePopupOpen && (
-                            <>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-6" onClick={handleCloseScrollPopup}>
-                                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-6 relative overflow-hidden w-full max-w-sm min-h-[380px]" onClick={e => e.stopPropagation()}>
-
-                                        <div className="flex justify-between items-center mb-4">
-                                            <h2 className="text-zinc-100 font-bold uppercase tracking-widest leading-none">SCROLL TYPE</h2>
-                                            <button onClick={handleCloseScrollPopup} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
-                                        </div>
-
-                                        <div className="flex justify-center mb-6">
-                                            {scrollStage === 'initial' ? (
-                                                <button onClick={handleBuyScroll} disabled={gold < GAME_CONSTANTS.SCROLL_COST} className={`py-3 px-6 w-full rounded font-bold uppercase tracking-widest text-sm transition-colors border ${gold >= GAME_CONSTANTS.SCROLL_COST ? 'bg-zinc-800 hover:bg-zinc-700 text-yellow-500 border-yellow-900/50' : 'bg-red-950/20 text-red-500/50 border-red-900/30 cursor-not-allowed'}`}>
-                                                    Buy Scroll {gold < GAME_CONSTANTS.SCROLL_COST ? `(Need ${GAME_CONSTANTS.SCROLL_COST}g)` : `(${GAME_CONSTANTS.SCROLL_COST}g)`}
-                                                </button>
-                                            ) : (
-                                                <div className="py-3 px-6 w-full text-center rounded font-bold uppercase tracking-widest text-sm bg-zinc-800 text-zinc-500 border border-zinc-700 opacity-50">
-                                                    Unlocking...
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="flex-1 min-h-[12rem] border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-4">
-                                            <div className="relative flex w-full h-full items-center justify-center">
-                                                {availableScrolls.map((color, i) => {
-                                                    const isRevealed = revealedScrollColor === color;
-
-                                                    const spacing = availableScrolls.length > 5 ? 25 : 35;
-                                                    const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
-
-                                                    const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
-                                                    const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
-
-                                                    return (
-                                                        <motion.div
-                                                            key={color}
-                                                            className="absolute drop-shadow-[2px_4px_0_rgba(0,0,0,1)]"
-                                                            initial={{ x: xPos, y: 10, opacity: 1 }}
-                                                            animate={{
-                                                                y: yPos,
-                                                                x: xPos,
-                                                                opacity: opacity,
-                                                                zIndex: i
-                                                            }}
-                                                            transition={{ duration: 0.6, ease: "easeOut" }}
-                                                        >
-                                                            <Icon name={color} scale={4} tintColor={ICON_THEME[color]} />
-                                                        </motion.div>
-                                                    );
-                                                })}
-
-                                            </div>
-
-                                            <div className="absolute bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none">
-                                                <AnimatePresence>
-                                                    {scrollStage === 'faded' && revealedScrollColor && (
-                                                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-sm text-zinc-100 font-black uppercase tracking-[0.2em] leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                                                            {revealedScrollColor.replace('-scroll', '')}
-                                                        </motion.div>
-                                                    )}
-                                                </AnimatePresence>
-                                            </div>
-                                        </div>
-
-                                    </motion.div>
-                                </motion.div>
-                            </>
-                        )}
-                    </AnimatePresence>
+                    <ScrollTypeModal
+                        isOpen={isScrollTypePopupOpen}
+                        onClose={handleCloseScrollPopup}
+                        onBuyScroll={handleBuyScroll}
+                        scrollStage={scrollStage}
+                        availableScrolls={availableScrolls}
+                        revealedScrollColor={revealedScrollColor}
+                        gold={gold}
+                        scrollCost={GAME_CONSTANTS.SCROLL_COST}
+                    />
 
                     {/* Conjure Magic Modal */}
                     <AnimatePresence>
@@ -671,56 +583,13 @@ export function GameLayout() {
                         )}
                     </AnimatePresence>
 
-                    {/* Character Modal */}
-                    <AnimatePresence>
-                        {isCharacterModalOpen && (
-                            <>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCharacterModalOpen(false)} className="fixed inset-0 bg-black/50 z-[60]" />
-                                <motion.div initial={{ y: "-100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed top-0 left-0 right-0 bg-zinc-900 border-b border-zinc-700 rounded-b-3xl shadow-2xl z-[70] flex flex-col p-6" style={{ height: '50%' }}>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <h2 className="text-zinc-100 font-bold uppercase tracking-widest">
-                                            Character <span className="text-zinc-500 ml-2">Lvl {1 + levelUpPerks.length}</span>
-                                        </h2>
-                                        <button onClick={() => setIsCharacterModalOpen(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
-                                    </div>
-                                    <div className="flex-1 border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto">
-                                        {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED && (
-                                            <div className="flex flex-col gap-3 w-full">
-                                                <h3 className="text-green-500 font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
-                                                {levelUpPerks.length === 0 ? (
-                                                    <>
-                                                        <button onClick={() => applyLevelUp("full_heal_max_hp")} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-3 rounded font-bold uppercase tracking-wider text-xs border border-zinc-600 transition-colors">
-                                                            Full heal and +10 Max HP
-                                                        </button>
-                                                        <button onClick={() => applyLevelUp("nature_2x_exp")} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-3 rounded font-bold uppercase tracking-wider text-xs border border-zinc-600 transition-colors">
-                                                            All Nature symbols give 2x EXP
-                                                        </button>
-                                                    </>
-                                                ) : (
-                                                    <button onClick={() => applyLevelUp("full_heal")} className="bg-green-950/20 hover:bg-green-900/30 text-green-500 p-3 rounded font-bold uppercase tracking-wider text-xs border border-green-900/40 transition-colors">
-                                                        Full Heal
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {levelUpPerks.length > 0 && (
-                                            <div className="mt-8 pt-4 border-t border-zinc-800/50 flex flex-col gap-2 w-full shrink-0">
-                                                <h3 className="text-zinc-500 uppercase tracking-widest text-[10px] font-bold">Applied Level Ups</h3>
-                                                <div className="flex flex-col gap-1">
-                                                    {levelUpPerks.map((perk, i) => (
-                                                        <div key={i} className="text-xs text-zinc-400 font-mono">
-                                                            - {perk === "full_heal_max_hp" ? "Full heal & +10 Max HP" : perk === "nature_2x_exp" ? "All Nature symbols give 2x EXP" : "Full Heal"}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            </>
-                        )}
-                    </AnimatePresence>
+                    <CharacterModal
+                        isOpen={isCharacterModalOpen}
+                        onClose={() => setIsCharacterModalOpen(false)}
+                        moves={moves}
+                        levelUpPerks={levelUpPerks}
+                        onApplyLevelUp={applyLevelUp}
+                    />
                 </section>
             </main>
 
