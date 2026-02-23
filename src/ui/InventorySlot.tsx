@@ -26,7 +26,7 @@ function KeptIconDisplay({ icon, onClick }: { icon: KeptIcon; onClick: (e: React
             >
                 {icon.battleCount}
             </span>
-            <Icon name={icon.name} scale={2.6} tintColor={ICON_THEME[icon.name]} />
+            <Icon name={icon.name} scale={3} tintColor={ICON_THEME[icon.name]} />
         </div>
     );
 }

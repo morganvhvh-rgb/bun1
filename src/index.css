@@ -3,29 +3,19 @@
 @tailwind utilities;
 
 /* ───────────────────────────────────────────────────
-   Mobile-first design tokens
-   
-   All sizing derives from the viewport so the entire
-   UI scales proportionally on any phone.
-   
-   --cell  : grid cell size   (icon tiles + control buttons)
-   --cell-sm : inventory slot size
-   --gap   : standard gap / spacing unit
-   --top-h : height of the battle/stats banner
+   Mobile scaling tokens — everything derives from --cell.
+   --cell is the grid tile size, constrained by viewport width.
    ─────────────────────────────────────────────────── */
 :root {
-  /* Base unit: 1/7 of the narrower viewport axis, capped at 64px.
-     A 4×3 grid with gaps needs ~4.5 units width, giving comfortable padding. */
-  --cell: min(calc((100vw - 6rem) / 5.2), 64px);
+  /* Grid cell: the widest a cell can be while 5 columns
+     (4 grid + 1 control) plus gaps fit comfortably */
+  --cell: min(calc((100vw - 2.5rem) / 5.3), 72px);
 
-  /* Smaller variant for inventory & side elements */
+  /* Inventory/slot variant */
   --cell-sm: calc(var(--cell) * 0.82);
 
-  /* Standard spacing unit */
-  --gap: clamp(4px, 1.2vw, 10px);
-
-  /* Top panel: ~42% of the viewport height, clamped within reason */
-  --top-h: clamp(13rem, 42dvh, 22rem);
+  /* Universal spacing */
+  --gap: clamp(6px, 1.5vw, 12px);
 }
 
 html,

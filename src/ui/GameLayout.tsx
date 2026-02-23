@@ -241,8 +241,8 @@ export function GameLayout() {
 
                 {/* ═══ TOP: Battle / Stats banner ═══ */}
                 <section
-                    className="flex bg-zinc-900/50 relative overflow-hidden shrink-0"
-                    style={{ height: 'var(--top-h)' }}
+                    className="flex bg-zinc-900/50 relative overflow-hidden min-h-0"
+                    style={{ flex: 2 }}
                 >
                     <HeroStatsPanel
                         playerAnim={playerAnim}
@@ -287,8 +287,8 @@ export function GameLayout() {
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* ═══ BOTTOM: Grid / Inventory / Controls ═══ */}
-                <section className="flex-1 min-h-0 flex flex-col items-center justify-center bg-zinc-950 relative overflow-hidden"
-                    style={{ padding: `var(--gap) 0` }}
+                <section className="min-h-0 flex flex-col items-center justify-evenly bg-zinc-950 relative overflow-hidden"
+                    style={{ flex: 3, padding: `var(--gap) 0` }}
                 >
                     {/* Kept Icons Row */}
                     <div className="w-full flex justify-center items-center shrink-0"

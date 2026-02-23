@@ -108,7 +108,7 @@ export function GridBoard({
                                 {item ? (
                                     <Icon
                                         name={item.name}
-                                        scale={2.8}
+                                        scale={3}
                                         tintColor={ICON_THEME[item.name]}
                                         onClick={() => onIconClick(item, index)}
                                         className={cn(

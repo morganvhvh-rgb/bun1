@@ -28,26 +28,31 @@ interface EnemyBattleHUDProps {
     onEngage: () => void;
 }
 
-function EnemyDisplay({ enemy }: { enemy: EnemyProps }) {
+/** Each enemy column mirrors the hero panel layout:
+ *  icon pinned at top, stats flex-grow with justify-evenly to align
+ *  with the hero's stat rows, bottom space left for the shared slider. */
+function EnemyColumn({ enemy }: { enemy: EnemyProps }) {
     if (!enemy.isVisible) return null;
     return (
         <motion.div
-            className="flex flex-col items-center"
+            className="flex flex-col items-center h-full"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
-            style={{ gap: 'var(--gap)' }}
         >
-            <motion.div animate={enemy.animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
-                <Icon name={enemy.name} scale={3.5} tintColor={ICON_THEME[enemy.name]} />
-            </motion.div>
+            {/* Icon — pinned at top, same position as hero icon */}
+            <div className="shrink-0">
+                <motion.div animate={enemy.animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                    <Icon name={enemy.name} scale={4} tintColor={ICON_THEME[enemy.name]} />
+                </motion.div>
+            </div>
+
+            {/* Stats — flex-1 + justify-evenly to match hero panel rows */}
             <div
-                className="flex flex-col w-full text-zinc-500 uppercase font-medium"
+                className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
                 style={{
-                    fontSize: 'clamp(9px, 2.4vw, 11px)',
-                    letterSpacing: '0.06em',
-                    gap: 'clamp(2px, 0.5vw, 5px)',
+                    fontSize: 'clamp(9px, 2.6vw, 12px)',
+                    letterSpacing: '0.08em',
                     padding: '0 2px',
-                    width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)',
                 }}
             >
                 <div className="flex justify-between items-center">
@@ -73,7 +78,6 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
     const [sliderWidth, setSliderWidth] = useState(0);
     const x = useMotionValue(0);
 
-    // Reset slider on battle state change OR external reset key
     useEffect(() => {
         x.set(0);
     }, [isBattleRunning, battleCount, sliderResetKey, x]);
@@ -82,7 +86,6 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
         if (containerRef.current) {
             setSliderWidth(containerRef.current.offsetWidth);
         }
-
         const handleResize = () => {
             if (containerRef.current) {
                 setSliderWidth(containerRef.current.offsetWidth);
@@ -97,35 +100,29 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div
-            className="flex-1 flex items-start justify-center relative"
-            style={{
-                gap: 'clamp(8px, 3vw, 2rem)',
-                paddingTop: 'var(--gap)',
-                paddingLeft: 'var(--gap)',
-                paddingRight: 'var(--gap)',
-            }}
-        >
-            {/* Enemy columns */}
-            <div className="flex flex-col items-center" style={{ width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)' }}>
-                <AnimatePresence>
-                    {enemy1.isVisible && <EnemyDisplay enemy={enemy1} />}
-                </AnimatePresence>
-            </div>
-            <div className="flex flex-col items-center" style={{ width: 'clamp(5rem, calc(var(--cell) * 1.8), 7rem)' }}>
-                <AnimatePresence>
-                    {enemy2.isVisible && <EnemyDisplay enemy={enemy2} />}
-                </AnimatePresence>
+        <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
+            {/* Enemy columns — flex-1 fills the space above the slider */}
+            <div className="flex-1 flex items-stretch justify-center min-h-0"
+                style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}
+            >
+                <div className="flex flex-col items-center min-w-0"
+                    style={{ width: 'clamp(5rem, 30%, 7rem)' }}
+                >
+                    <AnimatePresence>
+                        {enemy1.isVisible && <EnemyColumn enemy={enemy1} />}
+                    </AnimatePresence>
+                </div>
+                <div className="flex flex-col items-center min-w-0"
+                    style={{ width: 'clamp(5rem, 30%, 7rem)' }}
+                >
+                    <AnimatePresence>
+                        {enemy2.isVisible && <EnemyColumn enemy={enemy2} />}
+                    </AnimatePresence>
+                </div>
             </div>
 
-            {/* Slide-to-engage button */}
-            <div
-                className="absolute left-1/2 -translate-x-1/2 w-full flex justify-center"
-                style={{
-                    bottom: 'var(--gap)',
-                    padding: `0 var(--gap)`,
-                }}
-            >
+            {/* Slide-to-engage — same height as hero Reset button */}
+            <div className="shrink-0 flex justify-center w-full">
                 <div
                     ref={containerRef}
                     className={cn(
@@ -138,7 +135,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                         isDisabled && "opacity-50 grayscale"
                     )}
                     style={{
-                        height: 'clamp(2.5rem, 6dvh, 3rem)',
+                        height: 'clamp(1.5rem, 4dvh, 2rem)',
                         maxWidth: '18rem',
                     }}
                 >
@@ -150,7 +147,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 className="absolute inset-0 flex items-center justify-center text-red-500 tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
-                                style={{ fontSize: 'clamp(11px, 2.8vw, 14px)' }}
+                                style={{ fontSize: 'clamp(10px, 2.5vw, 13px)' }}
                             >
                                 {battleCount === 4 || battleCount === 8 ? "BOSS BATTLE" : battleCount > 8 ? "VICTORY" : `BATTLE ${battleCount}`}
                             </motion.span>
@@ -160,10 +157,10 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="absolute inset-0 flex items-center justify-end pr-5 pointer-events-none select-none"
+                                className="absolute inset-0 flex items-center justify-end pr-4 pointer-events-none select-none"
                             >
                                 <span className={cn("tracking-[0.15em] font-semibold uppercase leading-tight text-right w-full text-zinc-500")}
-                                    style={{ fontSize: 'clamp(9px, 2.4vw, 12px)' }}
+                                    style={{ fontSize: 'clamp(8px, 2.2vw, 11px)' }}
                                 >
                                     {canConjureMagic ? "CONJURE MAGIC" : "START BATTLE"}
                                 </span>
@@ -183,7 +180,7 @@ export function EnemyBattleHUD({ enemy1, enemy2, isBattleRunning, battleCount, i
                             drag="x"
                             dragConstraints={{ left: 0, right: maxDrag }}
                             dragElastic={0}
-                            style={{ x, width: knobSize, height: knobSize }}
+                            style={{ x, width: knobSize, height: '100%' }}
                             onDragEnd={(_e, info) => {
                                 if (info.offset.x >= maxDrag - 20) {
                                     onEngage();

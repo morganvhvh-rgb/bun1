@@ -71,11 +71,10 @@ export function HeroStatsPanel({
 
     return (
         <div
-            className="border-r border-zinc-800 flex flex-col items-center justify-start shrink-0"
+            className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full"
             style={{
-                width: 'clamp(6rem, calc(var(--cell) * 2 + var(--gap) * 2), 9rem)',
-                paddingTop: 'var(--gap)',
-                gap: 'var(--gap)',
+                width: 'clamp(6.5rem, calc(var(--cell) * 2.2), 9rem)',
+                padding: 'var(--gap)',
             }}
         >
             {/* Hero Icon */}
@@ -83,27 +82,26 @@ export function HeroStatsPanel({
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"
-                        scale={3.5}
+                        scale={4}
                         tintColor="#7e22ce"
                         className={cn("cursor-pointer hover:brightness-110 transition-all active:scale-95", isBattleRunning && "pointer-events-none")}
                         onClick={onCharacterClick}
                     />
                 </motion.div>
                 {moves >= 10 && (
-                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
+                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
                         <i className="ra ra-muscle-up" />
                     </div>
                 )}
             </div>
 
-            {/* Stat lines */}
+            {/* Stat lines — flex-1 so they stretch to fill middle space */}
             <div
-                className="flex flex-col w-full text-zinc-500 uppercase font-medium shrink-0"
+                className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
                 style={{
-                    padding: '0 clamp(4px, var(--gap), 10px)',
-                    fontSize: 'clamp(9px, 2.4vw, 11px)',
-                    letterSpacing: '0.06em',
-                    gap: 'clamp(2px, 0.5vw, 5px)',
+                    fontSize: 'clamp(9px, 2.6vw, 12px)',
+                    letterSpacing: '0.08em',
+                    padding: '0 2px',
                 }}
             >
                 <div className="flex justify-between items-center">
@@ -133,11 +131,8 @@ export function HeroStatsPanel({
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="relative w-[calc(100%-8px)] mt-auto mb-1.5 bg-red-950/30 text-zinc-400 rounded text-[9px] uppercase tracking-[0.15em] font-bold border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
-                style={{
-                    height: 'clamp(1.5rem, 4dvh, 2rem)',
-                    padding: '0 6px',
-                }}
+                className="relative w-full bg-red-950/30 text-zinc-400 rounded text-[9px] uppercase tracking-[0.15em] font-bold border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
+                style={{ height: 'clamp(1.5rem, 4dvh, 2rem)' }}
             >
                 <div
                     className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
