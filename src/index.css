@@ -2,22 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ───────────────────────────────────────────────────
-   Mobile scaling tokens — everything derives from --cell.
-   --cell is the grid tile size, constrained by viewport width.
-   ─────────────────────────────────────────────────── */
+/* ─── Design tokens ─── */
 :root {
-  /* Grid cell: the widest a cell can be while 5 columns
-     (4 grid + 1 control) plus gaps fit comfortably */
-  --cell: min(calc((100vw - 2.5rem) / 5.3), 72px);
-
-  /* Inventory/slot variant */
-  --cell-sm: calc(var(--cell) * 0.82);
-
-  /* Universal spacing */
-  --gap: clamp(6px, 1.5vw, 12px);
+  --cell: min(calc((100vw - 2rem) / 5), 72px);
+  --cell-sm: calc(var(--cell) * 0.8);
+  --gap: min(1.5vw, 10px);
+  --text-xs: clamp(9px, 2.2vw, 11px);
+  --text-sm: clamp(10px, 2.8vw, 13px);
+  --text-base: clamp(12px, 3.2vw, 15px);
+  --header-h: clamp(2.25rem, 6dvh, 3rem);
+  --slider-h: clamp(1.5rem, 4dvh, 2rem);
 }
 
+/* ─── Reset & mobile lockdown ─── */
 html,
 body {
   width: 100%;
@@ -49,7 +46,7 @@ textarea {
   -webkit-user-select: text;
 }
 
-/* Conjure Magic animations */
+/* ─── Conjure Magic animations ─── */
 @keyframes conjure-color-pulse {
   0% {
     color: #ec4899;

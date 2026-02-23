@@ -1,0 +1,152 @@
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { useGameStore, selectHasTwoFairyWands } from '@/store/gameStore';
+import { Icon } from '../shared/Icon';
+import { StatLine } from '../shared/StatLine';
+import { ICON_THEME, GAME_CONSTANTS } from '@/lib/constants';
+import { enemyIconVariants } from '../animations';
+import type { IconName } from '@/types/game';
+
+interface EnemyColumnProps {
+    name: IconName;
+    hp: number;
+    maxHp: number;
+    atk: number;
+    lvl: number;
+    type: string;
+    isVisible: boolean;
+    animStatus: 'idle' | 'attack' | 'hurt';
+}
+
+function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: EnemyColumnProps) {
+    if (!isVisible) return null;
+    return (
+        <motion.div className="flex flex-col items-center h-full" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.3 } }}>
+            <div className="shrink-0">
+                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+                    <Icon name={name} scale={4} tintColor={ICON_THEME[name]} />
+                </motion.div>
+            </div>
+            <div
+                className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
+                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', padding: '0 2px' }}
+            >
+                <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
+                <StatLine label="ATK" value={atk} />
+                <StatLine label="LVL" value={lvl} />
+                <StatLine label="Type" value={type} />
+                {/* Invisible spacers to match hero panel's 6 rows */}
+                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
+                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
+            </div>
+        </motion.div>
+    );
+}
+
+interface EnemyPanelProps {
+    enemy1Anim: 'idle' | 'attack' | 'hurt';
+    enemy2Anim: 'idle' | 'attack' | 'hurt';
+    isBattleRunning: boolean;
+    sliderResetKey: number;
+    onEngage: () => void;
+}
+
+export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderResetKey, onEngage }: EnemyPanelProps) {
+    const { enemy1, enemy2, battleCount, playerHp, conjureMagicUsed } = useGameStore();
+    const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
+    const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
+    const isDisabled = playerHp === 0 || battleCount > GAME_CONSTANTS.MAX_BATTLES;
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [sliderWidth, setSliderWidth] = useState(0);
+    const x = useMotionValue(0);
+
+    useEffect(() => { x.set(0); }, [isBattleRunning, battleCount, sliderResetKey, x]);
+
+    useEffect(() => {
+        if (containerRef.current) setSliderWidth(containerRef.current.offsetWidth);
+        const onResize = () => { if (containerRef.current) setSliderWidth(containerRef.current.offsetWidth); };
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    const knobSize = 44;
+    const maxDrag = Math.max(0, sliderWidth - knobSize);
+    const showBattleState = isBattleRunning || isDisabled;
+
+    return (
+        <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
+            {/* Enemy columns */}
+            <div className="flex-1 flex items-stretch justify-center min-h-0" style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}>
+                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5.5rem, 34%, 8rem)' }}>
+                    <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
+                </div>
+                <div className="flex flex-col items-center min-w-0" style={{ width: 'clamp(5rem, 30%, 7rem)' }}>
+                    <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
+                </div>
+            </div>
+
+            {/* Slide-to-engage */}
+            <div className="shrink-0 flex justify-center w-full">
+                <div
+                    ref={containerRef}
+                    className={cn(
+                        'relative overflow-hidden w-full rounded-md shadow-inner flex items-center transition-all duration-300',
+                        showBattleState ? 'bg-red-950/80 border border-red-900 pointer-events-none'
+                            : canConjureMagic ? 'bg-zinc-900 border border-pink-800/50'
+                                : 'bg-zinc-900 border border-zinc-700',
+                        isDisabled && 'opacity-50 grayscale'
+                    )}
+                    style={{ height: 'var(--slider-h)', maxWidth: '18rem' }}
+                >
+                    <AnimatePresence mode="popLayout">
+                        {showBattleState ? (
+                            <motion.span key="battle-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center text-red-500 tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
+                                style={{ fontSize: 'var(--text-sm)' }}
+                            >
+                                {battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}
+                            </motion.span>
+                        ) : (
+                            <motion.div key="begin-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-end pr-4 pointer-events-none select-none"
+                            >
+                                <span className="tracking-[0.15em] font-semibold uppercase leading-tight text-right w-full text-zinc-500" style={{ fontSize: 'var(--text-xs)' }}>
+                                    {canConjureMagic ? 'CONJURE MAGIC' : 'START BATTLE'}
+                                </span>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {!showBattleState && (
+                        <motion.div className={cn('absolute left-0 top-0 bottom-0 pointer-events-none', canConjureMagic ? 'bg-pink-500/20' : 'bg-red-500/20')} style={{ width: x }} />
+                    )}
+
+                    {!showBattleState && (
+                        <motion.div
+                            drag="x"
+                            dragConstraints={{ left: 0, right: maxDrag }}
+                            dragElastic={0}
+                            style={{ x, width: knobSize, height: '100%' }}
+                            onDragEnd={(_e, info) => {
+                                if (info.offset.x >= maxDrag - 20) onEngage();
+                                animate(x, 0, { type: 'spring', stiffness: 400, damping: 25 });
+                            }}
+                            className={cn(
+                                'border flex items-center justify-center cursor-grab active:cursor-grabbing relative z-10 transition-colors shrink-0 touch-none rounded-sm',
+                                canConjureMagic ? 'bg-pink-600 border-pink-500 hover:bg-pink-500' : 'bg-red-600 border-red-500 hover:bg-red-500'
+                            )}
+                        >
+                            {canConjureMagic ? (
+                                <Icon name="fairy-wand" scale={1.5} tintColor="#fff" className="pointer-events-none" />
+                            ) : (
+                                <i className="ra ra-sword text-lg text-white pointer-events-none" />
+                            )}
+                        </motion.div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

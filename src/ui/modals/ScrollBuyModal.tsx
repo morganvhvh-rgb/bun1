@@ -1,9 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Icon } from './Icon';
+import { Icon } from '../shared/Icon';
 import { ICON_THEME } from '@/lib/constants';
 import type { IconName } from '@/types/game';
 
-interface ScrollTypeModalProps {
+interface ScrollBuyModalProps {
     isOpen: boolean;
     onClose: () => void;
     onBuyScroll: () => void;
@@ -14,31 +14,16 @@ interface ScrollTypeModalProps {
     scrollCost: number;
 }
 
-export function ScrollTypeModal({
-    isOpen,
-    onClose,
-    onBuyScroll,
-    scrollStage,
-    availableScrolls,
-    revealedScrollColor,
-    gold,
-    scrollCost
-}: ScrollTypeModalProps) {
+export function ScrollBuyModal({
+    isOpen, onClose, onBuyScroll, scrollStage, availableScrolls, revealedScrollColor, gold, scrollCost,
+}: ScrollBuyModalProps) {
     return (
         <AnimatePresence>
             {isOpen && (
                 <>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4"
-                        onClick={onClose}
-                    >
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4" onClick={onClose}>
                         <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
+                            initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
                             className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
                             style={{ minHeight: 'min(380px, 60dvh)' }}
                             onClick={(e) => e.stopPropagation()}
@@ -68,10 +53,8 @@ export function ScrollTypeModal({
                                 <div className="relative flex w-full h-full items-center justify-center">
                                     {availableScrolls.map((color, i) => {
                                         const isRevealed = revealedScrollColor === color;
-
                                         const spacing = availableScrolls.length > 5 ? 25 : 35;
                                         const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
-
                                         const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
                                         const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
 
@@ -80,13 +63,8 @@ export function ScrollTypeModal({
                                                 key={color}
                                                 className="absolute drop-shadow-[2px_4px_0_rgba(0,0,0,1)]"
                                                 initial={{ x: xPos, y: 10, opacity: 1 }}
-                                                animate={{
-                                                    y: yPos,
-                                                    x: xPos,
-                                                    opacity: opacity,
-                                                    zIndex: i
-                                                }}
-                                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                                animate={{ y: yPos, x: xPos, opacity, zIndex: i }}
+                                                transition={{ duration: 0.6, ease: 'easeOut' }}
                                             >
                                                 <Icon name={color} scale={4} tintColor={ICON_THEME[color]} />
                                             </motion.div>
@@ -98,10 +76,8 @@ export function ScrollTypeModal({
                                     <AnimatePresence>
                                         {scrollStage === 'faded' && revealedScrollColor && (
                                             <motion.div
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0 }}
-                                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.6, ease: 'easeOut' }}
                                                 className="text-sm text-zinc-100 font-black uppercase tracking-[0.2em] leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                                             >
                                                 {revealedScrollColor.replace('-scroll', '')}

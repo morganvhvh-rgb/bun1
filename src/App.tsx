@@ -1,7 +1,7 @@
-import { GameLayout } from '@/ui/GameLayout';
+import { GameShell } from '@/ui/GameShell';
 
 export default function App() {
   return (
-    <GameLayout />
+    <GameShell />
   );
 }

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, getCoordinates, getStatText } from '@/lib/utils';
-import { Icon } from './Icon';
+import { Icon } from '../shared/Icon';
 import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS } from '@/lib/constants';
 import type { GridItem } from '@/types/game';
 
@@ -19,35 +19,18 @@ interface GridBoardProps {
 }
 
 export function GridBoard({
-    gridIcons,
-    spinKey,
-    matchingIndices,
-    glowingIndices,
-    activeHoodedIndex,
-    selectedIndex,
-    selectedEquippedItem,
-    isShaking,
-    onIconClick,
-    onEmptyGlowClick,
-    levelUpPerks
+    gridIcons, spinKey, matchingIndices, glowingIndices, activeHoodedIndex,
+    selectedIndex, selectedEquippedItem, isShaking, onIconClick, onEmptyGlowClick, levelUpPerks,
 }: GridBoardProps) {
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: { staggerChildren: 0.05 }
-        }
+        show: { opacity: 1, transition: { staggerChildren: 0.05 } },
     };
-
     const itemVariants = {
         hidden: { opacity: 0, scale: 0.5 },
         show: { opacity: 1, scale: 1 },
-        shake: {
-            opacity: 1,
-            scale: 1,
-            transition: { duration: 0.4 }
-        }
+        shake: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
     };
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
@@ -63,20 +46,19 @@ export function GridBoard({
                 initial="hidden"
                 animate="show"
             >
-                <AnimatePresence mode='popLayout'>
+                <AnimatePresence mode="popLayout">
                     {gridIcons.map((item, index) => {
                         const isMatching = matchingIndices.has(index);
                         const isTarget = glowingIndices.includes(index) && activeHoodedIndex !== null;
 
                         let arrowRotation = 0;
                         if (isTarget && activeHoodedIndex !== null) {
-                            const { row: startRow, col: startCol } = getCoordinates(activeHoodedIndex);
-                            const { row: targetRow, col: targetCol } = getCoordinates(index);
-
-                            if (targetRow < startRow) arrowRotation = 0; // Up
-                            else if (targetRow > startRow) arrowRotation = 180; // Down
-                            else if (targetCol < startCol) arrowRotation = 270; // Left
-                            else if (targetCol > startCol) arrowRotation = 90; // Right
+                            const { row: sr, col: sc } = getCoordinates(activeHoodedIndex);
+                            const { row: tr, col: tc } = getCoordinates(index);
+                            if (tr < sr) arrowRotation = 0;
+                            else if (tr > sr) arrowRotation = 180;
+                            else if (tc < sc) arrowRotation = 270;
+                            else if (tc > sc) arrowRotation = 90;
                         }
 
                         return (
@@ -84,44 +66,32 @@ export function GridBoard({
                                 key={item?.id ?? `empty-${index}`}
                                 layout
                                 variants={itemVariants}
-                                animate={isShaking ? "shake" : undefined}
-                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                animate={isShaking ? 'shake' : undefined}
+                                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    "flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow",
-                                    (!glowingIndices.includes(index) && isMatching) ? "ring-pink-500" :
-                                        (selectedIndex === index && !glowingIndices.includes(index)) ? "ring-white" : "ring-transparent"
+                                    'flex items-center justify-center relative rounded-md ring-1 ring-inset transition-shadow',
+                                    (!glowingIndices.includes(index) && isMatching) ? 'ring-pink-500'
+                                        : (selectedIndex === index && !glowingIndices.includes(index)) ? 'ring-white' : 'ring-transparent'
                                 )}
                                 style={{ width: 'var(--cell)', height: 'var(--cell)' }}
                             >
                                 {isTarget && (
-                                    <div
-                                        className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-                                        style={{ transform: `rotate(${arrowRotation}deg)` }}
-                                    >
+                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>
                                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]">
-                                            <path d="M12 19V5" />
-                                            <path d="M5 12l7-7 7 7" />
+                                            <path d="M12 19V5" /><path d="M5 12l7-7 7 7" />
                                         </svg>
                                     </div>
                                 )}
-
                                 {item ? (
                                     <Icon
-                                        name={item.name}
-                                        scale={3}
-                                        tintColor={ICON_THEME[item.name]}
+                                        name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
                                         onClick={() => onIconClick(item, index)}
-                                        className={cn(
-                                            "hover:brightness-110 transition-all active:scale-95",
-                                            (activeHoodedIndex === index && item.name === 'hood') && "brightness-125"
-                                        )}
+                                        className={cn('hover:brightness-110 transition-all active:scale-95', (activeHoodedIndex === index && item.name === 'hood') && 'brightness-125')}
                                     />
+                                ) : glowingIndices.includes(index) ? (
+                                    <div onClick={() => onEmptyGlowClick(index)} className="w-full h-full cursor-pointer" />
                                 ) : (
-                                    glowingIndices.includes(index) ? (
-                                        <div onClick={() => onEmptyGlowClick(index)} className="w-full h-full cursor-pointer" />
-                                    ) : (
-                                        <div className="w-full h-full" />
-                                    )
+                                    <div className="w-full h-full" />
                                 )}
                             </motion.div>
                         );
@@ -133,34 +103,26 @@ export function GridBoard({
             <div className="w-full min-w-0 flex items-start justify-center text-center" style={{ minHeight: 'calc(var(--cell) * 1.2)', padding: '0 2px' }}>
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0" style={{ gap: '3px' }}>
-                        <div className="font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words"
-                            style={{ fontSize: 'clamp(11px, 3vw, 14px)' }}
-                        >
+                        <div className="font-medium tracking-widest text-zinc-400 uppercase w-full min-w-0 break-words" style={{ fontSize: 'var(--text-base)' }}>
                             <span className="text-zinc-200">{displayItem.name.replace(/_/g, ' ')}</span>
                             <span className="text-zinc-600 mx-1.5">-</span>
                             <span className="text-zinc-500">{ICON_CATEGORIES[displayItem.name]}</span>
                         </div>
-                        <div className="font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words"
-                            style={{ fontSize: 'clamp(10px, 2.6vw, 12px)' }}
-                        >
+                        <div className="font-medium tracking-wider text-teal-400/80 uppercase w-full min-w-0 break-words" style={{ fontSize: 'var(--text-sm)' }}>
                             {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
                         </div>
-                        <div className="font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words"
-                            style={{ fontSize: 'clamp(10px, 2.4vw, 12px)', minHeight: 14 }}
-                        >
+                        <div className="font-medium tracking-wider uppercase text-zinc-500 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-sm)', minHeight: 14 }}>
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
                                 ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
                                     <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
                                         <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 12 }} /> costs 1 if experience is {'<'}3
                                     </span>
-                                ) : (
-                                    ICON_EXTRA_EFFECTS[displayItem.name]
-                                )
-                            ) : ""}
+                                ) : ICON_EXTRA_EFFECTS[displayItem.name]
+                            ) : ''}
                         </div>
                     </div>
                 ) : (
-                    <div className="text-zinc-600 uppercase tracking-widest mt-1" style={{ fontSize: 'clamp(10px, 2.6vw, 12px)' }}>
+                    <div className="text-zinc-600 uppercase tracking-widest mt-1" style={{ fontSize: 'var(--text-sm)' }}>
                         Select an icon
                     </div>
                 )}
