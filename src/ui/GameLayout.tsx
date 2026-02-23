@@ -372,13 +372,13 @@ export function GameLayout() {
 
     return (
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
-            <header className="h-14 flex items-center justify-between px-6 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
+            <header className="h-12 flex items-center justify-between px-4 border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap">
                 <h1 className="text-base font-bold tracking-wider text-zinc-100 uppercase">Daily Rogue</h1>
                 <div className="text-xs text-zinc-400">Sunday, February 15th</div>
             </header>
 
             <main className="flex-1 flex flex-col relative">
-                <section className="h-[40%] flex bg-zinc-900/50 relative">
+                <section className="h-[38%] flex bg-zinc-900/50 relative">
 
                     <HeroStatsPanel
                         playerAnim={playerAnim}
@@ -421,11 +421,11 @@ export function GameLayout() {
 
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
-                <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2">
+                <section className="h-[62%] flex flex-col items-center justify-start bg-zinc-950 relative py-1">
                     <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
 
                         {/* Kept Icons Row */}
-                        <div className="w-full flex justify-center items-center shrink-0 mb-6">
+                        <div className="w-full flex justify-center items-center shrink-0 mb-3">
                             <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
                                 {/* Food / Item */}
                                 <div
@@ -510,7 +510,7 @@ export function GameLayout() {
                             </div>
                         </div>
 
-                        <div className="flex flex-row items-start justify-center gap-6 w-full max-w-2xl px-4 flex-1">
+                        <div className="flex flex-row items-start justify-center gap-4 w-full max-w-2xl px-4 flex-1">
                             <GridBoard
                                 gridIcons={gridIcons}
                                 spinKey={spinKey}
@@ -525,7 +525,7 @@ export function GameLayout() {
                                 levelUpPerks={levelUpPerks}
                             />
 
-                            <div className="flex flex-col gap-3 mt-[1.875rem]">
+                            <div className="flex flex-col gap-3 mt-5">
                                 <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Spin">
                                     <i className="ra ra-cycle text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
@@ -535,16 +535,16 @@ export function GameLayout() {
                             </div>
                         </div>
 
-                        <div className="h-6 mt-2 flex items-center justify-center pointer-events-none w-full max-w-xl px-4">
+                        <div className="h-2 mt-1 flex items-center justify-center pointer-events-none w-full max-w-xl px-4">
                         </div>
                     </div>
 
-                    <div className="absolute bottom-8 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
+                    <div className="absolute bottom-4 left-5 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
                         <i className="ra ra-coffee-mug text-lg" />
                         <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
                     </div>
 
-                    <div className="absolute bottom-8 right-6 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
+                    <div className="absolute bottom-4 right-5 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
                         <div className="pointer-events-auto">
                             <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
                         </div>
