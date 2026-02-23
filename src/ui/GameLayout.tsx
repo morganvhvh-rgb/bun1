@@ -532,29 +532,20 @@ export function GameLayout() {
                                 <motion.button onClick={handleVary} disabled={gold < shuffleCost || isAnimating || isUnlockingMode} whileTap={{ scale: 0.95 }} className={controlButtonClass} title="Shuffle">
                                     <i className="ra ra-perspective-dice-random text-zinc-400" style={{ fontSize: 20 }} />
                                 </motion.button>
-                            </div>
-                        </div>
-
-                        <div className="w-full max-w-2xl px-4 pb-1 mt-1 shrink-0">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-zinc-500 opacity-70">
-                                    <i className="ra ra-coffee-mug text-lg" />
-                                    <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
-                                </div>
-                                <button
+                                <motion.button
                                     type="button"
-                                    className="relative -top-1 flex items-center justify-center w-16 h-16 hover:scale-105 transition-transform"
                                     onClick={() => setIsScrollWindowOpen(true)}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={`${controlButtonClass} relative`}
+                                    title="Scrolls"
                                 >
-                                    <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="relative" />
-                                    <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
+                                    <Icon name="scroll-unfurled" scale={2} tintColor="#a16207" />
+                                    <div className="absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-zinc-100 text-zinc-900 text-[10px] font-black leading-none flex items-center justify-center border border-zinc-700 pointer-events-none">
                                         {keptScrolls.length}
                                     </div>
-                                </button>
+                                </motion.button>
                             </div>
                         </div>
-
-                        <div className="h-16 w-full shrink-0" aria-hidden="true" />
                     </div>
 
                     {/* Scroll Window Modal */}
