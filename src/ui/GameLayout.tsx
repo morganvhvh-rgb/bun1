@@ -422,10 +422,10 @@ export function GameLayout() {
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
                 <section className="h-[60%] flex flex-col items-center justify-start bg-zinc-950 relative py-2 overflow-hidden">
-                    <div className="flex flex-col items-center justify-start w-full h-full scale-[0.95] origin-top">
+                    <div className="flex flex-col items-center justify-start w-full flex-1 min-h-0 scale-[0.95] origin-top">
 
                         {/* Kept Icons Row */}
-                        <div className="w-full flex justify-center items-center shrink-0 mb-6">
+                        <div className="w-full flex justify-center items-center shrink-0 mb-4">
                             <div className="flex gap-2 min-h-[3.5rem] items-center justify-center">
                                 {/* Food / Item */}
                                 <div
@@ -535,21 +535,20 @@ export function GameLayout() {
                             </div>
                         </div>
 
-                        <div className="h-6 mt-2 flex items-center justify-center pointer-events-none w-full max-w-xl px-4">
-                        </div>
-                    </div>
-
-                    <div className="absolute bottom-8 left-6 z-50 flex items-center gap-2 text-zinc-500 opacity-70">
-                        <i className="ra ra-coffee-mug text-lg" />
-                        <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
-                    </div>
-
-                    <div className="absolute bottom-8 right-6 z-50 flex items-center justify-center w-16 h-16 pointer-events-none">
-                        <div className="pointer-events-auto">
-                            <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
-                        </div>
-                        <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
-                            {keptScrolls.length}
+                        {/* Bottom bar: coffee + scroll icon — in-flow so nav spacer pushes them up */}
+                        <div className="w-full flex items-center justify-between px-6 mt-auto shrink-0">
+                            <div className="flex items-center gap-2 text-zinc-500 opacity-70">
+                                <i className="ra ra-coffee-mug text-lg" />
+                                <span className="text-[10px] uppercase tracking-widest font-medium">Buy me a coffee</span>
+                            </div>
+                            <div className="relative flex items-center justify-center w-16 h-16">
+                                <div>
+                                    <Icon name="scroll-unfurled" scale={4} tintColor="#a16207" className="cursor-pointer hover:scale-105 transition-transform relative" onClick={() => setIsScrollWindowOpen(true)} />
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-center text-white font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-10 leading-none mt-1">
+                                    {keptScrolls.length}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -724,6 +723,9 @@ export function GameLayout() {
                             </>
                         )}
                     </AnimatePresence>
+
+                    {/* Nav Bar Spacer — blank dead zone so content never hides behind Android 3-button nav */}
+                    <div className="w-full shrink-0 bg-zinc-950" style={{ height: 48 }} aria-hidden="true" />
                 </section>
             </main>
         </div >
