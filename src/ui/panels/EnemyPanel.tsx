@@ -35,9 +35,9 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
                 <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
                 <StatLine label="ATK" value={atk} />
                 <StatLine label="LVL" value={lvl} />
-                <StatLine label="Type" value={type} />
-                {/* Invisible spacers to match hero panel's 6 rows */}
-                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
+                <div className="flex items-center"><span>TYPES</span></div>
+                <div className="text-zinc-300 break-words leading-tight">{type}</div>
+                {/* Invisible spacer to match hero panel's 6 rows */}
                 <div aria-hidden className="invisible"><span>&nbsp;</span></div>
             </div>
         </motion.div>
