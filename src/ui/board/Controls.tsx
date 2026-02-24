@@ -66,15 +66,24 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         />
-                        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+                        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
                             <motion.div
                                 initial={{ scale: 0.85, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.85, opacity: 0 }}
                                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                                className="w-full max-w-[12rem] h-[8rem] bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl"
+                                className="relative w-full max-w-[12rem] h-[8rem] bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl pointer-events-auto"
                                 onClick={(e) => e.stopPropagation()}
-                            />
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCoffeePopupOpen(false)}
+                                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-zinc-800 text-zinc-100 hover:bg-zinc-700 transition-colors grid place-items-center leading-none"
+                                    aria-label="Close coffee popup"
+                                >
+                                    <span style={{ fontSize: '16px', lineHeight: 1 }}>×</span>
+                                </button>
+                            </motion.div>
                         </div>
                     </>
                 )}
