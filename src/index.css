@@ -11,7 +11,17 @@
   --text-sm: clamp(13px, 3.5vw, 16px);
   --text-base: clamp(14px, 3.8vw, 17px);
   --header-h: clamp(2.25rem, 6dvh, 3rem);
+  --header-h-compact: calc(var(--header-h) * 0.8);
+  --header-pad-x: calc(var(--gap) * 1.6);
+  --header-meta-gap: calc(var(--gap) * 1.2);
+  --header-info-btn-size: 1.5rem;
   --slider-h: clamp(1.75rem, 4.5dvh, 2.25rem);
+  --coffee-btn-size: calc(var(--cell) * 0.68);
+  --coffee-icon-size: calc(var(--cell) * 0.34);
+  --coffee-btn-offset: calc((var(--cell) * 3) + (var(--gap) * 3));
+  --coffee-modal-w: 12rem;
+  --coffee-modal-h: 8rem;
+  --info-modal-w: 16rem;
 }
 
 /* ─── Reset & mobile lockdown ─── */

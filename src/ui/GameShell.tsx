@@ -11,6 +11,8 @@ import { CharacterModal } from './modals/CharacterModal';
 import { ScrollsModal } from './modals/ScrollsModal';
 import { ScrollBuyModal } from './modals/ScrollBuyModal';
 import { ConjureModal } from './modals/ConjureModal';
+import { CoffeeModal } from './modals/CoffeeModal';
+import { InfoModal } from './modals/InfoModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
@@ -32,6 +34,7 @@ export function GameShell() {
     // Modal state
     const [isConjureMagicOpen, setIsConjureMagicOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
+    const [isCoffeeOpen, setIsCoffeeOpen] = useState(false);
     const [isInfoOpen, setIsInfoOpen] = useState(false);
     const [sliderResetKey, setSliderResetKey] = useState(0);
 
@@ -53,18 +56,19 @@ export function GameShell() {
     return (
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
             {/* ─── Header ─── */}
-            <header className="flex items-center border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap" style={{ height: 'calc(var(--header-h) * 0.8)', padding: '0 calc(var(--gap) * 1.6)' }}>
+            <header className="flex items-center border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <h1 className="text-sm font-bold tracking-wider text-zinc-100 uppercase leading-none">Daily Rogue</h1>
-                <div className="ml-auto flex items-center" style={{ gap: 'calc(var(--gap) * 1.2)' }}>
+                <div className="ml-auto flex items-center" style={{ gap: 'var(--header-meta-gap)' }}>
                     <div className="text-zinc-400 leading-none" style={{ fontSize: 'var(--text-xs)' }}>Sunday, February 15th</div>
                     <button
                         type="button"
                         onClick={() => setIsInfoOpen(true)}
-                        className="w-6 h-6 rounded-full border border-zinc-600 text-zinc-300 hover:bg-zinc-800 transition-colors grid place-items-center"
+                        className="rounded-full border border-zinc-600 text-zinc-300 hover:bg-zinc-800 transition-colors grid place-items-center"
+                        style={{ width: 'var(--header-info-btn-size)', height: 'var(--header-info-btn-size)' }}
                         aria-label="Open info menu"
                         title="Info"
                     >
-                        <span className="font-bold leading-none" style={{ fontSize: '12px' }}>i</span>
+                        <span className="font-bold leading-none" style={{ fontSize: 'var(--text-xs)' }}>i</span>
                     </button>
                 </div>
             </header>
@@ -119,6 +123,7 @@ export function GameShell() {
                             onSpin={grid.handleSpin}
                             onVary={grid.handleVary}
                             onScrollsOpen={() => scrollFlow.setIsScrollWindowOpen(true)}
+                            onCoffeeOpen={() => setIsCoffeeOpen(true)}
                         />
                     </div>
 
@@ -143,34 +148,8 @@ export function GameShell() {
                             />
                         )}
                     </AnimatePresence>
-                    <AnimatePresence>
-                        {isInfoOpen && (
-                            <>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsInfoOpen(false)}
-                                    aria-label="Close info menu"
-                                    className="fixed inset-0 bg-black/70 z-[60]"
-                                />
-                                <div className="fixed inset-0 z-[70] flex items-start justify-end p-4 pointer-events-none">
-                                    <div className="w-full max-w-[16rem] rounded-2xl border border-zinc-700 bg-zinc-900 shadow-2xl p-4 pointer-events-auto">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h2 className="text-zinc-100 font-bold uppercase tracking-wider leading-none" style={{ fontSize: 'var(--text-xs)' }}>Info</h2>
-                                            <button
-                                                type="button"
-                                                onClick={() => setIsInfoOpen(false)}
-                                                className="w-6 h-6 rounded-full bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors grid place-items-center leading-none"
-                                                aria-label="Close info menu"
-                                            >
-                                                <span style={{ fontSize: '14px', lineHeight: 1 }}>×</span>
-                                            </button>
-                                        </div>
-                                        <div className="text-zinc-400" style={{ fontSize: 'var(--text-xs)' }} />
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                    </AnimatePresence>
+                    <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
+                    <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
                     <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
                 </section>
             </main>
