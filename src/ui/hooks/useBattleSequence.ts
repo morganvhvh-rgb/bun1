@@ -8,6 +8,7 @@ export function useBattleSequence() {
     const [enemy1Anim, setEnemy1Anim] = useState<AnimStatus>('idle');
     const [enemy2Anim, setEnemy2Anim] = useState<AnimStatus>('idle');
     const [isBattleRunning, setIsBattleRunning] = useState(false);
+    const [isPostBattleScreen, setIsPostBattleScreen] = useState(false);
     const runningRef = useRef(false);
 
     /** Read latest store values mid-loop without ref-sync effects */
@@ -16,6 +17,7 @@ export function useBattleSequence() {
     const runBattle = async () => {
         if (runningRef.current) return;
         runningRef.current = true;
+        setIsPostBattleScreen(false);
         setIsBattleRunning(true);
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -28,7 +30,7 @@ export function useBattleSequence() {
         const e2AtkVal = snap.enemy2.atk;
         const e1Type = snap.enemy1.type;
         const e2Type = snap.enemy2.type;
-        const { applyBattleDamage, setEnemyVisibility, resetBattleTarget } = snap;
+        const { applyBattleDamage, setEnemyVisibility } = snap;
 
         if (snap.playerHp === 0) {
             runningRef.current = false;
@@ -42,9 +44,9 @@ export function useBattleSequence() {
             if (snap.enemy1.isVisible) setEnemyVisibility('enemy1', false);
             if (snap.enemy2.isVisible) setEnemyVisibility('enemy2', false);
             await delay(600);
-            resetBattleTarget();
             runningRef.current = false;
             setIsBattleRunning(false);
+            setIsPostBattleScreen(true);
             return;
         }
 
@@ -136,11 +138,10 @@ export function useBattleSequence() {
         }
 
         if (hp().e1 === 0 && hp().e2 === 0) {
-            setTimeout(() => {
-                resetBattleTarget();
-                runningRef.current = false;
-                setIsBattleRunning(false);
-            }, 600);
+            await delay(600);
+            runningRef.current = false;
+            setIsBattleRunning(false);
+            setIsPostBattleScreen(true);
             return;
         }
 
@@ -148,5 +149,30 @@ export function useBattleSequence() {
         setIsBattleRunning(false);
     };
 
-    return { playerAnim, enemy1Anim, enemy2Anim, isBattleRunning, runBattle };
+    const exitPostBattle = () => {
+        if (runningRef.current || !isPostBattleScreen) return;
+        const { resetBattleTarget } = getSnap();
+        resetBattleTarget();
+        setIsPostBattleScreen(false);
+    };
+
+    const resetBattleSequence = () => {
+        runningRef.current = false;
+        setIsBattleRunning(false);
+        setIsPostBattleScreen(false);
+        setPlayerAnim('idle');
+        setEnemy1Anim('idle');
+        setEnemy2Anim('idle');
+    };
+
+    return {
+        playerAnim,
+        enemy1Anim,
+        enemy2Anim,
+        isBattleRunning,
+        isPostBattleScreen,
+        runBattle,
+        exitPostBattle,
+        resetBattleSequence,
+    };
 }

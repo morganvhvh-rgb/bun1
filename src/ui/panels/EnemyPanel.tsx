@@ -48,11 +48,12 @@ interface EnemyPanelProps {
     enemy1Anim: 'idle' | 'attack' | 'hurt';
     enemy2Anim: 'idle' | 'attack' | 'hurt';
     isBattleRunning: boolean;
+    isPostBattleScreen: boolean;
     sliderResetKey: number;
     onEngage: () => void;
 }
 
-export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderResetKey, onEngage }: EnemyPanelProps) {
+export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBattleScreen, sliderResetKey, onEngage }: EnemyPanelProps) {
     const { enemy1, enemy2, battleCount, playerHp, conjureMagicUsed } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
@@ -79,12 +80,20 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderRese
         <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
             {/* Enemy columns */}
             <div className="flex-1 flex items-stretch justify-center min-h-0" style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}>
-                <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
-                    <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
-                </div>
-                <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
-                    <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
-                </div>
+                {isPostBattleScreen ? (
+                    <div className="w-full flex items-center justify-center text-zinc-300 uppercase tracking-[0.15em] font-semibold text-center px-4">
+                        placeholder text
+                    </div>
+                ) : (
+                    <>
+                        <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
+                            <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
+                        </div>
+                        <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
+                            <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* Slide-to-engage */}
@@ -93,15 +102,27 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderRese
                     ref={containerRef}
                     className={cn(
                         'relative overflow-hidden w-full rounded-md shadow-inner flex items-center transition-all duration-300',
-                        showBattleState ? 'bg-red-950/80 border border-red-900 pointer-events-none'
+                        isPostBattleScreen ? 'bg-zinc-900 border border-zinc-700'
+                            : showBattleState ? 'bg-red-950/80 border border-red-900 pointer-events-none'
                             : canConjureMagic ? 'bg-zinc-900 border border-pink-800/50'
                                 : 'bg-zinc-900 border border-zinc-700',
                         isDisabled && 'opacity-50 grayscale'
                     )}
                     style={{ height: 'var(--slider-h)', maxWidth: '18rem' }}
                 >
+                    {isPostBattleScreen && (
+                        <button
+                            type="button"
+                            onClick={onEngage}
+                            className="absolute inset-0 flex items-center justify-center uppercase tracking-[0.2em] font-semibold text-zinc-200 hover:text-white transition-colors"
+                            style={{ fontSize: 'var(--text-xs)' }}
+                        >
+                            EXIT
+                        </button>
+                    )}
+
                     <AnimatePresence mode="popLayout">
-                        {showBattleState ? (
+                        {isPostBattleScreen ? null : showBattleState ? (
                             <motion.span key="battle-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                                 className="absolute inset-0 flex items-center justify-center text-red-500 tracking-[0.35em] font-black uppercase pointer-events-none select-none drop-shadow-md"
                                 style={{ fontSize: 'var(--text-sm)' }}
@@ -119,11 +140,11 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, sliderRese
                         )}
                     </AnimatePresence>
 
-                    {!showBattleState && (
+                    {!isPostBattleScreen && !showBattleState && (
                         <motion.div className={cn('absolute left-0 top-0 bottom-0 pointer-events-none', canConjureMagic ? 'bg-pink-500/20' : 'bg-red-500/20')} style={{ width: x }} />
                     )}
 
-                    {!showBattleState && (
+                    {!isPostBattleScreen && !showBattleState && (
                         <motion.div
                             drag="x"
                             dragConstraints={{ left: 0, right: maxDrag }}

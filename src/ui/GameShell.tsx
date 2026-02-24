@@ -22,7 +22,16 @@ export function GameShell() {
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
 
-    const { playerAnim, enemy1Anim, enemy2Anim, isBattleRunning, runBattle } = useBattleSequence();
+    const {
+        playerAnim,
+        enemy1Anim,
+        enemy2Anim,
+        isBattleRunning,
+        isPostBattleScreen,
+        runBattle,
+        exitPostBattle,
+        resetBattleSequence,
+    } = useBattleSequence();
 
     // Scroll flow
     const scrollFlow = useScrollFlow();
@@ -43,12 +52,18 @@ export function GameShell() {
 
     const handleReset = () => {
         resetGame();
+        resetBattleSequence();
         grid.resetSelection();
         setSliderResetKey(prev => prev + 1);
         grid.setSpinKey(prev => prev + 1);
     };
 
     const handleEngage = () => {
+        if (isPostBattleScreen) {
+            exitPostBattle();
+            return;
+        }
+
         if (canConjureMagic) {
             setIsConjureMagicOpen(true);
         } else if (playerHp > 0) {
@@ -83,6 +98,7 @@ export function GameShell() {
                         enemy1Anim={enemy1Anim}
                         enemy2Anim={enemy2Anim}
                         isBattleRunning={isBattleRunning}
+                        isPostBattleScreen={isPostBattleScreen}
                         sliderResetKey={sliderResetKey}
                         onEngage={handleEngage}
                     />
