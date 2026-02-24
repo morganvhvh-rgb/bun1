@@ -12,6 +12,7 @@ export function CoffeeModal({ isOpen, onClose }: CoffeeModalProps) {
             onClose={onClose}
             title=""
             showHeader={false}
+            closeOnOutsideClick
             className="max-w-[var(--coffee-modal-w)] h-[var(--coffee-modal-h)] p-0 relative"
         >
             <button

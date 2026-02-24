@@ -10,6 +10,7 @@ interface ModalProps {
     /** Only applies to 'center' position */
     align?: 'center' | 'top-right';
     showHeader?: boolean;
+    closeOnOutsideClick?: boolean;
     /** Extra classes on the inner card */
     className?: string;
     children: React.ReactNode;
@@ -27,7 +28,17 @@ const positionClasses = {
     center: 'w-full max-w-sm rounded-2xl',
 };
 
-export function Modal({ isOpen, onClose, title, position = 'center', align = 'center', showHeader = true, className = '', children }: ModalProps) {
+export function Modal({
+    isOpen,
+    onClose,
+    title,
+    position = 'center',
+    align = 'center',
+    showHeader = true,
+    closeOnOutsideClick = false,
+    className = '',
+    children,
+}: ModalProps) {
     const pos = position;
 
     return (
@@ -53,6 +64,7 @@ export function Modal({ isOpen, onClose, title, position = 'center', align = 'ce
                                     ? 'items-start justify-end'
                                     : 'items-center justify-center'
                         )}
+                        onClick={closeOnOutsideClick ? onClose : undefined}
                     >
                         <motion.div
                             variants={slideVariants[pos]}

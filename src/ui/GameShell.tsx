@@ -12,7 +12,6 @@ import { ScrollsModal } from './modals/ScrollsModal';
 import { ScrollBuyModal } from './modals/ScrollBuyModal';
 import { ConjureModal } from './modals/ConjureModal';
 import { CoffeeModal } from './modals/CoffeeModal';
-import { InfoModal } from './modals/InfoModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
@@ -35,8 +34,12 @@ export function GameShell() {
     const [isConjureMagicOpen, setIsConjureMagicOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
     const [isCoffeeOpen, setIsCoffeeOpen] = useState(false);
-    const [isInfoOpen, setIsInfoOpen] = useState(false);
     const [sliderResetKey, setSliderResetKey] = useState(0);
+    const todayLabel = new Date().toLocaleDateString(undefined, {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+    });
 
     const handleReset = () => {
         resetGame();
@@ -57,19 +60,11 @@ export function GameShell() {
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
-                <h1 className="text-sm font-bold tracking-wider text-zinc-100 uppercase leading-none">Daily Rogue</h1>
-                <div className="ml-auto flex items-center" style={{ gap: 'var(--header-meta-gap)' }}>
-                    <div className="text-zinc-400 leading-none" style={{ fontSize: 'var(--text-xs)' }}>Sunday, February 15th</div>
-                    <button
-                        type="button"
-                        onClick={() => setIsInfoOpen(true)}
-                        className="rounded-full border border-zinc-600 text-zinc-300 hover:bg-zinc-800 transition-colors grid place-items-center"
-                        style={{ width: 'var(--header-info-btn-size)', height: 'var(--header-info-btn-size)' }}
-                        aria-label="Open info menu"
-                        title="Info"
-                    >
-                        <span className="font-bold leading-none" style={{ fontSize: 'var(--text-xs)' }}>i</span>
-                    </button>
+                <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
+                    <h1 className="text-sm font-bold tracking-[0.2em] text-zinc-100 uppercase leading-none">Daily Rogue</h1>
+                    <time className="text-zinc-400 uppercase tracking-[0.14em] leading-none shrink-0" style={{ fontSize: 'var(--text-xs)' }}>
+                        {todayLabel}
+                    </time>
                 </div>
             </header>
 
@@ -149,7 +144,6 @@ export function GameShell() {
                         )}
                     </AnimatePresence>
                     <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
-                    <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
                     <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
                 </section>
             </main>
