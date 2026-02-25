@@ -24,47 +24,47 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
 
     return (
         <motion.div
-            className="w-full flex items-center justify-between px-2 py-1.5 bg-zinc-950/60 rounded-lg border border-zinc-800/80 shrink-0 shadow-lg min-h-0"
+            className="w-full flex items-center justify-between px-2.5 py-2 sm:px-3 sm:py-2.5 bg-zinc-950/60 rounded-lg border border-zinc-800/80 shrink-0 shadow-lg min-h-0"
             initial={{ opacity: 1, scale: 0.95 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
             animate={{ opacity: 1, scale: 1 }}
         >
             {/* Left side: Icon + Type */}
-            <div className="flex flex-col items-center justify-center shrink-0 w-12 sm:w-14">
+            <div className="flex flex-col items-center justify-center shrink-0 w-14 sm:w-16">
                 <motion.div
                     animate={animStatus}
                     variants={enemyIconVariants}
                     initial="idle"
-                    className="relative flex items-center justify-center h-8 sm:h-10"
+                    className="relative flex items-center justify-center h-10 sm:h-12"
                 >
-                    <Icon name={name} scale={2.2} tintColor={ICON_THEME[name]} />
+                    <Icon name={name} scale={2.6} tintColor={ICON_THEME[name]} />
                 </motion.div>
                 {hasType && (
-                    <span className="text-zinc-500 uppercase tracking-widest leading-none mt-1 sm:mt-1.5 text-[8px] sm:text-[9px] text-center font-bold">
+                    <span className="text-zinc-500 uppercase tracking-widest leading-none mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-center font-bold">
                         {type}
                     </span>
                 )}
             </div>
 
             {/* Right side: Stats */}
-            <div className="flex flex-col flex-1 pl-2 justify-center min-w-0">
-                <div className="text-zinc-300 capitalize mb-0.5 border-b border-zinc-800/50 pb-0.5 shrink-0" style={{ fontSize: '10px', letterSpacing: '0.05em' }}>
+            <div className="flex flex-col flex-1 pl-3 justify-center min-w-0">
+                <div className="text-zinc-300 capitalize mb-1 border-b border-zinc-800/50 pb-0.5 shrink-0" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>
                     <span className="font-semibold whitespace-nowrap block truncate">{name.replace('-', ' ')}</span>
                 </div>
 
-                <div className="flex items-center justify-between w-full text-[9px] sm:text-[10px] tracking-widest mb-0.5 shrink-0">
+                <div className="flex items-center justify-between w-full text-[10px] sm:text-[11px] tracking-widest mb-0.5 shrink-0">
                     <span className="font-semibold text-zinc-500">HP</span>
                     <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="font-bold text-red-400 whitespace-nowrap">
                         {hp} / {maxHp}
                     </motion.span>
                 </div>
 
-                <div className="flex items-center justify-between w-full text-[9px] sm:text-[10px] tracking-widest mb-0.5 shrink-0">
+                <div className="flex items-center justify-between w-full text-[10px] sm:text-[11px] tracking-widest mb-0.5 shrink-0">
                     <span className="font-semibold text-zinc-500">ATK</span>
                     <span className="font-bold text-orange-400 whitespace-nowrap">{atk}</span>
                 </div>
 
-                <div className="flex items-center justify-between w-full text-[9px] sm:text-[10px] tracking-widest shrink-0">
+                <div className="flex items-center justify-between w-full text-[10px] sm:text-[11px] tracking-widest shrink-0">
                     <span className="font-semibold text-zinc-500">LVL</span>
                     <span className="font-bold text-blue-400 whitespace-nowrap">{lvl}</span>
                 </div>
@@ -108,13 +108,13 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     return (
         <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
             {/* Enemy stack */}
-            <div className="flex-1 flex items-stretch justify-center min-h-0 pb-1.5 mt-0.5">
+            <div className="flex-1 flex items-stretch justify-center min-h-0 pb-2.5 mt-0.5">
                 {isPostBattleScreen ? (
                     <div className="w-full flex items-center justify-center text-zinc-300 uppercase tracking-[0.15em] font-semibold text-center px-4">
                         placeholder text
                     </div>
                 ) : (
-                    <div className="w-full flex flex-col justify-center gap-1.5 px-1 max-w-[14rem] mx-auto h-full min-h-0">
+                    <div className="w-full flex flex-col justify-center gap-2 sm:gap-3 px-1 max-w-[15rem] mx-auto h-full min-h-0">
                         <AnimatePresence mode="wait">
                             {enemy1.isVisible && <EnemyColumn key="e1" {...enemy1} animStatus={enemy1Anim} />}
                         </AnimatePresence>
