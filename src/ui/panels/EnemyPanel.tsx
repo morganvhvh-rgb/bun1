@@ -19,6 +19,20 @@ interface EnemyColumnProps {
     animStatus: 'idle' | 'attack' | 'hurt';
 }
 
+const ENEMY_ICON_FRAME_STYLE = {
+    width: 'var(--enemy-icon-frame-size)',
+    height: 'var(--enemy-icon-frame-size)',
+};
+
+const ENEMY_STATS_COLUMN_STYLE = {
+    width: 'var(--enemy-stat-col-width)',
+    maxWidth: 'var(--enemy-stat-col-max-w)',
+};
+
+const ENEMY_STACK_COLUMN_STYLE = {
+    maxWidth: 'var(--enemy-stack-max-w)',
+};
+
 function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: EnemyColumnProps) {
     if (!isVisible) return null;
     const hasType = type.trim() !== '' && type !== '---';
@@ -31,21 +45,26 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
         >
             <div
                 className="relative shrink-0 mt-0.5 flex items-end justify-center"
-                style={{ width: 'calc(var(--cell) * 1.25)', height: 'calc(var(--cell) * 1.25)' }}
+                style={ENEMY_ICON_FRAME_STYLE}
             >
                 <motion.div
                     animate={animStatus}
                     variants={enemyIconVariants}
                     initial="idle"
                     className="z-10 relative flex items-center justify-center"
-                    style={{ width: 'calc(var(--cell) * 1.25)', height: 'calc(var(--cell) * 1.25)' }}
+                    style={ENEMY_ICON_FRAME_STYLE}
                 >
                     <Icon name={name} scale={4} tintColor={ICON_THEME[name]} />
                 </motion.div>
                 {hasType && (
                     <span
                         className="absolute text-zinc-300 uppercase leading-none whitespace-nowrap pointer-events-none"
-                        style={{ left: 'calc(100% + 0.1rem)', bottom: '0.18rem', fontSize: 'var(--text-xs)', letterSpacing: '0.06em' }}
+                        style={{
+                            left: 'calc(100% + var(--enemy-type-offset-x))',
+                            bottom: 'var(--enemy-type-offset-y)',
+                            fontSize: 'var(--text-xs)',
+                            letterSpacing: '0.06em',
+                        }}
                     >
                         {type}
                     </span>
@@ -53,12 +72,12 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
             </div>
             <div
                 className="mt-1 flex flex-col w-full text-zinc-500 uppercase font-medium justify-center"
-                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gap: '0.1rem' }}
+                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gap: 'var(--enemy-stat-row-gap)' }}
             >
-                <div className="mx-auto w-[74%] max-w-[9rem]">
+                <div className="mx-auto" style={ENEMY_STATS_COLUMN_STYLE}>
                     <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
                 </div>
-                <div className="mx-auto w-[74%] max-w-[9rem] flex items-center justify-center" style={{ gap: '0.8rem' }}>
+                <div className="mx-auto flex items-center justify-center" style={{ ...ENEMY_STATS_COLUMN_STYLE, gap: '0.8rem' }}>
                     <div className="flex items-center" style={{ gap: '0.35em' }}>
                         <span>ATK</span>
                         <span className="text-zinc-300">{atk}</span>
@@ -115,10 +134,10 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                     </div>
                 ) : (
                     <div className="flex flex-col w-full min-h-0 items-center justify-center" style={{ gap: 'var(--gap)' }}>
-                        <div className="flex-1 min-h-0 w-full" style={{ maxWidth: '15rem' }}>
+                        <div className="flex-1 min-h-0 w-full" style={ENEMY_STACK_COLUMN_STYLE}>
                             <AnimatePresence mode="wait">{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
                         </div>
-                        <div className="flex-1 min-h-0 w-full" style={{ maxWidth: '15rem' }}>
+                        <div className="flex-1 min-h-0 w-full" style={ENEMY_STACK_COLUMN_STYLE}>
                             <AnimatePresence mode="wait">{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
                         </div>
                     </div>
@@ -137,7 +156,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                                 : 'bg-zinc-900 border border-zinc-700',
                         isDisabled && 'opacity-50 grayscale'
                     )}
-                    style={{ height: 'var(--slider-h)', maxWidth: '18rem' }}
+                    style={{ height: 'var(--slider-h)', maxWidth: 'var(--enemy-slider-max-w)' }}
                 >
                     {isPostBattleScreen && (
                         <button
