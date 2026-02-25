@@ -13,7 +13,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Scroll Content" position="bottom">
-            <div className="border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto h-full">
+            <div className="border border-zinc-800/50 bg-zinc-950/50 rounded p-4 text-zinc-600 text-sm font-mono space-y-2 overflow-y-auto touch-pan-y h-full">
                 {keptScrolls.length > 0 ? (
                     keptScrolls.map((scrollName, i) => (
                         <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-900/30 px-2 transition-colors rounded-lg">

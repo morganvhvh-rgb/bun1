@@ -4,17 +4,17 @@
 
 /* ─── Design tokens ─── */
 :root {
-  --cell: min(calc((100vw - 2rem) / 5), 72px);
+  --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
   --cell-sm: calc(var(--cell) * 0.8);
   --gap: min(1.5vw, 10px);
   --text-xs: clamp(10px, 2.6vw, 13px);
   --text-sm: clamp(13px, 3.5vw, 16px);
   --text-base: clamp(14px, 3.8vw, 17px);
-  --header-h: clamp(2.25rem, 6dvh, 3rem);
+  --header-h: clamp(2.25rem, 6svh, 3rem);
   --header-h-compact: calc(var(--header-h) * 0.8);
   --header-pad-x: calc(var(--gap) * 1.6);
   --header-meta-gap: calc(var(--gap) * 1.2);
-  --slider-h: clamp(1.75rem, 4.5dvh, 2.25rem);
+  --slider-h: clamp(1.75rem, 4.5svh, 2.25rem);
   --enemy-slider-max-w: 18rem;
   --coffee-btn-size: calc(var(--cell) * 0.68);
   --coffee-icon-size: calc(var(--cell) * 0.34);
@@ -32,18 +32,20 @@ body {
   padding: 0;
   overflow: hidden;
   background-color: #000;
+  position: fixed;
 }
 
 #root {
   width: 100%;
-  min-height: 100dvh;
-  height: 100dvh;
+  height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
   overscroll-behavior: none;
-  touch-action: manipulation;
+  touch-action: none;
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;

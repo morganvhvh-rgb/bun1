@@ -14,7 +14,7 @@ export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={`Character Lvl ${1 + levelUpPerks.length}`} position="top">
-            <div className="border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto h-full">
+            <div className="border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto touch-pan-y h-full">
                 {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED && (
                     <div className="flex flex-col gap-3 w-full">
                         <h3 className="text-green-500 font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>

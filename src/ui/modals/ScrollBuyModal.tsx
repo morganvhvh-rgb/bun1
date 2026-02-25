@@ -25,7 +25,7 @@ export function ScrollBuyModal({
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
                             className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
-                            style={{ minHeight: 'min(380px, 60dvh)' }}
+                            style={{ minHeight: 'min(380px, 60svh)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-4">
