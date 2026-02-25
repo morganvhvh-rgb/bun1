@@ -72,10 +72,10 @@ export function GameShell() {
     return (
         <div className="w-full h-full flex flex-col bg-zinc-950 text-white font-mono overflow-hidden">
             {/* ─── Header ─── */}
-            <header className="flex items-center border-b border-zinc-700 bg-zinc-900 shrink-0 whitespace-nowrap" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
+            <header className="flex items-center border-b border-zinc-800/80 bg-gradient-to-r from-zinc-950 via-indigo-950/20 to-zinc-950 shrink-0 whitespace-nowrap shadow-[inset_0_-1px_10px_rgba(0,0,0,0.5)] z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
-                    <h1 className="text-sm font-bold tracking-[0.2em] text-zinc-100 uppercase leading-none">Daily Rogue</h1>
-                    <time className="text-zinc-400 uppercase tracking-[0.14em] leading-none shrink-0" style={{ fontSize: 'var(--text-xs)' }}>
+                    <h1 className="text-sm font-black tracking-[0.2em] text-zinc-100 uppercase leading-none drop-shadow-md">Daily Rogue</h1>
+                    <time className="text-zinc-400 font-semibold uppercase tracking-[0.14em] leading-none shrink-0 drop-shadow-sm" style={{ fontSize: 'var(--text-xs)' }}>
                         {todayLabel}
                     </time>
                 </div>
@@ -85,7 +85,7 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex bg-zinc-950 relative overflow-hidden min-h-0 z-10" style={{ flex: 2.3, boxShadow: 'inset 0 -20px 40px -20px rgba(0,0,0,0.8)' }}>
+                <section className="flex bg-zinc-950 relative overflow-hidden min-h-0 z-10" style={{ flex: 2, boxShadow: 'inset 0 -20px 40px -20px rgba(0,0,0,0.8)' }}>
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/40 via-zinc-950 to-zinc-950 pointer-events-none" />
                     <HeroPanel
                         playerAnim={playerAnim}
@@ -105,7 +105,7 @@ export function GameShell() {
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Board / Inventory / Controls */}
-                <section className="min-h-0 flex flex-col items-center justify-evenly bg-zinc-950 relative overflow-hidden z-10" style={{ flex: 3, padding: 'var(--gap) 0', boxShadow: 'inset 0 20px 40px -20px rgba(0,0,0,0.8)' }}>
+                <section className="min-h-0 flex flex-col items-center justify-start bg-zinc-950 relative overflow-visible z-10" style={{ flex: 3.3, padding: 'var(--gap) 0', boxShadow: 'inset 0 20px 40px -20px rgba(0,0,0,0.8)' }}>
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-indigo-950/20 via-zinc-950 to-zinc-950 pointer-events-none" />
                     <Inventory onKeptIconClick={grid.handleKeptIconClick} />
 

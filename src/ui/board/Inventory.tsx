@@ -32,9 +32,9 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
     const { keptIcons, unlockedSections, isUnlockingMode, unlockSection } = useGameStore();
 
     return (
-        <div className="w-full shrink-0 mb-3 flex justify-center relative">
+        <div className="w-full shrink-0 mb-1 flex justify-center relative">
             {/* Scrollable container for smaller screens */}
-            <div className="max-w-full overflow-x-auto touch-pan-x scrollbar-none snap-x snap-mandatory px-4 pb-2 pt-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div className="max-w-full mx-auto overflow-x-auto overflow-y-hidden touch-pan-x scrollbar-none snap-x snap-mandatory px-4 pb-2 pt-1 flex justify-start sm:justify-center after:content-[''] after:block after:w-4 after:shrink-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <style>{`
                     .scrollbar-none::-webkit-scrollbar { display: none; }
                 `}</style>
@@ -50,8 +50,8 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
                                 {i > 0 && <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0" />}
 
                                 <div
-                                    className="flex items-center justify-start relative rounded-xl overflow-hidden transition-all duration-300"
-                                    style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', height: 'calc(var(--cell-sm) + 4px)', gap: 'calc(var(--gap) * 0.5)', padding: '2px' }}
+                                    className="flex items-center justify-start relative rounded-xl transition-all duration-300"
+                                    style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', minHeight: 'calc(var(--cell-sm) + 4px)', gap: 'calc(var(--gap) * 0.5)', padding: '2px' }}
                                     onClick={() => isUnlockingMode && !isUnlocked && unlockSection(section.id)}
                                 >
                                     {!isUnlocked ? (
@@ -77,8 +77,8 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
 
                                             {!iconA && !iconB && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 opacity-40">
-                                                    <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none text-center px-1" style={{ fontSize: '9px' }}>
-                                                        {section.label.replace('/', ' /\n')}
+                                                    <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none text-center px-1 whitespace-nowrap" style={{ fontSize: '9px' }}>
+                                                        {section.label.replace('/', ' / ')}
                                                     </span>
                                                 </div>
                                             )}

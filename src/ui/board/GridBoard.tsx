@@ -74,7 +74,7 @@ export function GridBoard({
                                 animate={isShaking ? 'shake' : undefined}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    'flex items-center justify-center relative rounded-xl transition-all duration-300 before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/5 before:to-transparent before:rounded-xl',
+                                    'flex items-center justify-center relative rounded-xl transition-colors duration-300 before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/5 before:to-transparent before:rounded-xl',
                                     isNonTargetMatch ? 'bg-zinc-900/80 border border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.3)]'
                                         : isSelected ? 'bg-zinc-800/90 border border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.2)]'
                                             : 'bg-zinc-950/60 border border-zinc-800/60 shadow-inner hover:bg-zinc-800/50'
@@ -106,7 +106,7 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center bg-zinc-950/40 border border-white/5 rounded-xl backdrop-blur-[2px] shadow-inner p-2 relative overflow-hidden" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            <div className="w-full min-w-0 flex items-start justify-center text-center bg-zinc-950/40 border border-white/5 rounded-xl backdrop-blur-[2px] shadow-inner p-2 relative" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
