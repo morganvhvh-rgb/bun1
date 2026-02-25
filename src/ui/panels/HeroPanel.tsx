@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { hpVariants } from '../animations';
-import { playerIconVariants } from '../animations';
+import { hpVariants, playerIconVariants } from '../animations';
 
 interface HeroPanelProps {
     playerAnim: 'idle' | 'attack' | 'hurt';
@@ -13,17 +12,13 @@ interface HeroPanelProps {
     onReset: () => void;
 }
 
-function HeroStatRow({ label, value, color, flash, valueColor }: { label: string, value: string | number, color: string, flash?: boolean, valueColor?: string }) {
+function StatBadge({ label, value, colorClass, bgClass, borderClass, flash }: { label: string, value: string | number, colorClass: string, bgClass: string, borderClass: string, flash?: boolean }) {
     return (
-        <div className="flex items-center justify-between w-full text-[11px] sm:text-xs tracking-widest">
-            <span className={cn("font-semibold opacity-80", color)}>{label}</span>
-            {flash !== undefined ? (
-                <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("font-bold whitespace-nowrap", valueColor || "text-zinc-100")}>
-                    {value}
-                </motion.span>
-            ) : (
-                <span className={cn("font-bold whitespace-nowrap", valueColor || "text-zinc-100")}>{value}</span>
-            )}
+        <div className={cn("flex flex-col items-center justify-center p-1.5 rounded-lg border backdrop-blur-sm min-w-[3rem]", bgClass, borderClass)}>
+            <span className="text-[8px] sm:text-[9px] uppercase tracking-widest text-zinc-400 font-bold mb-0.5">{label}</span>
+            <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("text-[11px] sm:text-xs font-black", colorClass)}>
+                {value}
+            </motion.span>
         </div>
     );
 }
@@ -32,7 +27,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves } = useGameStore();
     const playerBaseAtk = useGameStore(selectTotalAttack);
 
-    const RESET_HOLD_MS = 1000;
+    const RESET_HOLD_MS = 800;
     const [resetProgress, setResetProgress] = useState(0);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resetStartRef = useRef<number>(0);
@@ -64,28 +59,48 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     }, [onReset, clearResetHold]);
 
     return (
-        <div
-            className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full bg-zinc-950/40 relative min-h-0"
-            style={{ width: 'clamp(7.5rem, 30vw, 10.5rem)', padding: 'var(--gap)' }}
-        >
-            {/* Hero Icon */}
-            <div className="relative flex shrink-0 mt-2 mb-1">
-                <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 sm:p-3 items-center justify-around z-10">
+            {/* Reset Button */}
+            <button
+                onPointerDown={startResetHold}
+                onPointerUp={clearResetHold}
+                onPointerLeave={clearResetHold}
+                onPointerCancel={clearResetHold}
+                onContextMenu={(e) => e.preventDefault()}
+                className="absolute top-2 left-2 px-2 py-1 bg-red-500/10 text-red-400 rounded-md border border-red-500/20 text-[8px] uppercase tracking-widest overflow-hidden touch-none select-none z-20"
+            >
+                <div 
+                    className="absolute inset-0 bg-red-500/30 origin-left" 
+                    style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.1s' : 'none' }} 
+                />
+                <span className="relative z-10 font-bold">Hold Reset</span>
+            </button>
+
+            {/* Avatar Section */}
+            <div className="relative flex flex-col items-center mt-6 shrink-0">
+                <div className="absolute inset-0 bg-purple-600/20 blur-2xl rounded-full scale-150 pointer-events-none" />
+                <motion.div 
+                    animate={playerAnim} 
+                    variants={playerIconVariants} 
+                    initial="idle" 
+                    className="relative z-10 p-2.5 sm:p-3 bg-zinc-950/80 rounded-2xl border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-white/5 backdrop-blur-md"
+                >
                     <Icon
                         name="hood"
-                        scale={3.4}
-                        tintColor="#9333ea"
-                        className={cn('cursor-pointer hover:brightness-110 transition-all active:scale-95 drop-shadow-lg', isBattleRunning && 'pointer-events-none')}
+                        scale={3.2}
+                        tintColor="#c084fc"
+                        className={cn('cursor-pointer hover:brightness-125 transition-all active:scale-95 drop-shadow-[0_0_10px_rgba(192,132,252,0.4)]', isBattleRunning && 'pointer-events-none')}
                         onClick={onCharacterClick}
                     />
                 </motion.div>
+                
                 <AnimatePresence>
                     {moves >= 10 && (
                         <motion.div
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            className="absolute -bottom-1 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center p-0.5 bg-zinc-900 rounded-full border border-red-900"
+                            initial={{ scale: 0, opacity: 0, y: 10 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0, opacity: 0, y: -10 }}
+                            className="absolute -bottom-2 -right-2 text-white font-black text-sm drop-shadow-lg pointer-events-none z-20 flex items-center justify-center w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full border-2 border-zinc-900 shadow-[0_0_10px_rgba(52,211,153,0.5)]"
                         >
                             <i className="ra ra-muscle-up" />
                         </motion.div>
@@ -93,36 +108,29 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 </AnimatePresence>
             </div>
 
-            {/* Stats */}
-            <div
-                className="grid w-full flex-1 min-h-0 my-1 items-center px-1 max-w-[8.5rem]"
-                style={{ gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
-            >
-                <HeroStatRow label="HP" value={`${playerHp} / ${playerMaxHp}`} flash={playerAnim === 'hurt'} color="text-red-400" />
-                <HeroStatRow label="ATK" value={playerBaseAtk} color="text-orange-400" />
-                <HeroStatRow label="MGC" value={playerMagic} color="text-pink-400" />
-                <HeroStatRow label="DEF" value={playerGear} color="text-blue-400" />
-                <HeroStatRow label="EXP" value={moves} color="text-emerald-400" />
-                <HeroStatRow label="GLD" value={gold} color="text-yellow-400" valueColor="text-yellow-400" />
+            {/* HP Bar */}
+            <div className="w-full max-w-[8rem] mt-3 flex flex-col items-center shrink-0">
+                <div className="flex justify-between w-full px-1 mb-1">
+                    <span className="text-[9px] font-bold text-zinc-400 tracking-wider">HP</span>
+                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[9px] font-black text-red-400 tracking-wider">
+                        {playerHp} / {playerMaxHp}
+                    </motion.span>
+                </div>
+                <div className="w-full bg-zinc-950 rounded-full h-1.5 border border-zinc-800 overflow-hidden relative shadow-inner">
+                    <motion.div 
+                        className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-600 to-red-400" 
+                        animate={{ width: `${(playerHp/playerMaxHp)*100}%` }}
+                        transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                    />
+                </div>
             </div>
 
-            {/* Reset button */}
-            <div className="w-full shrink-0">
-                <button
-                    onPointerDown={startResetHold}
-                    onPointerUp={clearResetHold}
-                    onPointerLeave={clearResetHold}
-                    onPointerCancel={clearResetHold}
-                    onContextMenu={(e) => e.preventDefault()}
-                    className="relative w-full bg-red-950/30 text-red-500/80 rounded uppercase tracking-[0.15em] font-semibold border border-red-950 hover:bg-red-950/50 hover:text-red-400 hover:border-red-900 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-red-800 inline-flex items-center justify-center leading-none whitespace-nowrap mt-1 text-[10px] sm:text-[11px]"
-                    style={{ height: 'var(--slider-h)' }}
-                >
-                    <div
-                        className="absolute inset-0 bg-red-700/60 origin-left pointer-events-none"
-                        style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.15s ease-out' : 'none' }}
-                    />
-                    <span className="relative z-10">RESET</span>
-                </button>
+            {/* Stats Grid */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 w-full shrink-0">
+                <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-400" bgClass="bg-orange-950/30" borderClass="border-orange-500/20" />
+                <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-400" bgClass="bg-pink-950/30" borderClass="border-pink-500/20" />
+                <StatBadge label="DEF" value={playerGear} colorClass="text-blue-400" bgClass="bg-blue-950/30" borderClass="border-blue-500/20" />
+                <StatBadge label="GLD" value={gold} colorClass="text-yellow-400" bgClass="bg-yellow-950/30" borderClass="border-yellow-500/20" />
             </div>
         </div>
     );

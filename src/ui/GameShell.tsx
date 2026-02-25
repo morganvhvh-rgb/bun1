@@ -43,7 +43,6 @@ export function GameShell() {
     const [isConjureMagicOpen, setIsConjureMagicOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
     const [isCoffeeOpen, setIsCoffeeOpen] = useState(false);
-    const [sliderResetKey, setSliderResetKey] = useState(0);
     const todayLabel = new Date().toLocaleDateString(undefined, {
         weekday: 'long',
         month: 'long',
@@ -54,7 +53,6 @@ export function GameShell() {
         resetGame();
         resetBattleSequence();
         grid.resetSelection();
-        setSliderResetKey(prev => prev + 1);
         grid.setSpinKey(prev => prev + 1);
     };
 
@@ -87,7 +85,8 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex bg-zinc-900/50 relative overflow-hidden min-h-0" style={{ flex: 2.3 }}>
+                <section className="flex bg-zinc-950 relative overflow-hidden min-h-0 z-10" style={{ flex: 2.3, boxShadow: 'inset 0 -20px 40px -20px rgba(0,0,0,0.8)' }}>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/40 via-zinc-950 to-zinc-950 pointer-events-none" />
                     <HeroPanel
                         playerAnim={playerAnim}
                         isBattleRunning={isBattleRunning}
@@ -99,17 +98,15 @@ export function GameShell() {
                         enemy2Anim={enemy2Anim}
                         isBattleRunning={isBattleRunning}
                         isPostBattleScreen={isPostBattleScreen}
-                        sliderResetKey={sliderResetKey}
                         onEngage={handleEngage}
                     />
-                    {/* Dot overlay */}
-                    <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                 </section>
 
                 <div className="h-px bg-zinc-700 w-full shrink-0 z-10" />
 
                 {/* Board / Inventory / Controls */}
-                <section className="min-h-0 flex flex-col items-center justify-evenly bg-zinc-950 relative overflow-hidden" style={{ flex: 3, padding: 'var(--gap) 0' }}>
+                <section className="min-h-0 flex flex-col items-center justify-evenly bg-zinc-950 relative overflow-hidden z-10" style={{ flex: 3, padding: 'var(--gap) 0', boxShadow: 'inset 0 20px 40px -20px rgba(0,0,0,0.8)' }}>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-indigo-950/20 via-zinc-950 to-zinc-950 pointer-events-none" />
                     <Inventory onKeptIconClick={grid.handleKeptIconClick} />
 
                     <div className="flex items-start justify-center flex-1 min-h-0 w-full" style={{ gap: 'var(--gap)', padding: '0 var(--gap)' }}>
