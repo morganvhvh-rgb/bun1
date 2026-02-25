@@ -14,9 +14,9 @@ interface HeroPanelProps {
 
 function StatBadge({ label, value, colorClass, bgClass, borderClass, flash }: { label: string, value: string | number, colorClass: string, bgClass: string, borderClass: string, flash?: boolean }) {
     return (
-        <div className={cn("flex flex-col items-center justify-center p-1.5 rounded-lg border backdrop-blur-sm min-w-[3rem]", bgClass, borderClass)}>
+        <div className={cn("flex flex-col items-center justify-center py-1 px-1.5 rounded-lg border backdrop-blur-sm min-w-[3rem]", bgClass, borderClass)}>
             <span className="text-[8px] sm:text-[9px] uppercase tracking-widest text-zinc-400 font-bold mb-0.5">{label}</span>
-            <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("text-[11px] sm:text-xs font-black", colorClass)}>
+            <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("text-[11px] sm:text-xs font-black leading-none", colorClass)}>
                 {value}
             </motion.span>
         </div>
@@ -69,31 +69,31 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 onContextMenu={(e) => e.preventDefault()}
                 className="absolute top-2 left-2 px-2 py-1 bg-red-500/10 text-red-400 rounded-md border border-red-500/20 text-[8px] uppercase tracking-widest overflow-hidden touch-none select-none z-20"
             >
-                <div 
-                    className="absolute inset-0 bg-red-500/30 origin-left" 
-                    style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.1s' : 'none' }} 
+                <div
+                    className="absolute inset-0 bg-red-500/30 origin-left"
+                    style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.1s' : 'none' }}
                 />
                 <span className="relative z-10 font-bold">Hold Reset</span>
             </button>
 
             {/* Avatar Section */}
-            <div className="relative flex flex-col items-center mt-6 shrink-0">
+            <div className="relative flex flex-col items-center mt-3 shrink-0">
                 <div className="absolute inset-0 bg-purple-600/20 blur-2xl rounded-full scale-150 pointer-events-none" />
-                <motion.div 
-                    animate={playerAnim} 
-                    variants={playerIconVariants} 
-                    initial="idle" 
-                    className="relative z-10 p-2.5 sm:p-3 bg-zinc-950/80 rounded-2xl border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-white/5 backdrop-blur-md"
+                <motion.div
+                    animate={playerAnim}
+                    variants={playerIconVariants}
+                    initial="idle"
+                    className="relative z-10 p-2 sm:p-2.5 bg-zinc-950/80 rounded-2xl border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] ring-1 ring-white/5 backdrop-blur-md"
                 >
                     <Icon
                         name="hood"
-                        scale={3.2}
+                        scale={3}
                         tintColor="#c084fc"
                         className={cn('cursor-pointer hover:brightness-125 transition-all active:scale-95 drop-shadow-[0_0_10px_rgba(192,132,252,0.4)]', isBattleRunning && 'pointer-events-none')}
                         onClick={onCharacterClick}
                     />
                 </motion.div>
-                
+
                 <AnimatePresence>
                     {moves >= 10 && (
                         <motion.div
@@ -117,16 +117,16 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                     </motion.span>
                 </div>
                 <div className="w-full bg-zinc-950 rounded-full h-1.5 border border-zinc-800 overflow-hidden relative shadow-inner">
-                    <motion.div 
-                        className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-600 to-red-400" 
-                        animate={{ width: `${(playerHp/playerMaxHp)*100}%` }}
+                    <motion.div
+                        className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-600 to-red-400"
+                        animate={{ width: `${(playerHp / playerMaxHp) * 100}%` }}
                         transition={{ type: "spring", stiffness: 100, damping: 15 }}
                     />
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 w-full shrink-0">
+            <div className="grid grid-cols-2 gap-1.5 mt-3 w-full shrink-0 max-w-[8rem] mx-auto">
                 <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-400" bgClass="bg-orange-950/30" borderClass="border-orange-500/20" />
                 <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-400" bgClass="bg-pink-950/30" borderClass="border-pink-500/20" />
                 <StatBadge label="DEF" value={playerGear} colorClass="text-blue-400" bgClass="bg-blue-950/30" borderClass="border-blue-500/20" />
