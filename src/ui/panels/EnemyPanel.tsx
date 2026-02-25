@@ -21,24 +21,53 @@ interface EnemyColumnProps {
 
 function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: EnemyColumnProps) {
     if (!isVisible) return null;
+    const hasType = type.trim() !== '' && type !== '---';
+
     return (
-        <motion.div className="flex flex-col items-center h-full" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.3 } }}>
-            <div className="shrink-0 mt-1">
-                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="z-10 relative">
+        <motion.div
+            className="h-full w-full px-1 flex flex-col items-center justify-center min-h-0"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+        >
+            <div
+                className="relative shrink-0 mt-0.5 flex items-end justify-center"
+                style={{ width: 'calc(var(--cell) * 1.25)', height: 'calc(var(--cell) * 1.25)' }}
+            >
+                <motion.div
+                    animate={animStatus}
+                    variants={enemyIconVariants}
+                    initial="idle"
+                    className="z-10 relative flex items-center justify-center"
+                    style={{ width: 'calc(var(--cell) * 1.25)', height: 'calc(var(--cell) * 1.25)' }}
+                >
                     <Icon name={name} scale={4} tintColor={ICON_THEME[name]} />
                 </motion.div>
+                {hasType && (
+                    <span
+                        className="absolute text-zinc-300 uppercase leading-none whitespace-nowrap pointer-events-none"
+                        style={{ left: 'calc(100% + 0.1rem)', bottom: '0.18rem', fontSize: 'var(--text-xs)', letterSpacing: '0.06em' }}
+                    >
+                        {type}
+                    </span>
+                )}
             </div>
             <div
-                className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
-                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', padding: '0 2px' }}
+                className="mt-1 flex flex-col w-full text-zinc-500 uppercase font-medium justify-center"
+                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gap: '0.1rem' }}
             >
-                <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
-                <StatLine label="ATK" value={atk} />
-                <StatLine label="LVL" value={lvl} />
-                <div className="flex items-center"><span>TYPES</span></div>
-                <div className="text-zinc-300 break-words leading-tight">{type}</div>
-                {/* Invisible spacer to match hero panel's 6 rows */}
-                <div aria-hidden className="invisible"><span>&nbsp;</span></div>
+                <div className="mx-auto w-[74%] max-w-[9rem]">
+                    <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
+                </div>
+                <div className="mx-auto w-[74%] max-w-[9rem] flex items-center justify-center" style={{ gap: '0.8rem' }}>
+                    <div className="flex items-center" style={{ gap: '0.35em' }}>
+                        <span>ATK</span>
+                        <span className="text-zinc-300">{atk}</span>
+                    </div>
+                    <div className="flex items-center" style={{ gap: '0.35em' }}>
+                        <span>LVL</span>
+                        <span className="text-zinc-300">{lvl}</span>
+                    </div>
+                </div>
             </div>
         </motion.div>
     );
@@ -78,21 +107,21 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
 
     return (
         <div className="flex-1 flex flex-col h-full min-h-0 min-w-0" style={{ padding: 'var(--gap)' }}>
-            {/* Enemy columns */}
-            <div className="flex-1 flex items-stretch justify-center min-h-0" style={{ gap: 'clamp(6px, 3vw, 1.5rem)' }}>
+            {/* Enemy stack */}
+            <div className="flex-1 flex items-stretch justify-center min-h-0 pb-1">
                 {isPostBattleScreen ? (
                     <div className="w-full flex items-center justify-center text-zinc-300 uppercase tracking-[0.15em] font-semibold text-center px-4">
                         placeholder text
                     </div>
                 ) : (
-                    <>
-                        <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
-                            <AnimatePresence>{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
+                    <div className="flex flex-col w-full min-h-0 items-center justify-center" style={{ gap: 'var(--gap)' }}>
+                        <div className="flex-1 min-h-0 w-full" style={{ maxWidth: '15rem' }}>
+                            <AnimatePresence mode="wait">{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
                         </div>
-                        <div className="flex flex-col items-center min-w-0 flex-1" style={{ maxWidth: '9rem' }}>
-                            <AnimatePresence>{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
+                        <div className="flex-1 min-h-0 w-full" style={{ maxWidth: '15rem' }}>
+                            <AnimatePresence mode="wait">{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
 
