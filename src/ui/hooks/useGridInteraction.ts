@@ -48,7 +48,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         resetSelection();
         setHasMoved(false);
         setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 1000);
+        setTimeout(() => setIsAnimating(false), 250);
     };
 
     const handleVary = () => {
@@ -59,7 +59,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setHasMoved(false);
         setIsShaking(true);
         setIsAnimating(true);
-        setTimeout(() => { setIsShaking(false); setIsAnimating(false); }, 400);
+        setTimeout(() => { setIsShaking(false); setIsAnimating(false); }, 250);
     };
 
     const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {

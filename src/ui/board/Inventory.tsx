@@ -32,66 +32,72 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
     const { keptIcons, unlockedSections, isUnlockingMode, unlockSection } = useGameStore();
 
     return (
-        <div className="w-full flex justify-center items-center shrink-0 mb-3 px-2">
-            <div className="flex items-center justify-center p-1.5 bg-zinc-950/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner" style={{ gap: 'var(--gap)' }}>
-                {SECTIONS.map((section, i) => {
-                    const [slotA, slotB] = section.slots;
-                    const iconA = keptIcons[slotA];
-                    const iconB = keptIcons[slotB];
-                    const isUnlocked = unlockedSections[section.id];
+        <div className="w-full shrink-0 mb-3 flex justify-center relative">
+            {/* Scrollable container for smaller screens */}
+            <div className="max-w-full overflow-x-auto touch-pan-x scrollbar-none snap-x snap-mandatory px-4 pb-2 pt-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <style>{`
+                    .scrollbar-none::-webkit-scrollbar { display: none; }
+                `}</style>
+                <div className="flex items-center justify-start p-1.5 bg-zinc-950/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner shrink-0 w-max snap-center" style={{ gap: 'var(--gap)' }}>
+                    {SECTIONS.map((section, i) => {
+                        const [slotA, slotB] = section.slots;
+                        const iconA = keptIcons[slotA];
+                        const iconB = keptIcons[slotB];
+                        const isUnlocked = unlockedSections[section.id];
 
-                    return (
-                        <div key={section.id} className="contents relative">
-                            {i > 0 && <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0" style={{ margin: '0 2px' }} />}
+                        return (
+                            <div key={section.id} className="flex items-center shrink-0" style={{ gap: 'var(--gap)' }}>
+                                {i > 0 && <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0" />}
 
-                            <div
-                                className="flex items-center justify-start relative rounded-xl overflow-hidden transition-all duration-300"
-                                style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', height: 'calc(var(--cell-sm) + 4px)', gap: 'calc(var(--gap) * 0.5)', padding: '2px' }}
-                                onClick={() => isUnlockingMode && !isUnlocked && unlockSection(section.id)}
-                            >
-                                {!isUnlocked ? (
-                                    <div
-                                        className={cn('absolute inset-0 flex flex-col items-center justify-center gap-1 rounded-xl transition-all border border-transparent', isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/80 bg-zinc-900/60 border-zinc-700/50 shadow-inner' : 'bg-black/40')}
-                                        style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}
-                                    >
-                                        {isUnlockingMode ? (
-                                            <>
-                                                <i className="ra ra-unlock text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" style={{ fontSize: '14px' }} />
-                                                <span className="font-bold text-green-400 uppercase tracking-widest leading-none drop-shadow-sm" style={{ fontSize: '9px' }}>UNLOCK</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <i className="ra ra-padlock text-red-900/80" style={{ fontSize: '14px' }} />
-                                                <span className="font-bold text-zinc-700 uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>LOCKED</span>
-                                            </>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="absolute inset-0 bg-zinc-900/40 border border-white/5 rounded-xl shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] pointer-events-none" />
-
-                                        {!iconA && !iconB && (
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 opacity-40">
-                                                <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none text-center px-1" style={{ fontSize: '9px' }}>
-                                                    {section.label.replace('/', ' /\n')}
-                                                </span>
-                                            </div>
-                                        )}
-
-                                        {/* Slot Backgrounds */}
-                                        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-between w-full px-1 pointer-events-none opacity-30">
-                                            <div className="rounded-lg bg-black/50 border border-white/5" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} />
-                                            <div className="rounded-lg bg-black/50 border border-white/5" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} />
+                                <div
+                                    className="flex items-center justify-start relative rounded-xl overflow-hidden transition-all duration-300"
+                                    style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', height: 'calc(var(--cell-sm) + 4px)', gap: 'calc(var(--gap) * 0.5)', padding: '2px' }}
+                                    onClick={() => isUnlockingMode && !isUnlocked && unlockSection(section.id)}
+                                >
+                                    {!isUnlocked ? (
+                                        <div
+                                            className={cn('absolute inset-0 flex flex-col items-center justify-center gap-1 rounded-xl transition-all border border-transparent', isUnlockingMode ? 'cursor-pointer hover:bg-zinc-800/80 bg-zinc-900/60 border-zinc-700/50 shadow-inner' : 'bg-black/40')}
+                                            style={{ pointerEvents: isUnlockingMode ? 'auto' : 'none' }}
+                                        >
+                                            {isUnlockingMode ? (
+                                                <>
+                                                    <i className="ra ra-unlock text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" style={{ fontSize: '14px' }} />
+                                                    <span className="font-bold text-green-400 uppercase tracking-widest leading-none drop-shadow-sm" style={{ fontSize: '9px' }}>UNLOCK</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <i className="ra ra-padlock text-red-900/80" style={{ fontSize: '14px' }} />
+                                                    <span className="font-bold text-zinc-700 uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>LOCKED</span>
+                                                </>
+                                            )}
                                         </div>
+                                    ) : (
+                                        <>
+                                            <div className="absolute inset-0 bg-zinc-900/40 border border-white/5 rounded-xl shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] pointer-events-none" />
 
-                                        {iconA && <KeptIconDisplay icon={iconA} onClick={(e) => onKeptIconClick(e, iconA)} />}
-                                        {iconB && <KeptIconDisplay icon={iconB} onClick={(e) => onKeptIconClick(e, iconB)} />}
-                                    </>
-                                )}
+                                            {!iconA && !iconB && (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-0.5 opacity-40">
+                                                    <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none text-center px-1" style={{ fontSize: '9px' }}>
+                                                        {section.label.replace('/', ' /\n')}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Slot Backgrounds */}
+                                            <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-between w-full px-1 pointer-events-none opacity-30">
+                                                <div className="rounded-lg bg-black/50 border border-white/5" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} />
+                                                <div className="rounded-lg bg-black/50 border border-white/5" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} />
+                                            </div>
+
+                                            {iconA && <KeptIconDisplay icon={iconA} onClick={(e) => onKeptIconClick(e, iconA)} />}
+                                            {iconB && <KeptIconDisplay icon={iconB} onClick={(e) => onKeptIconClick(e, iconB)} />}
+                                        </>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
