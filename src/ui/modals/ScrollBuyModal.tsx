@@ -24,13 +24,13 @@ export function ScrollBuyModal({
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4" onClick={onClose}>
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
-                            className="bg-zinc-900 border border-zinc-700 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
+                            className="bg-black border border-zinc-600 flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
                             style={{ minHeight: 'min(380px, 60svh)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-zinc-100 font-bold uppercase tracking-widest leading-none">SCROLL TYPE</h2>
-                                <button onClick={onClose} className="text-zinc-500 hover:text-zinc-300 transition-colors uppercase text-xs tracking-widest">Close</button>
+                                <h2 className="text-white font-bold uppercase tracking-widest leading-none">SCROLL TYPE</h2>
+                                <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Close</button>
                             </div>
 
                             <div className="flex justify-center mb-6">
@@ -38,18 +38,18 @@ export function ScrollBuyModal({
                                     <button
                                         onClick={onBuyScroll}
                                         disabled={gold < scrollCost}
-                                        className={`py-3 px-6 w-full rounded font-bold uppercase tracking-widest text-sm transition-colors border ${gold >= scrollCost ? 'bg-zinc-800 hover:bg-zinc-700 text-yellow-500 border-yellow-900/50' : 'bg-red-950/20 text-red-500/50 border-red-900/30 cursor-not-allowed'}`}
+                                        className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border ${gold >= scrollCost ? 'bg-black text-white border-zinc-600' : 'bg-black text-zinc-600 border-zinc-600 cursor-not-allowed'}`}
                                     >
                                         Buy Scroll {gold < scrollCost ? `(Need ${scrollCost}g)` : `(${scrollCost}g)`}
                                     </button>
                                 ) : (
-                                    <div className="py-3 px-6 w-full text-center rounded font-bold uppercase tracking-widest text-sm bg-zinc-800 text-zinc-500 border border-zinc-700 opacity-50">
+                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-black text-white border border-zinc-600 opacity-50">
                                         Unlocking...
                                     </div>
                                 )}
                             </div>
 
-                            <div className="flex-1 min-h-[12rem] border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-4">
+                            <div className="flex-1 min-h-[12rem] border border-zinc-600 bg-black flex flex-col items-center justify-center relative overflow-hidden p-4">
                                 <div className="relative flex w-full h-full items-center justify-center">
                                     {availableScrolls.map((color, i) => {
                                         const isRevealed = revealedScrollColor === color;
@@ -61,7 +61,7 @@ export function ScrollBuyModal({
                                         return (
                                             <motion.div
                                                 key={color}
-                                                className="absolute drop-shadow-[2px_4px_0_rgba(0,0,0,1)]"
+                                                className="absolute"
                                                 initial={{ x: xPos, y: 10, opacity: 1 }}
                                                 animate={{ y: yPos, x: xPos, opacity, zIndex: i }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -78,7 +78,7 @@ export function ScrollBuyModal({
                                             <motion.div
                                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
-                                                className="text-sm text-zinc-100 font-black uppercase tracking-[0.2em] leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                                className="text-sm text-white font-black uppercase tracking-[0.2em] leading-none text-center"
                                             >
                                                 {revealedScrollColor.replace('-scroll', '')}
                                             </motion.div>

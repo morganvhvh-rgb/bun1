@@ -14,21 +14,21 @@ export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={`Character Lvl ${1 + levelUpPerks.length}`} position="top">
-            <div className="border border-zinc-800/50 bg-zinc-950/50 rounded flex flex-col p-4 text-zinc-600 text-sm font-mono overflow-y-auto touch-pan-y h-full">
+            <div className="border border-zinc-600 bg-black flex flex-col p-4 text-white text-sm font-mono overflow-y-auto touch-pan-y h-full">
                 {moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED && (
                     <div className="flex flex-col gap-3 w-full">
-                        <h3 className="text-green-500 font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
                         {levelUpPerks.length === 0 ? (
                             <>
-                                <button onClick={() => applyLevelUp('full_heal_max_hp')} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-3 rounded font-bold uppercase tracking-wider text-xs border border-zinc-600 transition-colors">
+                                <button onClick={() => applyLevelUp('full_heal_max_hp')} className="bg-black text-white p-3 font-bold uppercase tracking-wider text-xs border border-zinc-600">
                                     Full heal and +10 Max HP
                                 </button>
-                                <button onClick={() => applyLevelUp('nature_2x_exp')} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-3 rounded font-bold uppercase tracking-wider text-xs border border-zinc-600 transition-colors">
+                                <button onClick={() => applyLevelUp('nature_2x_exp')} className="bg-black text-white p-3 font-bold uppercase tracking-wider text-xs border border-zinc-600">
                                     All Nature symbols give 2x EXP
                                 </button>
                             </>
                         ) : (
-                            <button onClick={() => applyLevelUp('full_heal')} className="bg-green-950/20 hover:bg-green-900/30 text-green-500 p-3 rounded font-bold uppercase tracking-wider text-xs border border-green-900/40 transition-colors">
+                            <button onClick={() => applyLevelUp('full_heal')} className="bg-black text-white p-3 font-bold uppercase tracking-wider text-xs border border-zinc-600">
                                 Full Heal
                             </button>
                         )}
@@ -36,11 +36,11 @@ export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
                 )}
 
                 {levelUpPerks.length > 0 && (
-                    <div className="mt-8 pt-4 border-t border-zinc-800/50 flex flex-col gap-2 w-full shrink-0">
-                        <h3 className="text-zinc-500 uppercase tracking-widest text-[10px] font-bold">Applied Level Ups</h3>
+                    <div className="mt-8 pt-4 border-t border-zinc-600 flex flex-col gap-2 w-full shrink-0">
+                        <h3 className="text-white uppercase tracking-widest text-[10px] font-bold">Applied Level Ups</h3>
                         <div className="flex flex-col gap-1">
                             {levelUpPerks.map((perk, i) => (
-                                <div key={i} className="text-xs text-zinc-400 font-mono">
+                                <div key={i} className="text-xs text-white font-mono">
                                     - {perk === 'full_heal_max_hp' ? 'Full heal & +10 Max HP' : perk === 'nature_2x_exp' ? 'All Nature symbols give 2x EXP' : 'Full Heal'}
                                 </div>
                             ))}
