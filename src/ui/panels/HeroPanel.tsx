@@ -13,6 +13,10 @@ interface HeroPanelProps {
     onReset: () => void;
 }
 
+const HERO_STAT_ROW_STYLE = {
+    width: '100%',
+};
+
 export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onReset }: HeroPanelProps) {
     const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves } = useGameStore();
     const playerBaseAtk = useGameStore(selectTotalAttack);
@@ -73,15 +77,27 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
 
             {/* Stats */}
             <div
-                className="flex flex-col w-full text-zinc-500 uppercase font-medium flex-1 justify-evenly"
-                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', padding: '0 2px' }}
+                className="grid text-zinc-500 uppercase font-medium flex-1 mx-auto"
+                style={{ width: 'var(--hero-stat-col-w)', fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
             >
-                <StatLine label="HP" value={`${playerHp}/${playerMaxHp}`} flash={playerAnim === 'hurt'} />
-                <StatLine label="ATK" value={playerBaseAtk} />
-                <StatLine label="Magic" value={playerMagic} />
-                <StatLine label="Gear" value={playerGear} />
-                <StatLine label="EXP" value={moves} />
-                <StatLine label="Gold" value={gold} color="text-yellow-500" />
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="HP" value={`${playerHp}/${playerMaxHp}`} flash={playerAnim === 'hurt'} />
+                </div>
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="ATK" value={playerBaseAtk} />
+                </div>
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="Magic" value={playerMagic} />
+                </div>
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="Gear" value={playerGear} />
+                </div>
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="EXP" value={moves} />
+                </div>
+                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
+                    <StatLine label="Gold" value={gold} color="text-yellow-500" />
+                </div>
             </div>
 
             {/* Reset button */}

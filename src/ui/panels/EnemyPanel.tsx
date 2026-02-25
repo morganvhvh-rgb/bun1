@@ -24,14 +24,41 @@ const ENEMY_ICON_FRAME_STYLE = {
     height: 'var(--enemy-icon-frame-size)',
 };
 
+const ENEMY_STACK_COLUMN_STYLE = {
+    width: '100%',
+    maxWidth: 'var(--enemy-stack-max-w)',
+};
+
 const ENEMY_STATS_COLUMN_STYLE = {
     width: 'var(--enemy-stat-col-width)',
     maxWidth: 'var(--enemy-stat-col-max-w)',
+    height: '100%',
+    display: 'grid',
+    gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+    rowGap: 'var(--enemy-stat-row-gap)',
 };
 
-const ENEMY_STACK_COLUMN_STYLE = {
-    maxWidth: 'var(--enemy-stack-max-w)',
+const ENEMY_ICON_FLOAT_STYLE = {
+    top: 'var(--enemy-icon-float-top)',
+    transform: 'translate(-50%, calc(-1 * var(--enemy-icon-float-lift)))',
 };
+
+const ENEMY_ALIGNED_GRID_STYLE = {
+    width: '100%',
+    height: '100%',
+    minHeight: 0,
+    paddingTop: 'var(--enemy-stack-top-offset)',
+    display: 'grid',
+    gridTemplateRows: 'repeat(6, minmax(0, 1fr))',
+    rowGap: 'var(--enemy-grid-row-gap)',
+};
+
+const ENEMY_STAT_TEXT_STYLE = {
+    fontSize: 'var(--text-sm)',
+    letterSpacing: '0.08em',
+};
+
+const ENEMY_ICON_SCALE = 3.1;
 
 function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: EnemyColumnProps) {
     if (!isVisible) return null;
@@ -39,52 +66,65 @@ function EnemyColumn({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }:
 
     return (
         <motion.div
-            className="h-full w-full px-1 flex flex-col items-center justify-center min-h-0"
+            className="h-full w-full px-1 min-h-0"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
         >
             <div
-                className="relative shrink-0 mt-0.5 flex items-end justify-center"
-                style={ENEMY_ICON_FRAME_STYLE}
+                className="relative mx-auto h-full w-full flex items-center justify-center"
             >
-                <motion.div
-                    animate={animStatus}
-                    variants={enemyIconVariants}
-                    initial="idle"
-                    className="z-10 relative flex items-center justify-center"
-                    style={ENEMY_ICON_FRAME_STYLE}
+                <div
+                    className="absolute left-1/2 z-10 pointer-events-none"
+                    style={ENEMY_ICON_FLOAT_STYLE}
                 >
-                    <Icon name={name} scale={4} tintColor={ICON_THEME[name]} />
-                </motion.div>
-                {hasType && (
-                    <span
-                        className="absolute text-zinc-300 uppercase leading-none whitespace-nowrap pointer-events-none"
-                        style={{
-                            left: 'calc(100% + var(--enemy-type-offset-x))',
-                            bottom: 'var(--enemy-type-offset-y)',
-                            fontSize: 'var(--text-xs)',
-                            letterSpacing: '0.06em',
-                        }}
+                    <div
+                        className="relative flex items-end justify-center"
+                        style={ENEMY_ICON_FRAME_STYLE}
                     >
-                        {type}
-                    </span>
-                )}
-            </div>
-            <div
-                className="mt-1 flex flex-col w-full text-zinc-500 uppercase font-medium justify-center"
-                style={{ fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gap: 'var(--enemy-stat-row-gap)' }}
-            >
-                <div className="mx-auto" style={ENEMY_STATS_COLUMN_STYLE}>
-                    <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
-                </div>
-                <div className="mx-auto flex items-center justify-center" style={{ ...ENEMY_STATS_COLUMN_STYLE, gap: '0.8rem' }}>
-                    <div className="flex items-center" style={{ gap: '0.35em' }}>
-                        <span>ATK</span>
-                        <span className="text-zinc-300">{atk}</span>
+                        <motion.div
+                            animate={animStatus}
+                            variants={enemyIconVariants}
+                            initial="idle"
+                            className="z-10 relative flex items-center justify-center"
+                            style={ENEMY_ICON_FRAME_STYLE}
+                        >
+                            <Icon name={name} scale={ENEMY_ICON_SCALE} tintColor={ICON_THEME[name]} />
+                        </motion.div>
+                        {hasType && (
+                            <span
+                                className="absolute text-zinc-300 uppercase leading-none whitespace-nowrap pointer-events-none"
+                                style={{
+                                    left: 'calc(100% + var(--enemy-type-offset-x))',
+                                    bottom: 'var(--enemy-type-offset-y)',
+                                    fontSize: 'var(--text-xs)',
+                                    letterSpacing: '0.06em',
+                                }}
+                            >
+                                {type}
+                            </span>
+                        )}
                     </div>
-                    <div className="flex items-center" style={{ gap: '0.35em' }}>
-                        <span>LVL</span>
-                        <span className="text-zinc-300">{lvl}</span>
+                </div>
+
+                <div
+                    className="mx-auto"
+                    style={ENEMY_STATS_COLUMN_STYLE}
+                >
+                    <div className="flex min-w-0 items-center justify-center text-zinc-500 uppercase font-medium" style={ENEMY_STAT_TEXT_STYLE}>
+                        <StatLine label="HP" value={`${hp}/${maxHp}`} flash={animStatus === 'hurt'} />
+                    </div>
+                    <div
+                        className="flex min-w-0 items-center justify-center text-zinc-500 uppercase font-medium"
+                        style={{ ...ENEMY_STAT_TEXT_STYLE, gap: 'var(--enemy-stat-group-gap)' }}
+                    >
+                        <div className="flex items-center" style={{ gap: 'var(--enemy-stat-inline-gap)' }}>
+                            <span>ATK</span>
+                            <span className="text-zinc-300">{atk}</span>
+                        </div>
+                        <div className="flex items-center" style={{ gap: 'var(--enemy-stat-inline-gap)' }}>
+                            <span>LVL</span>
+                            <span className="text-zinc-300">{lvl}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,12 +173,14 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                         placeholder text
                     </div>
                 ) : (
-                    <div className="flex flex-col w-full min-h-0 items-center justify-center" style={{ gap: 'var(--gap)' }}>
-                        <div className="flex-1 min-h-0 w-full" style={ENEMY_STACK_COLUMN_STYLE}>
-                            <AnimatePresence mode="wait">{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
-                        </div>
-                        <div className="flex-1 min-h-0 w-full" style={ENEMY_STACK_COLUMN_STYLE}>
-                            <AnimatePresence mode="wait">{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
+                    <div className="w-full min-h-0" style={ENEMY_STACK_COLUMN_STYLE}>
+                        <div style={ENEMY_ALIGNED_GRID_STYLE}>
+                            <div className="min-h-0" style={{ gridRow: '1 / span 2' }}>
+                                <AnimatePresence mode="wait">{enemy1.isVisible && <EnemyColumn {...enemy1} animStatus={enemy1Anim} />}</AnimatePresence>
+                            </div>
+                            <div className="min-h-0" style={{ gridRow: '5 / span 2' }}>
+                                <AnimatePresence mode="wait">{enemy2.isVisible && <EnemyColumn {...enemy2} animStatus={enemy2Anim} />}</AnimatePresence>
+                            </div>
                         </div>
                     </div>
                 )}
