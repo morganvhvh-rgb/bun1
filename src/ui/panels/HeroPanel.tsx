@@ -15,14 +15,14 @@ interface HeroPanelProps {
 
 function HeroStatRow({ label, value, color, flash, valueColor }: { label: string, value: string | number, color: string, flash?: boolean, valueColor?: string }) {
     return (
-        <div className="flex items-center justify-between w-full text-[var(--text-xs)] tracking-wider">
+        <div className="flex items-center justify-between w-full text-[10px] sm:text-[11px] tracking-widest">
             <span className={cn("font-semibold opacity-80", color)}>{label}</span>
             {flash !== undefined ? (
-                <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("font-bold", valueColor || "text-zinc-100")}>
+                <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("font-bold whitespace-nowrap", valueColor || "text-zinc-100")}>
                     {value}
                 </motion.span>
             ) : (
-                <span className={cn("font-bold", valueColor || "text-zinc-100")}>{value}</span>
+                <span className={cn("font-bold whitespace-nowrap", valueColor || "text-zinc-100")}>{value}</span>
             )}
         </div>
     );
@@ -66,14 +66,14 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     return (
         <div
             className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full bg-zinc-950/40 relative min-h-0"
-            style={{ width: 'clamp(7.5rem, calc(var(--cell) * 2.5), 11rem)', padding: 'var(--gap)' }}
+            style={{ width: 'clamp(7rem, 28vw, 9.5rem)', padding: 'var(--gap)' }}
         >
             {/* Hero Icon */}
-            <div className="relative flex shrink-0 mt-2 mb-1">
+            <div className="relative flex shrink-0 mt-1 mb-0.5">
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"
-                        scale={3.6}
+                        scale={3}
                         tintColor="#9333ea"
                         className={cn('cursor-pointer hover:brightness-110 transition-all active:scale-95 drop-shadow-lg', isBattleRunning && 'pointer-events-none')}
                         onClick={onCharacterClick}
@@ -85,7 +85,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
-                            className="absolute -bottom-1 -right-2 text-red-500 font-black text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center p-1 bg-zinc-900 rounded-full border border-red-900"
+                            className="absolute -bottom-1 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center p-0.5 bg-zinc-900 rounded-full border border-red-900"
                         >
                             <i className="ra ra-muscle-up" />
                         </motion.div>
@@ -95,7 +95,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
 
             {/* Stats */}
             <div
-                className="grid w-full flex-1 min-h-0 my-1 items-center px-1 sm:px-2 max-w-[9rem]"
+                className="grid w-full flex-1 min-h-0 my-0.5 items-center px-0.5 max-w-[8rem]"
                 style={{ gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
             >
                 <HeroStatRow label="HP" value={`${playerHp} / ${playerMaxHp}`} flash={playerAnim === 'hurt'} color="text-red-400" />
@@ -114,8 +114,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                     onPointerLeave={clearResetHold}
                     onPointerCancel={clearResetHold}
                     onContextMenu={(e) => e.preventDefault()}
-                    className="relative w-full bg-red-950/30 text-red-500/80 rounded uppercase tracking-[0.15em] font-semibold border border-red-950 hover:bg-red-950/50 hover:text-red-400 hover:border-red-900 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-red-800 inline-flex items-center justify-center leading-none whitespace-nowrap"
-                    style={{ height: 'var(--slider-h)', fontSize: 'var(--text-xs)' }}
+                    className="relative w-full bg-red-950/30 text-red-500/80 rounded uppercase tracking-[0.15em] font-semibold border border-red-950 hover:bg-red-950/50 hover:text-red-400 hover:border-red-900 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-red-800 inline-flex items-center justify-center leading-none whitespace-nowrap mt-1"
+                    style={{ height: 'var(--slider-h)', fontSize: '9px' }}
                 >
                     <div
                         className="absolute inset-0 bg-red-700/60 origin-left pointer-events-none"
