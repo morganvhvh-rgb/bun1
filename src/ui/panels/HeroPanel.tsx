@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { StatLine } from '../shared/StatLine';
+import { hpVariants } from '../animations';
 import { playerIconVariants } from '../animations';
 
 interface HeroPanelProps {
@@ -13,9 +13,20 @@ interface HeroPanelProps {
     onReset: () => void;
 }
 
-const HERO_STAT_ROW_STYLE = {
-    width: '100%',
-};
+function HeroStatRow({ label, value, color, flash, valueColor }: { label: string, value: string | number, color: string, flash?: boolean, valueColor?: string }) {
+    return (
+        <div className="flex items-center justify-between w-full text-[var(--text-xs)] tracking-wider">
+            <span className={cn("font-semibold opacity-80", color)}>{label}</span>
+            {flash !== undefined ? (
+                <motion.span animate={flash ? 'hurt' : 'idle'} variants={hpVariants} className={cn("font-bold", valueColor || "text-zinc-100")}>
+                    {value}
+                </motion.span>
+            ) : (
+                <span className={cn("font-bold", valueColor || "text-zinc-100")}>{value}</span>
+            )}
+        </div>
+    );
+}
 
 export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onReset }: HeroPanelProps) {
     const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves } = useGameStore();
@@ -54,68 +65,65 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
 
     return (
         <div
-            className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full"
-            style={{ width: 'clamp(7.5rem, calc(var(--cell) * 2.5), 10rem)', padding: 'var(--gap)' }}
+            className="border-r border-zinc-800 flex flex-col items-center justify-between shrink-0 h-full bg-zinc-950/40 relative min-h-0"
+            style={{ width: 'clamp(7.5rem, calc(var(--cell) * 2.5), 11rem)', padding: 'var(--gap)' }}
         >
             {/* Hero Icon */}
-            <div className="relative flex shrink-0 mt-1">
+            <div className="relative flex shrink-0 mt-2 mb-1">
                 <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="z-10 relative">
                     <Icon
                         name="hood"
-                        scale={4}
-                        tintColor="#7e22ce"
-                        className={cn('cursor-pointer hover:brightness-110 transition-all active:scale-95', isBattleRunning && 'pointer-events-none')}
+                        scale={3.6}
+                        tintColor="#9333ea"
+                        className={cn('cursor-pointer hover:brightness-110 transition-all active:scale-95 drop-shadow-lg', isBattleRunning && 'pointer-events-none')}
                         onClick={onCharacterClick}
                     />
                 </motion.div>
-                {moves >= 10 && (
-                    <div className="absolute bottom-0 -right-2 text-red-500 font-black text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center">
-                        <i className="ra ra-muscle-up" />
-                    </div>
-                )}
+                <AnimatePresence>
+                    {moves >= 10 && (
+                        <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            className="absolute -bottom-1 -right-2 text-red-500 font-black text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none z-20 leading-none flex items-center justify-center p-1 bg-zinc-900 rounded-full border border-red-900"
+                        >
+                            <i className="ra ra-muscle-up" />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             {/* Stats */}
             <div
-                className="grid text-zinc-500 uppercase font-medium flex-1 mx-auto"
-                style={{ width: 'var(--hero-stat-col-w)', fontSize: 'var(--text-sm)', letterSpacing: '0.08em', gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
+                className="grid w-full flex-1 min-h-0 my-1 items-center px-1 sm:px-2 max-w-[9rem]"
+                style={{ gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
             >
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="HP" value={`${playerHp}/${playerMaxHp}`} flash={playerAnim === 'hurt'} />
-                </div>
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="ATK" value={playerBaseAtk} />
-                </div>
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="Magic" value={playerMagic} />
-                </div>
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="Gear" value={playerGear} />
-                </div>
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="EXP" value={moves} />
-                </div>
-                <div className="flex items-center justify-start" style={HERO_STAT_ROW_STYLE}>
-                    <StatLine label="Gold" value={gold} color="text-yellow-500" />
-                </div>
+                <HeroStatRow label="HP" value={`${playerHp} / ${playerMaxHp}`} flash={playerAnim === 'hurt'} color="text-red-400" />
+                <HeroStatRow label="ATK" value={playerBaseAtk} color="text-orange-400" />
+                <HeroStatRow label="MGC" value={playerMagic} color="text-pink-400" />
+                <HeroStatRow label="DEF" value={playerGear} color="text-blue-400" />
+                <HeroStatRow label="EXP" value={moves} color="text-emerald-400" />
+                <HeroStatRow label="GLD" value={gold} color="text-yellow-400" valueColor="text-yellow-400" />
             </div>
 
             {/* Reset button */}
-            <button
-                onPointerDown={startResetHold}
-                onPointerUp={clearResetHold}
-                onPointerLeave={clearResetHold}
-                onPointerCancel={clearResetHold}
-                onContextMenu={(e) => e.preventDefault()}
-                className="relative w-full bg-red-950/30 text-zinc-400 rounded uppercase tracking-[0.15em] font-medium border border-zinc-600 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-zinc-500 inline-flex items-center justify-center leading-none whitespace-nowrap shrink-0"
-                style={{ height: 'var(--slider-h)', fontSize: 'var(--text-xs)' }}
-            >
-                <div
-                    className="absolute inset-0 bg-red-600/70 origin-left pointer-events-none"
-                    style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.15s ease-out' : 'none' }}
-                />
-                <span className="relative z-10">HOLD - RESET</span>
-            </button>
+            <div className="w-full shrink-0">
+                <button
+                    onPointerDown={startResetHold}
+                    onPointerUp={clearResetHold}
+                    onPointerLeave={clearResetHold}
+                    onPointerCancel={clearResetHold}
+                    onContextMenu={(e) => e.preventDefault()}
+                    className="relative w-full bg-red-950/30 text-red-500/80 rounded uppercase tracking-[0.15em] font-semibold border border-red-950 hover:bg-red-950/50 hover:text-red-400 hover:border-red-900 transition-colors overflow-hidden select-none touch-none cursor-pointer active:border-red-800 inline-flex items-center justify-center leading-none whitespace-nowrap"
+                    style={{ height: 'var(--slider-h)', fontSize: 'var(--text-xs)' }}
+                >
+                    <div
+                        className="absolute inset-0 bg-red-700/60 origin-left pointer-events-none"
+                        style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.15s ease-out' : 'none' }}
+                    />
+                    <span className="relative z-10">RESET</span>
+                </button>
+            </div>
         </div>
     );
 }
