@@ -59,7 +59,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     }, [onReset, clearResetHold]);
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 sm:p-3 items-center justify-around z-10">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 pt-10 sm:p-3 sm:pt-10 items-center justify-center gap-3 z-10">
             {/* Reset Button */}
             <button
                 onPointerDown={startResetHold}
@@ -77,7 +77,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </button>
 
             {/* Avatar Section */}
-            <div className="relative flex flex-col items-center mt-3 shrink-0">
+            <div className="relative flex flex-col items-center shrink-0">
                 <motion.div
                     animate={playerAnim}
                     variants={playerIconVariants}
@@ -108,7 +108,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </div>
 
             {/* HP Bar */}
-            <div className="w-full max-w-[8rem] mt-3 flex flex-col items-center shrink-0">
+            <div className="w-full max-w-[8rem] flex flex-col items-center shrink-0">
                 <div className="flex justify-between w-full px-1 mb-1 border border-zinc-600">
                     <span className="text-[9px] font-bold tracking-wider">HP</span>
                     <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[9px] font-bold text-red-500 tracking-wider">
@@ -118,7 +118,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-1.5 mt-3 w-full shrink-0 max-w-[8rem] mx-auto">
+            <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 max-w-[8rem] mx-auto">
                 <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-500" />
                 <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-500" />
                 <StatBadge label="DEF" value={playerGear} colorClass="text-blue-500" />

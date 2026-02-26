@@ -19,53 +19,51 @@ interface EnemyColumnProps {
 
 function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: EnemyColumnProps) {
     if (!isVisible) return null;
-    const hasType = type.trim() !== '' && type !== '---';
+    const hasType = type && type.trim() !== '' && type !== '---';
 
     return (
         <motion.div
             layout
-            className="w-full flex items-center justify-between p-2 mt-2 border border-zinc-600 relative shrink-0 bg-black"
+            className="w-full p-2 mt-2 border border-zinc-600 relative shrink-0 bg-black flex"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
             {/* Avatar block */}
-            <div className="relative shrink-0 flex flex-col items-center ml-1">
-                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-10 p-2 sm:p-2.5 border border-zinc-600">
+            <div className="relative shrink-0 flex flex-col items-center justify-center w-14">
+                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-10">
                     <Icon name={name} scale={2} tintColor={ICON_THEME[name]} />
                 </motion.div>
                 {hasType && (
-                    <span className="absolute -bottom-2 bg-black border border-zinc-600 text-[8px] font-bold uppercase px-1.5 py-0.5 z-20 tracking-widest leading-none">
+                    <span className="text-[8px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-2 text-center w-full">
                         {type}
                     </span>
                 )}
             </div>
 
             {/* Stats block */}
-            <div className="flex-1 flex flex-col justify-center ml-3 min-w-0 z-10 relative">
-                <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest truncate max-w-[80px]">
+            <div className="flex-1 flex flex-col justify-center gap-1.5 ml-3 min-w-0 z-10 border-l border-zinc-900 pl-3">
+                <div className="flex items-start justify-between gap-1 w-full">
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-tight">
                         {name.replace('-', ' ')}
                     </span>
-                    <span className="text-[9px] font-bold border border-zinc-600 px-1 py-0.5 leading-none shrink-0 tracking-widest text-blue-500">
+                    <span className="text-[9px] font-bold tracking-widest text-blue-500 shrink-0 whitespace-nowrap">
                         LVL {lvl}
                     </span>
                 </div>
 
-                <div className="flex items-center gap-2 mt-1 w-full">
-                    {/* HP Section */}
-                    <div className="flex-1 flex flex-col relative w-full overflow-hidden">
-                        <div className="flex justify-between items-center mt-0.5 w-full border border-zinc-600 px-1">
-                            <span className="text-[8px] font-bold uppercase tracking-wider">HP</span>
-                            <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[9px] font-bold tracking-wider text-red-500">
-                                {hp}/{maxHp}
-                            </motion.span>
-                        </div>
-                    </div>
+                <div className="flex justify-between items-center text-[9px] font-bold tracking-wider">
+                    <span className="text-zinc-500 uppercase">HP</span>
+                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
+                        {hp} / {maxHp}
+                    </motion.span>
                 </div>
 
-                <div className="absolute right-0 bottom-[-2px] text-[10px] font-bold flex items-center gap-1 border border-zinc-600 px-1.5 py-0.5 bg-black text-orange-500">
-                    <i className="ra ra-sword text-[10px]" /> {atk}
+                <div className="flex justify-between items-center text-[9px] font-bold tracking-wider">
+                    <span className="text-zinc-500 uppercase">ATK</span>
+                    <span className="text-orange-500 flex items-center gap-1">
+                        <i className="ra ra-sword text-[10px]" /> {atk}
+                    </span>
                 </div>
             </div>
         </motion.div>
