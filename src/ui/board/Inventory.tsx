@@ -40,24 +40,30 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
                     const isUnlocked = unlockedSections[section.id];
 
                     if (!isUnlocked) {
+                        const typeLabel = section.id === 0 ? 'Food / Item' : section.id === 1 ? 'Armor / Magic' : 'Weapon / Music';
                         return (
                             <div
                                 key={`sec-${section.id}`}
-                                className={cn('flex items-center justify-center gap-1 border border-zinc-600', isUnlockingMode ? 'cursor-pointer bg-zinc-900' : 'bg-black')}
+                                className={cn('flex flex-col items-center justify-center border border-zinc-600', isUnlockingMode ? 'cursor-pointer bg-zinc-900' : 'bg-black')}
                                 style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', height: 'var(--cell-sm)', pointerEvents: isUnlockingMode ? 'auto' : 'none' }}
                                 onClick={() => isUnlockingMode && !isUnlocked && unlockSection(section.id)}
                             >
-                                {isUnlockingMode ? (
-                                    <>
-                                        <i className="ra ra-unlock text-white" style={{ fontSize: '14px' }} />
-                                        <span className="font-bold text-white uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>UNLOCK</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="ra ra-padlock text-zinc-500" style={{ fontSize: '14px' }} />
-                                        <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>LOCKED</span>
-                                    </>
-                                )}
+                                <span className={cn("text-[8px] sm:text-[9px] uppercase tracking-wider font-bold mb-0.5", isUnlockingMode ? "text-zinc-400" : "text-zinc-600")}>
+                                    {typeLabel}
+                                </span>
+                                <div className="flex items-center justify-center gap-1">
+                                    {isUnlockingMode ? (
+                                        <>
+                                            <i className="ra ra-unlock text-white" style={{ fontSize: '12px' }} />
+                                            <span className="font-bold text-white uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>UNLOCK</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="ra ra-padlock text-zinc-500" style={{ fontSize: '12px' }} />
+                                            <span className="font-bold text-zinc-500 uppercase tracking-widest leading-none" style={{ fontSize: '9px' }}>LOCKED</span>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         );
                     }
