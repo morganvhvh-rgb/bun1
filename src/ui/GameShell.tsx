@@ -131,31 +131,32 @@ export function GameShell() {
                         />
                     </div>
 
-                    {/* Modals */}
-                    <ScrollsModal isOpen={scrollFlow.isScrollWindowOpen} onClose={() => scrollFlow.setIsScrollWindowOpen(false)} />
-                    <ScrollBuyModal
-                        isOpen={scrollFlow.isScrollTypeOpen}
-                        onClose={scrollFlow.handleCloseScrollPopup}
-                        onBuyScroll={scrollFlow.handleBuyScroll}
-                        scrollStage={scrollFlow.scrollStage}
-                        availableScrolls={scrollFlow.availableScrolls}
-                        revealedScrollColor={scrollFlow.revealedScrollColor}
-                        gold={gold}
-                        scrollCost={GAME_CONSTANTS.SCROLL_COST}
-                    />
-                    <AnimatePresence>
-                        {isConjureMagicOpen && (
-                            <ConjureModal
-                                isOpen={isConjureMagicOpen}
-                                onClose={() => setIsConjureMagicOpen(false)}
-                                onResult={(winner) => applyConjureMagic(winner)}
-                            />
-                        )}
-                    </AnimatePresence>
-                    <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
-                    <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
                 </section>
             </main>
-        </div>
+
+            {/* Modals */}
+            <ScrollsModal isOpen={scrollFlow.isScrollWindowOpen} onClose={() => scrollFlow.setIsScrollWindowOpen(false)} />
+            <ScrollBuyModal
+                isOpen={scrollFlow.isScrollTypeOpen}
+                onClose={scrollFlow.handleCloseScrollPopup}
+                onBuyScroll={scrollFlow.handleBuyScroll}
+                scrollStage={scrollFlow.scrollStage}
+                availableScrolls={scrollFlow.availableScrolls}
+                revealedScrollColor={scrollFlow.revealedScrollColor}
+                gold={gold}
+                scrollCost={GAME_CONSTANTS.SCROLL_COST}
+            />
+            <AnimatePresence>
+                {isConjureMagicOpen && (
+                    <ConjureModal
+                        isOpen={isConjureMagicOpen}
+                        onClose={() => setIsConjureMagicOpen(false)}
+                        onResult={(winner) => applyConjureMagic(winner)}
+                    />
+                )}
+            </AnimatePresence>
+            <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
+            <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
+        </div >
     );
 }

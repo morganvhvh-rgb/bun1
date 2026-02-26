@@ -14,9 +14,9 @@ interface HeroPanelProps {
 
 function StatBadge({ label, value, colorClass }: { label: string, value: string | number, colorClass: string, flash?: boolean }) {
     return (
-        <div className="flex flex-col items-center justify-center py-1 px-1.5 rounded-none border border-zinc-600 min-w-[3rem]">
-            <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-bold mb-0.5">{label}</span>
-            <span className={cn("text-[11px] sm:text-xs font-bold leading-none", colorClass)}>
+        <div className="flex flex-col items-center justify-center py-0.5 px-1 rounded-none border border-zinc-600 min-w-[3.25rem]">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-bold mb-0">{label}</span>
+            <span className={cn("text-xs sm:text-sm font-bold leading-none", colorClass)}>
                 {value}
             </span>
         </div>
@@ -109,9 +109,9 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
 
             {/* HP Bar */}
             <div className="w-full max-w-[8rem] flex flex-col items-center shrink-0">
-                <div className="flex justify-between w-full px-1 mb-1 border border-zinc-600">
-                    <span className="text-[9px] font-bold tracking-wider">HP</span>
-                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[9px] font-bold text-red-500 tracking-wider">
+                <div className="flex justify-between items-center w-full px-1.5 py-0.5 mb-1 border border-zinc-600">
+                    <span className="text-[10px] font-bold tracking-wider">HP</span>
+                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] font-bold text-red-500 tracking-wider">
                         {playerHp} / {playerMaxHp}
                     </motion.span>
                 </div>

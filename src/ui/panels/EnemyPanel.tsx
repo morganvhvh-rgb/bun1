@@ -24,7 +24,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
     return (
         <motion.div
             layout
-            className="w-full p-2 mt-2 border border-zinc-600 relative shrink-0 bg-black flex"
+            className="w-full p-1.5 mt-1.5 border border-zinc-600 relative shrink-0 bg-black flex"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -42,27 +42,27 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             </div>
 
             {/* Stats block */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 ml-3 min-w-0 z-10 border-l border-zinc-900 pl-3">
-                <div className="flex items-start justify-between gap-1 w-full">
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-tight">
+            <div className="flex-1 flex flex-col justify-center gap-1 ml-2 min-w-0 z-10 border-l border-zinc-900 pl-2">
+                <div className="flex items-start justify-between gap-0.5 w-full">
+                    <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest leading-tight">
                         {name.replace('-', ' ')}
                     </span>
-                    <span className="text-[9px] font-bold tracking-widest text-blue-500 shrink-0 whitespace-nowrap">
+                    <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-blue-500 shrink-0 whitespace-nowrap">
                         LVL {lvl}
                     </span>
                 </div>
 
-                <div className="flex justify-between items-center text-[9px] font-bold tracking-wider">
+                <div className="flex justify-between items-center text-[10px] font-bold tracking-wider">
                     <span className="text-zinc-500 uppercase">HP</span>
                     <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
                         {hp} / {maxHp}
                     </motion.span>
                 </div>
 
-                <div className="flex justify-between items-center text-[9px] font-bold tracking-wider">
+                <div className="flex justify-between items-center text-[10px] font-bold tracking-wider">
                     <span className="text-zinc-500 uppercase">ATK</span>
                     <span className="text-orange-500 flex items-center gap-1">
-                        <i className="ra ra-sword text-[10px]" /> {atk}
+                        <i className="ra ra-sword text-[11px]" /> {atk}
                     </span>
                 </div>
             </div>
