@@ -72,7 +72,7 @@ export function GameShell() {
     return (
         <div className="w-full h-full flex flex-col bg-black text-white font-mono overflow-hidden">
             {/* ─── Header ─── */}
-            <header className="flex items-center border-b border-zinc-600 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
+            <header className="flex items-center border-b border-zinc-800 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
                     <h1 className="text-sm font-bold tracking-widest uppercase leading-none">Daily Rogue</h1>
                     <time className="font-normal uppercase tracking-widest leading-none shrink-0" style={{ fontSize: 'var(--text-xs)' }}>
@@ -85,7 +85,7 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex bg-black relative overflow-visible min-h-0 z-20 border-b border-zinc-600" style={{ flex: 2 }}>
+                <section className="flex bg-black relative overflow-visible min-h-0 z-20 border-b border-zinc-800" style={{ flex: 2 }}>
                     <HeroPanel
                         playerAnim={playerAnim}
                         isBattleRunning={isBattleRunning}

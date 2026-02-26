@@ -18,7 +18,7 @@ export function CoffeeModal({ isOpen, onClose }: CoffeeModalProps) {
             <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-2 right-2 w-6 h-6 border border-zinc-600 bg-black text-white hover:bg-zinc-800 transition-colors grid place-items-center leading-none"
+                className="absolute top-2 right-2 w-6 h-6 border border-zinc-800 bg-black text-white hover:bg-zinc-800 transition-colors grid place-items-center leading-none"
                 aria-label="Close coffee popup"
             >
                 <span style={{ fontSize: '16px', lineHeight: 1 }}>×</span>

@@ -70,13 +70,13 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
         <>
             <div onClick={phase === 'revealed' ? onClose : undefined} className="fixed inset-0 bg-black/90 z-[60]" />
             <div className="fixed inset-0 z-[70] flex items-center justify-center p-6 pointer-events-none">
-                <div className="bg-black border border-zinc-600 flex flex-col p-5 w-full max-w-sm pointer-events-auto">
+                <div className="bg-black border border-zinc-800 flex flex-col p-5 w-full max-w-sm pointer-events-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-white font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
                         <button onClick={onClose} className="text-white uppercase text-xs tracking-widest">Close</button>
                     </div>
 
-                    <div className="border border-zinc-600 bg-black flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
+                    <div className="border border-zinc-800 bg-black flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
                         {phase === 'waiting' && sparkles.map(s => (
                             <div key={`sparkle-${s.id}`} className="absolute rounded-full bg-white pointer-events-none" style={{
                                 width: s.size, height: s.size, left: `${s.left}%`, top: `${s.top}%`, opacity: 0,

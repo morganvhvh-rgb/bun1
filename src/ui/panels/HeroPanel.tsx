@@ -14,7 +14,7 @@ interface HeroPanelProps {
 
 function StatBadge({ label, value, colorClass }: { label: string, value: string | number, colorClass: string, flash?: boolean }) {
     return (
-        <div className="flex flex-col items-center justify-center py-0.5 px-1 rounded-none border border-zinc-600 min-w-[3.25rem]">
+        <div className="flex flex-col items-center justify-center py-0.5 px-1 rounded-none border border-zinc-800 min-w-[3.25rem]">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-bold mb-0">{label}</span>
             <span className={cn("text-xs sm:text-sm font-bold leading-none", colorClass)}>
                 {value}
@@ -67,7 +67,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute top-2 left-2 px-2 py-1 border border-zinc-600 text-[8px] uppercase tracking-widest touch-none select-none z-20"
+                className="absolute top-2 left-2 px-2 py-1 border border-zinc-800 text-[8px] uppercase tracking-widest touch-none select-none z-20"
             >
                 <div
                     className="absolute inset-0 bg-white origin-left"
@@ -78,7 +78,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
 
             {/* Avatar Section */}
             <div className="relative flex flex-col items-center shrink-0 z-20">
-                <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-600 bg-black">
+                <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-800 bg-black">
                     <motion.div
                         animate={playerAnim}
                         variants={playerIconVariants}
@@ -109,13 +109,19 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 </AnimatePresence>
             </div>
 
-            {/* HP Bar */}
-            <div className="w-full max-w-[8rem] flex flex-col items-center shrink-0">
-                <div className="flex justify-between items-center w-full px-1.5 py-0.5 mb-1 border border-zinc-600">
+            {/* HP & EXP Bars */}
+            <div className="w-full max-w-[8rem] flex flex-col items-center shrink-0 gap-1 mb-1">
+                <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
                     <span className="text-[10px] font-bold tracking-wider">HP</span>
                     <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] font-bold text-red-500 tracking-wider">
                         {playerHp} / {playerMaxHp}
                     </motion.span>
+                </div>
+                <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
+                    <span className="text-[10px] font-bold tracking-wider">EXP</span>
+                    <span className="text-[10px] font-bold text-green-500 tracking-wider">
+                        {moves}
+                    </span>
                 </div>
             </div>
 
@@ -123,7 +129,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 max-w-[8rem] mx-auto">
                 <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-500" />
                 <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-500" />
-                <StatBadge label="DEF" value={playerGear} colorClass="text-blue-500" />
+                <StatBadge label="GER" value={playerGear} colorClass="text-blue-500" />
                 <StatBadge label="GLD" value={gold} colorClass="text-yellow-500" />
             </div>
         </div>

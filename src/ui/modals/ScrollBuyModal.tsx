@@ -24,7 +24,7 @@ export function ScrollBuyModal({
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4" onClick={onClose}>
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
-                            className="bg-black border border-zinc-600 flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
+                            className="bg-black border border-zinc-800 flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
                             style={{ minHeight: 'min(380px, 60svh)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -38,18 +38,18 @@ export function ScrollBuyModal({
                                     <button
                                         onClick={onBuyScroll}
                                         disabled={gold < scrollCost}
-                                        className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border ${gold >= scrollCost ? 'bg-black text-white border-zinc-600' : 'bg-black text-zinc-600 border-zinc-600 cursor-not-allowed'}`}
+                                        className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border ${gold >= scrollCost ? 'bg-black text-white border-zinc-800' : 'bg-black text-zinc-600 border-zinc-800 cursor-not-allowed'}`}
                                     >
                                         Buy Scroll {gold < scrollCost ? `(Need ${scrollCost}g)` : `(${scrollCost}g)`}
                                     </button>
                                 ) : (
-                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-black text-white border border-zinc-600 opacity-50">
+                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-black text-white border border-zinc-800 opacity-50">
                                         Unlocking...
                                     </div>
                                 )}
                             </div>
 
-                            <div className="flex-1 min-h-[12rem] border border-zinc-600 bg-black flex flex-col items-center justify-center relative overflow-hidden p-4">
+                            <div className="flex-1 min-h-[12rem] border border-zinc-800 bg-black flex flex-col items-center justify-center relative overflow-hidden p-4">
                                 <div className="relative flex w-full h-full items-center justify-center">
                                     {availableScrolls.map((color, i) => {
                                         const isRevealed = revealedScrollColor === color;

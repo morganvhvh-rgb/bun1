@@ -71,7 +71,7 @@ export function GridBoard({
                                 animate={isShaking ? 'shake' : undefined}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    'flex items-center justify-center relative transition-colors duration-300 border border-zinc-600',
+                                    'flex items-center justify-center relative transition-colors duration-300 border border-zinc-800',
                                     isNonTargetMatch ? 'bg-black border-pink-500'
                                         : isSelected ? 'bg-zinc-900'
                                             : 'bg-black hover:bg-zinc-800/80'
@@ -103,12 +103,12 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center bg-black border border-zinc-600 p-2 relative" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            <div className="w-full min-w-0 flex items-start justify-center text-center bg-black border border-zinc-800 p-2 relative" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2" style={{ fontSize: 'var(--text-base)' }}>
                             <span className="text-white">{displayItem.name.replace(/_/g, ' ')}</span>
-                            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 border border-zinc-600 leading-none">
+                            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 border border-zinc-800 leading-none">
                                 {ICON_CATEGORIES[displayItem.name]}
                             </span>
                         </div>

@@ -73,7 +73,7 @@ export function Modal({
                             exit="exit"
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                             className={cn(
-                                'bg-black border border-zinc-600 flex flex-col p-5 pointer-events-auto',
+                                'bg-black border border-zinc-800 flex flex-col p-5 pointer-events-auto',
                                 positionClasses[pos],
                                 className
                             )}

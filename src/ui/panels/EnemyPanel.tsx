@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full p-2 sm:p-2.5 border border-zinc-600 relative shrink-0 bg-black flex z-10"
+            className="w-full p-2 sm:p-2.5 border border-zinc-800 relative shrink-0 bg-black flex z-10"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -85,12 +85,12 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full p-2 sm:p-3 items-center justify-between z-10 border-l border-zinc-600 bg-black">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full p-2 sm:p-3 items-center justify-between z-10 border-l border-zinc-800 bg-black">
             {/* Enemies list */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
-                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold border border-zinc-600 px-3 py-1.5 bg-black">
+                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold border border-zinc-800 px-3 py-1.5 bg-black">
                             Battle Cleared
                         </motion.div>
                     </div>
@@ -116,7 +116,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                     onClick={onEngage}
                     disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
                     className={cn(
-                        "relative w-full overflow-hidden active:opacity-50 touch-manipulation z-20 border border-zinc-600",
+                        "relative w-full overflow-hidden active:opacity-50 touch-manipulation z-20 border border-zinc-800",
                         isPostBattleScreen ? "bg-white text-black"
                             : showBattleState ? "bg-black opacity-50 cursor-not-allowed"
                                 : canConjureMagic ? "bg-black"

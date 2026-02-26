@@ -13,7 +13,7 @@ const SECTIONS: { id: 0 | 1 | 2; slots: [number, number] }[] = [
 function KeptIconDisplay({ icon, onClick }: { icon: KeptIcon; onClick: (e: React.MouseEvent) => void }) {
     return (
         <div className="shrink-0 flex items-center justify-center relative cursor-pointer opacity-80 active:opacity-50 transition-opacity" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} onClick={onClick}>
-            <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center w-4 h-4 bg-black border border-zinc-600 text-white font-mono font-bold" style={{ fontSize: '10px' }}>
+            <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center w-4 h-4 bg-black border border-zinc-800 text-white font-mono font-bold" style={{ fontSize: '10px' }}>
                 {icon.battleCount}
             </span>
             <div className="relative z-10">
@@ -44,7 +44,7 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
                         return (
                             <div
                                 key={`sec-${section.id}`}
-                                className={cn('flex flex-col items-center justify-center border border-zinc-600', isUnlockingMode ? 'cursor-pointer bg-zinc-900' : 'bg-black')}
+                                className={cn('flex flex-col items-center justify-center border border-zinc-800', isUnlockingMode ? 'cursor-pointer bg-zinc-900' : 'bg-black')}
                                 style={{ width: 'calc(var(--cell-sm) * 2 + var(--gap))', height: 'var(--cell-sm)', pointerEvents: isUnlockingMode ? 'auto' : 'none' }}
                                 onClick={() => isUnlockingMode && !isUnlocked && unlockSection(section.id)}
                             >
@@ -70,10 +70,10 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
 
                     return (
                         <div key={`sec-${section.id}`} className="flex items-center" style={{ gap: 'var(--gap)' }}>
-                            <div className="bg-black border border-zinc-600 flex items-center justify-center relative" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
+                            <div className="bg-black border border-zinc-800 flex items-center justify-center relative" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
                                 {iconA && <KeptIconDisplay icon={iconA} onClick={(e) => onKeptIconClick(e, iconA)} />}
                             </div>
-                            <div className="bg-black border border-zinc-600 flex items-center justify-center relative" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
+                            <div className="bg-black border border-zinc-800 flex items-center justify-center relative" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
                                 {iconB && <KeptIconDisplay icon={iconB} onClick={(e) => onKeptIconClick(e, iconB)} />}
                             </div>
                         </div>
