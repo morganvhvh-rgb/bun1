@@ -23,15 +23,14 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            layout
-            className="w-full p-2 sm:p-2.5 border border-zinc-600 relative shrink-0 bg-black flex"
+            className="w-full p-2 sm:p-2.5 border border-zinc-600 relative shrink-0 bg-black flex z-10"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
             {/* Avatar block */}
-            <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16">
-                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-10">
+            <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16 z-20">
+                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20">
                     <Icon name={name} scale={2.5} tintColor={ICON_THEME[name]} />
                 </motion.div>
                 {hasType && (
@@ -88,7 +87,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     return (
         <div className="flex-1 flex flex-col relative min-h-0 w-full p-2 sm:p-3 items-center justify-between z-10 border-l border-zinc-600 bg-black">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center gap-2 overflow-hidden py-1">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold border border-zinc-600 px-3 py-1.5 bg-black">
@@ -96,10 +95,18 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                         </motion.div>
                     </div>
                 ) : (
-                    <AnimatePresence mode="popLayout">
-                        {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
-                        {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
-                    </AnimatePresence>
+                    <>
+                        <div className="w-full flex-1 flex items-end justify-center min-h-0 pb-1 z-20">
+                            <AnimatePresence>
+                                {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
+                            </AnimatePresence>
+                        </div>
+                        <div className="w-full flex-1 flex items-start justify-center min-h-0 pt-1 z-10">
+                            <AnimatePresence>
+                                {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
+                            </AnimatePresence>
+                        </div>
+                    </>
                 )}
             </div>
 

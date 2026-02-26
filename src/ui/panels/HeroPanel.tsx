@@ -59,7 +59,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     }, [onReset, clearResetHold]);
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 pt-10 sm:p-3 sm:pt-10 items-center justify-center gap-3 z-10">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 pt-10 sm:p-3 sm:pt-10 items-center justify-center gap-3 z-20">
             {/* Reset Button */}
             <button
                 onPointerDown={startResetHold}
@@ -77,21 +77,23 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </button>
 
             {/* Avatar Section */}
-            <div className="relative flex flex-col items-center shrink-0">
-                <motion.div
-                    animate={playerAnim}
-                    variants={playerIconVariants}
-                    initial="idle"
-                    className="relative z-10 p-2 sm:p-2.5 border border-zinc-600"
-                >
-                    <Icon
-                        name="hood"
-                        scale={3}
-                        tintColor="#c084fc"
-                        className={cn('cursor-pointer hover:opacity-80 active:opacity-50', isBattleRunning && 'pointer-events-none')}
-                        onClick={onCharacterClick}
-                    />
-                </motion.div>
+            <div className="relative flex flex-col items-center shrink-0 z-20">
+                <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-600 bg-black">
+                    <motion.div
+                        animate={playerAnim}
+                        variants={playerIconVariants}
+                        initial="idle"
+                        className="relative z-20"
+                    >
+                        <Icon
+                            name="hood"
+                            scale={3}
+                            tintColor="#c084fc"
+                            className={cn('cursor-pointer hover:opacity-80 active:opacity-50', isBattleRunning && 'pointer-events-none')}
+                            onClick={onCharacterClick}
+                        />
+                    </motion.div>
+                </div>
 
                 <AnimatePresence>
                     {moves >= 10 && (
