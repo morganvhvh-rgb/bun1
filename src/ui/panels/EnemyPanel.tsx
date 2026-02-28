@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full flex-1 max-h-[96px] sm:max-h-[106px] min-h-[70px] p-1.5 sm:p-2.5 border border-zinc-800 relative bg-black flex z-10 overflow-hidden"
+            className="w-full flex-1 max-h-[96px] sm:max-h-[106px] min-h-[70px] p-1.5 sm:p-2.5 surface-panel relative flex z-10 overflow-hidden"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -51,20 +51,20 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     </span>
                 </div>
 
-                <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0">
-                    <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider leading-none">
+                <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0" style={{ fontFamily: 'var(--font-mono)' }}>
+                    <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
                         <span className="text-zinc-500 uppercase">HP</span>
-                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
+                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-400 font-bold">
                             {hp} / {maxHp}
                         </motion.span>
                     </div>
 
-                    <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider leading-none">
+                    <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
                         <div className="flex items-center gap-1.5">
                             <span className="text-zinc-500 uppercase">ATK</span>
-                            <span className="text-orange-500">{atk}</span>
+                            <span className="text-orange-400 font-bold">{atk}</span>
                         </div>
-                        <span className="text-green-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
+                        <span className="text-emerald-400 font-bold tracking-widest shrink-0 whitespace-nowrap">
                             LVL {lvl}
                         </span>
                     </div>
@@ -90,12 +90,12 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10 border-l border-zinc-800 bg-black">
+        <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0 gap-2">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
-                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold border border-zinc-800 px-3 py-1.5 bg-black">
+                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 surface-panel">
                             Battle Cleared
                         </motion.div>
                     </div>
@@ -121,11 +121,11 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                     onClick={onEngage}
                     disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
                     className={cn(
-                        "relative w-full h-[46px] sm:h-[50px] overflow-hidden active:opacity-50 touch-manipulation z-20 border border-zinc-800",
-                        isPostBattleScreen ? "bg-white text-black"
-                            : showBattleState ? "bg-black opacity-50 cursor-not-allowed"
-                                : canConjureMagic ? "bg-black"
-                                    : "bg-black text-white"
+                        "relative w-full h-[46px] sm:h-[50px] overflow-hidden active:opacity-50 touch-manipulation z-20 rounded-xl font-bold tracking-[0.1em]",
+                        isPostBattleScreen ? "bg-white text-black shadow-md border-b-2 border-zinc-200"
+                            : showBattleState ? "bg-zinc-800/40 text-zinc-500 cursor-not-allowed border border-white/5"
+                                : canConjureMagic ? "bg-zinc-900 border border-white/10 shadow-[0_2px_8px_rgba(244,114,182,0.15)]"
+                                    : "bg-zinc-900 text-white border border-white/10 shadow-sm border-b-2 border-b-zinc-800/80"
                     )}
                 >
                     <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-[11px] sm:text-xs">

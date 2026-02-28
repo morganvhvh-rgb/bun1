@@ -11,6 +11,18 @@
   }
 }
 
+@layer utilities {
+  .surface-panel {
+    @apply bg-zinc-900/60 border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-xl;
+  }
+}
+
+/* ─── Typography Defaults ─── */
+:root {
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+}
+
 /* ─── Design tokens ─── */
 :root {
   --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
@@ -40,8 +52,9 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #121214;
+  background-color: #0d0f12;
   position: fixed;
+  font-family: var(--font-sans);
 }
 
 #root {

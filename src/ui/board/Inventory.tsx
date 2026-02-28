@@ -36,7 +36,7 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
                         return (
                             <div
                                 key={`slot-${slot}`}
-                                className="flex flex-col items-center justify-center border border-zinc-800 bg-black"
+                                className="flex flex-col items-center justify-center surface-panel opacity-60 rounded-md"
                                 style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}
                             >
                                 <Icon name="key" scale={1.2} tintColor="#71717a" />
@@ -45,7 +45,7 @@ export function Inventory({ onKeptIconClick }: InventoryProps) {
                     }
 
                     return (
-                        <div key={`slot-${slot}`} className="bg-black border border-zinc-800 flex items-center justify-center relative" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
+                        <div key={`slot-${slot}`} className="surface-panel flex items-center justify-center relative rounded-md shadow-sm" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
                             {icon && <KeptIconDisplay icon={icon} onClick={(e) => onKeptIconClick(e, icon)} />}
                         </div>
                     );

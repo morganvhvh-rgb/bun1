@@ -70,7 +70,7 @@ export function GameShell() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col bg-black text-white font-mono overflow-hidden">
+        <div className="w-full h-full flex flex-col tracking-wide text-white overflow-hidden" style={{ backgroundColor: '#0d0f12', fontFamily: 'var(--font-sans)' }}>
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-zinc-800 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
@@ -85,7 +85,7 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex justify-center bg-black relative overflow-visible min-h-0 z-20 border-b border-zinc-800" style={{ flex: 2 }}>
+                <section className="flex justify-center relative overflow-visible min-h-0 z-20" style={{ flex: 2 }}>
                     <div className="flex w-full h-full" style={{ maxWidth: 'calc(var(--cell) * 5 + var(--gap) * 4)' }}>
                         <HeroPanel
                             playerAnim={playerAnim}
@@ -103,7 +103,7 @@ export function GameShell() {
                 </section>
 
                 {/* Board / Inventory / Controls */}
-                <section className="min-h-0 flex flex-col items-center justify-start bg-black relative overflow-visible z-10" style={{ flex: 3.3, padding: 'var(--gap) 0' }}>
+                <section className="min-h-0 flex flex-col items-center justify-start relative overflow-visible z-10" style={{ flex: 3.3, padding: 'var(--gap) 0' }}>
                     <Inventory onKeptIconClick={grid.handleKeptIconClick} />
 
                     <div className="flex items-start justify-center flex-1 min-h-0 w-full" style={{ gap: 'var(--gap)', padding: '0 var(--gap)' }}>

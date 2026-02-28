@@ -50,7 +50,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
     }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
-    const btnClass = 'relative bg-black border border-zinc-800 flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden';
+    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800/80 active:scale-95 transition-all';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
@@ -73,7 +73,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
             <button
                 type="button"
                 onClick={onCoffeeOpen}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none bg-black border border-zinc-800"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800/80 active:scale-95 transition-all rounded-full border-white/10"
                 style={{
                     top: 'var(--coffee-btn-offset)',
                     width: 'var(--coffee-btn-size)',
@@ -92,7 +92,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none bg-black border border-zinc-800 touch-none select-none overflow-hidden"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 opacity-60 hover:opacity-100 transition-opacity"
                 style={{
                     top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
                     width: 'var(--coffee-btn-size)',

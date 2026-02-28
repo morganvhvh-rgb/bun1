@@ -22,7 +22,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             {/* Avatar Section */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible z-20 py-1 min-h-0">
                 <div className="relative flex flex-col items-center shrink-0 z-20">
-                    <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-800 bg-black">
+                    <div className="relative z-10 p-2 sm:p-2.5 surface-panel shadow-lg border-white/10">
                         <motion.div
                             animate={playerAnim}
                             variants={playerIconVariants}
@@ -55,50 +55,51 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             </div>
 
             {/* Unified Stats Grid */}
-            <div className="flex flex-col gap-1.5 w-full shrink-0 mx-auto mt-auto pb-1 pt-2 sm:pt-3">
+            <div className="flex flex-col gap-1.5 w-full max-w-[96%] shrink-0 mx-auto mt-auto pb-1 pt-2 sm:pt-3">
                 {/* Row 1: HP & LVL */}
-                <div className="flex justify-between items-center w-full px-2 py-0.5 border border-zinc-800">
-                    <div className="flex items-center gap-2">
-                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500">HP</span>
-                        <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[12px] font-bold text-red-500 tracking-wider">
+                <div className="flex justify-between items-center w-full px-2.5 py-1 surface-panel">
+                    <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-mono)' }}>
+                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>HP</span>
+                        <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[13px] font-bold text-red-400 tracking-wider">
                             {playerHp} / {playerMaxHp}
                         </motion.span>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500">LVL</span>
-                        <span className="text-[11px] sm:text-[12px] font-bold text-green-500 tracking-wider">
+                    <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-mono)' }}>
+                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>LVL</span>
+                        <span className="text-[12px] sm:text-[13px] font-bold text-emerald-400 tracking-wider">
                             {moves}
                         </span>
                     </div>
                 </div>
 
                 {/* Row 2: ATK, MGC, GER */}
-                <div className="flex items-center justify-between w-full px-2 py-0.5 border border-zinc-800">
+                <div className="flex items-center justify-between w-full px-2.5 py-1 surface-panel" style={{ fontFamily: 'var(--font-mono)' }}>
                     <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500">ATK</span>
-                        <span className="text-sm sm:text-base font-bold leading-none text-orange-500">
+                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500 mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>ATK</span>
+                        <span className="text-[15px] sm:text-base font-bold leading-none text-orange-400">
                             {playerBaseAtk}
                         </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500">MGC</span>
-                        <span className="text-sm sm:text-base font-bold leading-none text-pink-500">
+                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500 mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>MGC</span>
+                        <span className="text-[15px] sm:text-base font-bold leading-none text-pink-400">
                             {playerMagic}
                         </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500">GER</span>
-                        <span className="text-sm sm:text-base font-bold leading-none text-blue-500">
+                        <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500 mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>GER</span>
+                        <span className="text-[15px] sm:text-base font-bold leading-none text-blue-400">
                             {playerGear}
                         </span>
                     </div>
                 </div>
 
                 {/* Row 3: GOLD */}
-                <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 border border-zinc-800">
-                    <div className="flex items-center gap-2.5">
-                        <span className="text-sm sm:text-base font-bold tracking-widest text-zinc-500">GOLD</span>
-                        <span className="text-xl sm:text-2xl font-bold text-yellow-500 tracking-wider">
+                <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/5 to-transparent pointer-events-none" />
+                    <div className="flex items-center gap-2.5 z-10" style={{ fontFamily: 'var(--font-mono)' }}>
+                        <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>GOLD</span>
+                        <span className="text-xl sm:text-2xl font-bold text-yellow-400 tracking-wider">
                             {gold}
                         </span>
                     </div>
