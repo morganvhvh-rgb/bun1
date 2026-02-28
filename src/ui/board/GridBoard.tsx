@@ -91,11 +91,13 @@ export function GridBoard({
                                     </div>
                                 )}
                                 {item ? (
-                                    <Icon
-                                        name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
-                                        onClick={() => onIconClick(item, index)}
-                                        className={cn('relative z-10 active:opacity-50 cursor-pointer', (activeHoodedIndex === index && item.name === 'hood') && 'opacity-80')}
-                                    />
+                                    <div className="relative z-10 active:opacity-50 cursor-pointer drop-shadow-[2px_2px_0_#000]">
+                                        <Icon
+                                            name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
+                                            onClick={() => onIconClick(item, index)}
+                                            className={cn((activeHoodedIndex === index && item.name === 'hood') && 'opacity-80')}
+                                        />
+                                    </div>
                                 ) : glowingIndices.includes(index) ? (
                                     <div onClick={() => onEmptyGlowClick(index)} className="w-full h-full cursor-pointer relative z-10" />
                                 ) : (
