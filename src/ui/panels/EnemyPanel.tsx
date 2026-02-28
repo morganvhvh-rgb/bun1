@@ -94,7 +94,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10">
+        <div className="flex-1 flex flex-col relative overflow-visible w-full max-w-[50%] h-full py-2 px-1.5 sm:py-3 sm:px-2 items-center justify-between z-10">
             {/* Enemies list */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0 gap-2 sm:gap-3">
                 {isPostBattleScreen ? (
@@ -129,14 +129,14 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                         isPostBattleScreen ? "bg-white text-black shadow-md border-b-2 border-zinc-200"
                             : showBattleState ? "bg-zinc-800/40 text-zinc-500 cursor-not-allowed border border-white/5"
                                 : canConjureMagic ? "bg-zinc-900 border border-white/10 shadow-[0_2px_8px_rgba(244,114,182,0.15)]"
-                                    : "bg-zinc-900 text-white border border-white/10 shadow-sm border-b-2 border-b-zinc-800/80"
+                                    : "bg-red-950 text-red-100 border border-red-900/50 shadow-sm border-b-2 border-b-red-950/80"
                     )}
                 >
-                    <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-[11px] sm:text-xs">
+                    <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs sm:text-sm">
                         {isPostBattleScreen ? "NEXT ROUND"
-                            : showBattleState ? <span className="text-red-500">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
-                                : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
-                                    : <span className="text-red-500 flex items-center gap-1"><i className="ra ra-sword text-sm" /> ENGAGE</span>}
+                            : showBattleState ? <span className="text-red-500 text-[11px] sm:text-xs">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
+                                : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1 text-[11px] sm:text-xs"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
+                                    : <span className="text-red-400">ENGAGE</span>}
                     </div>
                 </button>
             </div>

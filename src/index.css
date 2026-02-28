@@ -13,7 +13,7 @@
 
 @layer utilities {
   .surface-panel {
-    @apply bg-[#06070a]/90 border border-white/5 backdrop-blur-md rounded-xl;
+    @apply bg-[#050c0e]/90 border border-white/5 backdrop-blur-md rounded-xl;
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.02), 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 }
@@ -53,7 +53,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #1a1c21;
+  background-color: #0d2127;
   position: fixed;
   font-family: var(--font-sans);
 }

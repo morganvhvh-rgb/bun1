@@ -12,7 +12,7 @@ function KeptIconDisplay({ icon, onClick }: { icon: KeptIcon; onClick: (e: React
                 {icon.battleCount}
             </span>
             <div className="relative z-10">
-                <Icon name={icon.name} scale={3} tintColor={ICON_THEME[icon.name]} />
+                <Icon name={icon.name} scale={2.7} tintColor={ICON_THEME[icon.name]} />
             </div>
         </div>
     );
