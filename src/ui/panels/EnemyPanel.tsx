@@ -31,35 +31,35 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             {/* Avatar block */}
             <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16 z-20">
                 <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20">
-                    <Icon name={name} scale={2.5} tintColor={ICON_THEME[name]} />
+                    <Icon name={name} scale={3.0} tintColor={ICON_THEME[name]} />
                 </motion.div>
                 {hasType && (
-                    <span className="text-[9px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-1.5 text-center w-full">
+                    <span className="text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-1.5 text-center w-full">
                         {type}
                     </span>
                 )}
             </div>
 
             {/* Stats block */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 ml-2 min-w-0 z-10 border-l border-zinc-900 pl-2 sm:pl-3">
+            <div className="flex-1 flex flex-col justify-center gap-1.5 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
                 <div className="flex items-start justify-between gap-1 w-full">
-                    <span className="text-xs sm:text-[13px] font-bold uppercase tracking-widest leading-tight">
+                    <span className="text-sm sm:text-base font-bold uppercase tracking-widest leading-tight">
                         {name.replace('-', ' ')}
                     </span>
                 </div>
 
-                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold tracking-wider">
+                <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider">
                     <span className="text-zinc-500 uppercase">HP</span>
                     <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
                         {hp} / {maxHp}
                     </motion.span>
                 </div>
 
-                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold tracking-wider">
+                <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider">
                     <div className="flex items-center gap-1.5">
                         <span className="text-zinc-500 uppercase">ATK</span>
                         <span className="text-orange-500 flex items-center gap-1">
-                            <i className="ra ra-sword text-[12px] sm:text-[13px]" /> {atk}
+                            <i className="ra ra-sword text-[13px] sm:text-[14px]" /> {atk}
                         </span>
                     </div>
                     <span className="text-blue-500 font-bold tracking-widest shrink-0 whitespace-nowrap">

@@ -12,8 +12,8 @@ interface ConjureModalProps {
 const CONJURE_ICONS: IconName[] = ['two-hearts', 'sapphire', 'lightning-trio'];
 const REVEAL_DELAY = 2500;
 const FADE_DURATION = 400;
-const SPARKLE_COUNT = 14;
-const COLOR_CYCLE_SPEED = 0.6;
+const SPARKLE_COUNT = 40;
+const COLOR_CYCLE_SPEED = 2.0;
 
 const EFFECT_LABELS: Record<string, string> = {
     'two-hearts': 'Apply current magic to HP',
@@ -26,9 +26,9 @@ function generateSparkles(count: number) {
         id: i,
         left: 5 + Math.random() * 90,
         top: 5 + Math.random() * 90,
-        size: 1 + Math.random() * 2.5,
+        size: 1.5 + Math.random() * 3.5,
         delay: Math.random() * 1.5,
-        duration: 0.4 + Math.random() * 0.8,
+        duration: 0.3 + Math.random() * 0.7,
     }));
 }
 
@@ -77,7 +77,7 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                     </div>
 
                     <div className="border border-zinc-800 bg-black flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
-                        {phase === 'waiting' && sparkles.map(s => (
+                        {(phase === 'waiting' || phase === 'revealed') && sparkles.map(s => (
                             <div key={`sparkle-${s.id}`} className="absolute rounded-full bg-white pointer-events-none" style={{
                                 width: s.size, height: s.size, left: `${s.left}%`, top: `${s.top}%`, opacity: 0,
                                 animation: `conjure-sparkle ${s.duration}s ease-in-out ${s.delay}s infinite`,

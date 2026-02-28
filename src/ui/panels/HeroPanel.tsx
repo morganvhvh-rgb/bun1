@@ -14,8 +14,8 @@ interface HeroPanelProps {
 function StatBadge({ label, value, colorClass }: { label: string, value: string | number, colorClass: string, flash?: boolean }) {
     return (
         <div className="flex flex-col items-center justify-center py-0.5 px-1 border border-zinc-800 min-w-[3.25rem]">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-bold mb-0">{label}</span>
-            <span className={cn("text-xs sm:text-sm font-bold leading-none", colorClass)}>
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold mb-0">{label}</span>
+            <span className={cn("text-sm sm:text-base font-bold leading-none", colorClass)}>
                 {value}
             </span>
         </div>
@@ -39,7 +39,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     >
                         <Icon
                             name="hood"
-                            scale={3}
+                            scale={3.5}
                             tintColor="#c084fc"
                             className={cn('cursor-pointer hover:opacity-80 active:opacity-50', isBattleRunning && 'pointer-events-none')}
                             onClick={onCharacterClick}
@@ -64,17 +64,19 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             {/* Unified 2x3 Stats Grid */}
             <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 mx-auto mb-1">
                 {/* Row 1 */}
-                <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
-                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider">HP</span>
-                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] sm:text-[11px] font-bold text-red-500 tracking-wider">
-                        {playerHp} / {playerMaxHp}
-                    </motion.span>
-                </div>
-                <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
-                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider">LVL</span>
-                    <span className="text-[10px] sm:text-[11px] font-bold text-green-500 tracking-wider">
-                        {moves}
-                    </span>
+                <div className="col-span-2 flex justify-between items-center w-full px-2 py-0.5 border border-zinc-800">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider">HP</span>
+                        <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[12px] font-bold text-red-500 tracking-wider">
+                            {playerHp} / {playerMaxHp}
+                        </motion.span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] sm:text-[12px] font-bold tracking-wider">LVL</span>
+                        <span className="text-[11px] sm:text-[12px] font-bold text-green-500 tracking-wider">
+                            {moves}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Row 2 */}
