@@ -40,10 +40,10 @@ export function useBattleSequence() {
 
         // Handle enemies already killed (e.g. by conjure magic lightning-trio)
         if (snap.enemy1.hp === 0 && snap.enemy2.hp === 0) {
-            await delay(200);
+            await delay(100);
             if (snap.enemy1.isVisible) setEnemyVisibility('enemy1', false);
             if (snap.enemy2.isVisible) setEnemyVisibility('enemy2', false);
-            await delay(600);
+            await delay(300);
             runningRef.current = false;
             setIsBattleRunning(false);
             setIsPostBattleScreen(true);
@@ -53,11 +53,11 @@ export function useBattleSequence() {
         // Fade out any individually pre-killed enemies before battle starts
         if (snap.enemy1.hp === 0 && snap.enemy1.isVisible) {
             setEnemyVisibility('enemy1', false);
-            await delay(300);
+            await delay(150);
         }
         if (snap.enemy2.hp === 0 && snap.enemy2.isVisible) {
             setEnemyVisibility('enemy2', false);
-            await delay(300);
+            await delay(150);
         }
 
         let isFirstAttack = true;
@@ -75,7 +75,7 @@ export function useBattleSequence() {
                 if (h.e1 === 0 && h.e2 === 0) break;
 
                 setPlayerAnim('attack');
-                await delay(120);
+                await delay(60);
                 setPlayerAnim('idle');
 
                 const target = hp().e1 > 0 ? 1 : 2;
@@ -83,62 +83,62 @@ export function useBattleSequence() {
                     const bonusAtk = e1Type.includes('flying') ? (crossbowCount * 10) : 0;
                     applyBattleDamage('enemy1', pAtk + bonusAtk);
                     setEnemy1Anim('hurt');
-                    await delay(250);
+                    await delay(125);
                     setEnemy1Anim('idle');
                     if (hp().e1 === 0) {
-                        await delay(20);
+                        await delay(10);
                         setEnemyVisibility('enemy1', false);
                     }
                 } else {
                     const bonusAtk = e2Type.includes('flying') ? (crossbowCount * 10) : 0;
                     applyBattleDamage('enemy2', pAtk + bonusAtk);
                     setEnemy2Anim('hurt');
-                    await delay(250);
+                    await delay(125);
                     setEnemy2Anim('idle');
                     if (hp().e2 === 0) {
-                        await delay(20);
+                        await delay(10);
                         setEnemyVisibility('enemy2', false);
                     }
                 }
 
-                if (i < attackLoops - 1) await delay(120);
+                if (i < attackLoops - 1) await delay(60);
             }
 
             if (hp().e1 === 0 && hp().e2 === 0) break;
 
-            await delay(120);
+            await delay(60);
 
             if (hp().e1 > 0) {
                 setEnemy1Anim('attack');
-                await delay(120);
+                await delay(60);
                 setEnemy1Anim('idle');
 
                 applyBattleDamage('player', e1AtkVal);
                 setPlayerAnim('hurt');
-                await delay(250);
+                await delay(125);
                 setPlayerAnim('idle');
             }
 
             if (hp().player === 0) break;
-            await delay(120);
+            await delay(60);
 
             if (hp().e2 > 0) {
                 setEnemy2Anim('attack');
-                await delay(120);
+                await delay(60);
                 setEnemy2Anim('idle');
 
                 applyBattleDamage('player', e2AtkVal);
                 setPlayerAnim('hurt');
-                await delay(250);
+                await delay(125);
                 setPlayerAnim('idle');
             }
 
             if (hp().player === 0) break;
-            await delay(120);
+            await delay(60);
         }
 
         if (hp().e1 === 0 && hp().e2 === 0) {
-            await delay(600);
+            await delay(300);
             runningRef.current = false;
             setIsBattleRunning(false);
             setIsPostBattleScreen(true);

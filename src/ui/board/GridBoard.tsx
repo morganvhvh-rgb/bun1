@@ -30,7 +30,7 @@ export function GridBoard({
     const itemVariants = {
         hidden: { opacity: 0, scale: 0.5 },
         show: { opacity: 1, scale: 1 },
-        shake: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+        shake: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
     };
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;

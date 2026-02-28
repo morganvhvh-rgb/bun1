@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME } from '@/lib/constants';
+import { ICON_THEME, GAME_CONSTANTS } from '@/lib/constants';
 import { hpVariants, playerIconVariants } from '../animations';
 
 interface HeroPanelProps {
@@ -14,8 +14,11 @@ interface HeroPanelProps {
 
 
 export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: HeroPanelProps) {
-    const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves } = useGameStore();
+    const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves, levelUpPerks } = useGameStore();
     const playerBaseAtk = useGameStore(selectTotalAttack);
+
+    const playerLvl = 1 + levelUpPerks.length;
+    const isLevelUpReady = moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED;
 
     return (
         <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 sm:py-3 z-20">
@@ -26,25 +29,28 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 <div className="flex justify-between items-start z-10 relative pointer-events-none">
                     <div className="flex flex-col">
                         <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">HERO</span>
-                        <div className="flex items-center gap-1.5 mt-1.5">
-                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {moves}</span>
-                            <AnimatePresence>
-                                {moves >= 10 && (
-                                    <motion.span
-                                        initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -5 }}
-                                        className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md"
-                                    >
-                                        UP
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
+                        <div className="flex items-center gap-2 mt-1.5">
+                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {playerLvl}</span>
+                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-teal-400 drop-shadow-md">EXP {moves}/{GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Big Avatar Center */}
-                <div className="absolute inset-0 flex items-center justify-center z-0 pt-2 lg:pt-0 pointer-events-none">
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pt-2 lg:pt-0 pointer-events-none">
                     <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto scale-[0.85] sm:scale-100">
+                        <AnimatePresence>
+                            {isLevelUpReady && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0 }}
+                                    className="absolute -top-3 -right-3 z-30 flex items-center justify-center w-6 h-6 bg-red-500 rounded-full border-2 border-zinc-900 shadow-lg"
+                                >
+                                    <i className="ra ra-muscle-up text-white text-[12px] leading-none" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         <Icon name="hood" scale={5.5} tintColor={ICON_THEME['hood']} className={cn('cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-200', isBattleRunning && 'pointer-events-none')} onClick={onCharacterClick} />
                     </motion.div>
                 </div>
