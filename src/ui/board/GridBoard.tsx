@@ -74,9 +74,14 @@ export function GridBoard({
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-lg',
                                     isNonTargetMatch ? 'bg-zinc-800/80 shadow-[inset_0_0_12px_rgba(236,72,153,0.3)] border border-pink-500/50'
                                         : isSelected ? 'bg-zinc-800 shadow-inner border border-white/20'
-                                            : 'bg-zinc-900/60 border border-white/5 hover:bg-zinc-800/80 hover:border-white/10'
+                                            : !item ? 'bg-zinc-900/60 border border-white/5 hover:bg-zinc-800/80 hover:border-white/10'
+                                                : 'border border-white/5 hover:border-white/10'
                                 )}
-                                style={{ width: 'var(--cell)', height: 'var(--cell)' }}
+                                style={{
+                                    width: 'var(--cell)',
+                                    height: 'var(--cell)',
+                                    backgroundColor: (!isNonTargetMatch && !isSelected && item) ? `${ICON_THEME[item.name]}26` : undefined
+                                }}
                             >
                                 {isTarget && (
                                     <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>
