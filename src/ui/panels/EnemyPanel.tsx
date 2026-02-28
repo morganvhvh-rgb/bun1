@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full p-2 sm:p-2.5 border border-zinc-800 relative shrink-0 bg-black flex z-10"
+            className="w-full h-[96px] sm:h-[106px] p-2 sm:p-2.5 border border-zinc-800 relative shrink-0 bg-black flex z-10"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -41,28 +41,33 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             </div>
 
             {/* Stats block */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
-                <div className="flex items-start justify-between gap-1 w-full">
-                    <span className="text-sm sm:text-base font-bold uppercase tracking-widest leading-tight">
+            <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
+                <div className="flex items-start justify-between gap-1 w-full min-h-0">
+                    <span 
+                        className="text-sm sm:text-[15px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2"
+                        title={name.replace('-', ' ')}
+                    >
                         {name.replace('-', ' ')}
                     </span>
                 </div>
 
-                <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider">
-                    <span className="text-zinc-500 uppercase">HP</span>
-                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
-                        {hp} / {maxHp}
-                    </motion.span>
-                </div>
-
-                <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider">
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-zinc-500 uppercase">ATK</span>
-                        <span className="text-orange-500">{atk}</span>
+                <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0">
+                    <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider leading-none">
+                        <span className="text-zinc-500 uppercase">HP</span>
+                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-500">
+                            {hp} / {maxHp}
+                        </motion.span>
                     </div>
-                    <span className="text-green-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
-                        LVL {lvl}
-                    </span>
+
+                    <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider leading-none">
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-zinc-500 uppercase">ATK</span>
+                            <span className="text-orange-500">{atk}</span>
+                        </div>
+                        <span className="text-green-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
+                            LVL {lvl}
+                        </span>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -87,7 +92,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     return (
         <div className="flex-1 flex flex-col relative min-h-0 w-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10 border-l border-zinc-800 bg-black">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold border border-zinc-800 px-3 py-1.5 bg-black">
