@@ -16,9 +16,9 @@
   --header-meta-gap: calc(var(--gap) * 1.2);
   --slider-h: clamp(1.75rem, 4.5svh, 2.25rem);
   --enemy-slider-max-w: 18rem;
-  --coffee-btn-size: calc(var(--cell) * 0.68);
-  --coffee-icon-size: calc(var(--cell) * 0.34);
   --coffee-btn-offset: calc((var(--cell) * 3) + (var(--gap) * 3));
+  --coffee-btn-size: calc((var(--cell) * 1.5 - var(--gap)) / 2);
+  --coffee-icon-size: calc(var(--coffee-btn-size) * 0.5);
   --coffee-modal-w: 12rem;
   --coffee-modal-h: 8rem;
 }

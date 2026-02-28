@@ -91,7 +91,6 @@ export function GameShell() {
                             playerAnim={playerAnim}
                             isBattleRunning={isBattleRunning}
                             onCharacterClick={() => !isBattleRunning && setIsCharacterModalOpen(true)}
-                            onReset={handleReset}
                         />
                         <EnemyPanel
                             enemy1Anim={enemy1Anim}
@@ -130,6 +129,7 @@ export function GameShell() {
                             onVary={grid.handleVary}
                             onScrollsOpen={() => scrollFlow.setIsScrollWindowOpen(true)}
                             onCoffeeOpen={() => setIsCoffeeOpen(true)}
+                            onReset={handleReset}
                         />
                     </div>
 

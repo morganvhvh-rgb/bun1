@@ -9,7 +9,6 @@ interface HeroPanelProps {
     playerAnim: 'idle' | 'attack' | 'hurt';
     isBattleRunning: boolean;
     onCharacterClick: () => void;
-    onReset: () => void;
 }
 
 function StatBadge({ label, value, colorClass }: { label: string, value: string | number, colorClass: string, flash?: boolean }) {
@@ -23,59 +22,12 @@ function StatBadge({ label, value, colorClass }: { label: string, value: string 
     );
 }
 
-export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onReset }: HeroPanelProps) {
+export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: HeroPanelProps) {
     const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves } = useGameStore();
     const playerBaseAtk = useGameStore(selectTotalAttack);
 
-    const RESET_HOLD_MS = 800;
-    const [resetProgress, setResetProgress] = useState(0);
-    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const resetStartRef = useRef<number>(0);
-    const resetRafRef = useRef<number>(0);
-
-    const clearResetHold = useCallback(() => {
-        if (resetTimerRef.current) { clearTimeout(resetTimerRef.current); resetTimerRef.current = null; }
-        if (resetRafRef.current) { cancelAnimationFrame(resetRafRef.current); resetRafRef.current = 0; }
-        setResetProgress(0);
-    }, []);
-
-    const startResetHold = useCallback(() => {
-        resetStartRef.current = Date.now();
-        setResetProgress(0);
-
-        const tick = () => {
-            const elapsed = Date.now() - resetStartRef.current;
-            const pct = Math.min(elapsed / RESET_HOLD_MS, 1);
-            setResetProgress(pct);
-            if (pct < 1) resetRafRef.current = requestAnimationFrame(tick);
-        };
-        tick();
-
-        resetTimerRef.current = setTimeout(() => {
-            setResetProgress(1);
-            onReset();
-            clearResetHold();
-        }, RESET_HOLD_MS);
-    }, [onReset, clearResetHold]);
-
     return (
         <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] pb-2 pr-1.5 pl-0 pt-10 sm:pb-3 sm:pr-2 sm:pl-0 sm:pt-10 items-center justify-center gap-3 z-20">
-            {/* Reset Button */}
-            <button
-                onPointerDown={startResetHold}
-                onPointerUp={clearResetHold}
-                onPointerLeave={clearResetHold}
-                onPointerCancel={clearResetHold}
-                onContextMenu={(e) => e.preventDefault()}
-                className="absolute top-2 left-0 px-2 py-1 border border-zinc-800 text-[8px] uppercase tracking-widest touch-none select-none z-20"
-            >
-                <div
-                    className="absolute inset-0 bg-white origin-left"
-                    style={{ transform: `scaleX(${resetProgress})`, transition: resetProgress === 0 ? 'transform 0.1s' : 'none' }}
-                />
-                <span className={cn("relative z-10 font-bold", resetProgress > 0.5 ? 'text-black' : 'text-white')}>Hold Reset</span>
-            </button>
-
             {/* Avatar Section */}
             <div className="relative flex flex-col items-center shrink-0 z-20">
                 <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-800 bg-black">
@@ -109,27 +61,28 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 </AnimatePresence>
             </div>
 
-            {/* HP & EXP Bars */}
-            <div className="w-full flex flex-col items-center shrink-0 gap-1 mb-1">
+            {/* Unified 2x3 Stats Grid */}
+            <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 mx-auto mb-1">
+                {/* Row 1 */}
                 <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
-                    <span className="text-[10px] font-bold tracking-wider">HP</span>
-                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] font-bold text-red-500 tracking-wider">
+                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider">HP</span>
+                    <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] sm:text-[11px] font-bold text-red-500 tracking-wider">
                         {playerHp} / {playerMaxHp}
                     </motion.span>
                 </div>
                 <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
-                    <span className="text-[10px] font-bold tracking-wider">EXP</span>
-                    <span className="text-[10px] font-bold text-green-500 tracking-wider">
+                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider">LVL</span>
+                    <span className="text-[10px] sm:text-[11px] font-bold text-green-500 tracking-wider">
                         {moves}
                     </span>
                 </div>
-            </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 mx-auto">
+                {/* Row 2 */}
                 <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-500" />
-                <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-500" />
                 <StatBadge label="GER" value={playerGear} colorClass="text-blue-500" />
+
+                {/* Row 3 */}
+                <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-500" />
                 <StatBadge label="GLD" value={gold} colorClass="text-yellow-500" />
             </div>
         </div>

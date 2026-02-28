@@ -46,9 +46,6 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     <span className="text-xs sm:text-[13px] font-bold uppercase tracking-widest leading-tight">
                         {name.replace('-', ' ')}
                     </span>
-                    <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-blue-500 shrink-0 whitespace-nowrap">
-                        LVL {lvl}
-                    </span>
                 </div>
 
                 <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold tracking-wider">
@@ -59,9 +56,14 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                 </div>
 
                 <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold tracking-wider">
-                    <span className="text-zinc-500 uppercase">ATK</span>
-                    <span className="text-orange-500 flex items-center gap-1">
-                        <i className="ra ra-sword text-[12px] sm:text-[13px]" /> {atk}
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-zinc-500 uppercase">ATK</span>
+                        <span className="text-orange-500 flex items-center gap-1">
+                            <i className="ra ra-sword text-[12px] sm:text-[13px]" /> {atk}
+                        </span>
+                    </div>
+                    <span className="text-blue-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
+                        LVL {lvl}
                     </span>
                 </div>
             </div>

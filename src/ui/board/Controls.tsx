@@ -1,3 +1,4 @@
+import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
@@ -11,10 +12,42 @@ interface ControlsProps {
     onVary: () => void;
     onScrollsOpen: () => void;
     onCoffeeOpen: () => void;
+    onReset: () => void;
 }
 
-export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOpen, onCoffeeOpen }: ControlsProps) {
+export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOpen, onCoffeeOpen, onReset }: ControlsProps) {
     const { gold, keptScrolls } = useGameStore();
+
+    const RESET_HOLD_MS = 800;
+    const [resetProgress, setResetProgress] = useState(0);
+    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const resetStartRef = useRef<number>(0);
+    const resetRafRef = useRef<number>(0);
+
+    const clearResetHold = useCallback(() => {
+        if (resetTimerRef.current) { clearTimeout(resetTimerRef.current); resetTimerRef.current = null; }
+        if (resetRafRef.current) { cancelAnimationFrame(resetRafRef.current); resetRafRef.current = 0; }
+        setResetProgress(0);
+    }, []);
+
+    const startResetHold = useCallback(() => {
+        resetStartRef.current = Date.now();
+        setResetProgress(0);
+
+        const tick = () => {
+            const elapsed = Date.now() - resetStartRef.current;
+            const pct = Math.min(elapsed / RESET_HOLD_MS, 1);
+            setResetProgress(pct);
+            if (pct < 1) resetRafRef.current = requestAnimationFrame(tick);
+        };
+        tick();
+
+        resetTimerRef.current = setTimeout(() => {
+            setResetProgress(1);
+            onReset();
+            clearResetHold();
+        }, RESET_HOLD_MS);
+    }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
     const btnClass = 'relative bg-black border border-zinc-800 flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden';
@@ -50,6 +83,31 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
                 aria-label="Open coffee popup"
             >
                 <i className="ra ra-coffee-mug text-white" style={{ fontSize: 'var(--coffee-icon-size)' }} />
+            </button>
+
+            {/* Reset Button */}
+            <button
+                onPointerDown={startResetHold}
+                onPointerUp={clearResetHold}
+                onPointerLeave={clearResetHold}
+                onPointerCancel={clearResetHold}
+                onContextMenu={(e) => e.preventDefault()}
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none bg-black border border-zinc-800 touch-none select-none overflow-hidden"
+                style={{
+                    top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
+                    width: 'var(--coffee-btn-size)',
+                    height: 'var(--coffee-btn-size)'
+                }}
+                title="Hold to Reset"
+                aria-label="Hold to reset game"
+            >
+                <div
+                    className="absolute inset-x-0 bottom-0 bg-white origin-bottom z-0"
+                    style={{ height: `${resetProgress * 100}%`, transition: resetProgress === 0 ? 'height 0.1s' : 'none' }}
+                />
+                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-zinc-500')}>
+                    Reset
+                </span>
             </button>
         </div>
     );
