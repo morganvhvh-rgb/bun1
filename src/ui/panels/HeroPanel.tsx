@@ -55,7 +55,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             </div>
 
             {/* Unified Stats Grid */}
-            <div className="flex flex-col gap-1.5 w-full max-w-[96%] shrink-0 mx-auto mt-auto pb-1 pt-2 sm:pt-3">
+            <div className="flex flex-col gap-1.5 w-full shrink-0 pl-1.5 sm:pl-2 mt-auto pb-1 pt-2 sm:pt-3">
                 {/* Row 1: HP & LVL */}
                 <div className="flex justify-between items-center w-full px-2.5 py-1 surface-panel">
                     <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-mono)' }}>

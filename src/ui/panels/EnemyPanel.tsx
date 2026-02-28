@@ -23,50 +23,54 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full p-1.5 sm:p-2.5 surface-panel flex z-10 overflow-visible"
+            className="absolute inset-0 w-full h-full flex z-10 overflow-visible"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            {/* Avatar block */}
-            <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16 z-20">
-                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20">
-                    <Icon name={name} scale={3.0} tintColor={ICON_THEME[name]} />
-                </motion.div>
-                {hasType && (
-                    <span className="text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-1.5 text-center w-full">
-                        {type}
-                    </span>
-                )}
-            </div>
+            <div className="absolute inset-0 surface-panel overflow-hidden pointer-events-none" style={{ zIndex: 1 }} />
 
-            {/* Stats block */}
-            <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
-                <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-visible">
-                    <span
-                        className="text-[12px] sm:text-[13px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2 w-full whitespace-normal break-words"
-                        title={name.replace('-', ' ')}
-                    >
-                        {name.replace('-', ' ')}
-                    </span>
+            <div className="relative w-full h-full p-1.5 sm:p-2.5 flex items-center z-10">
+                {/* Avatar block */}
+                <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16 z-20">
+                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20">
+                        <Icon name={name} scale={3.0} tintColor={ICON_THEME[name]} />
+                    </motion.div>
+                    {hasType && (
+                        <span className="text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-1.5 text-center w-full">
+                            {type}
+                        </span>
+                    )}
                 </div>
 
-                <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0" style={{ fontFamily: 'var(--font-mono)' }}>
-                    <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
-                        <span className="text-zinc-500 uppercase">HP</span>
-                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-400 font-bold">
-                            {hp} / {maxHp}
-                        </motion.span>
+                {/* Stats block */}
+                <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
+                    <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-visible">
+                        <span
+                            className="text-[12px] sm:text-[13px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2 w-full whitespace-normal break-words"
+                            title={name.replace('-', ' ')}
+                        >
+                            {name.replace('-', ' ')}
+                        </span>
                     </div>
 
-                    <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
-                        <div className="flex items-center gap-1.5">
-                            <span className="text-zinc-500 uppercase">ATK</span>
-                            <span className="text-orange-400 font-bold">{atk}</span>
+                    <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0" style={{ fontFamily: 'var(--font-mono)' }}>
+                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
+                            <span className="text-zinc-500 uppercase">HP</span>
+                            <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-400 font-bold">
+                                {hp} / {maxHp}
+                            </motion.span>
                         </div>
-                        <span className="text-emerald-400 font-bold tracking-widest shrink-0 whitespace-nowrap">
-                            LVL {lvl}
-                        </span>
+
+                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-zinc-500 uppercase">ATK</span>
+                                <span className="text-orange-400 font-bold">{atk}</span>
+                            </div>
+                            <span className="text-emerald-400 font-bold tracking-widest shrink-0 whitespace-nowrap">
+                                LVL {lvl}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
