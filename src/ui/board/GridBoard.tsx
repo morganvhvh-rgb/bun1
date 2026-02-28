@@ -71,7 +71,7 @@ export function GridBoard({
                                 animate={isShaking ? 'shake' : undefined}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    'flex items-center justify-center relative transition-all duration-300 rounded-lg',
+                                    'flex items-center justify-center relative transition-colors duration-300 rounded-lg',
                                     isNonTargetMatch ? 'bg-zinc-800/80 shadow-[inset_0_0_12px_rgba(236,72,153,0.3)] border border-pink-500/50'
                                         : isSelected ? 'bg-zinc-800 shadow-inner border border-white/20'
                                             : 'bg-zinc-900/60 border border-white/5 hover:bg-zinc-800/80 hover:border-white/10'
