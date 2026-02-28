@@ -85,7 +85,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full p-2 sm:p-3 items-center justify-between z-10 border-l border-zinc-800 bg-black">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10 border-l border-zinc-800 bg-black">
             {/* Enemies list */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1">
                 {isPostBattleScreen ? (
@@ -111,7 +111,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
             </div>
 
             {/* Engage Button */}
-            <div className="w-full shrink-0 flex justify-center pb-1 pt-3 max-w-[12rem]">
+            <div className="w-full shrink-0 flex justify-center pb-1 pt-3">
                 <button
                     onClick={onEngage}
                     disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}

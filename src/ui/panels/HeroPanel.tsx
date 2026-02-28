@@ -59,7 +59,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
     }, [onReset, clearResetHold]);
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] p-2 pt-10 sm:p-3 sm:pt-10 items-center justify-center gap-3 z-20">
+        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] pb-2 pr-1.5 pl-0 pt-10 sm:pb-3 sm:pr-2 sm:pl-0 sm:pt-10 items-center justify-center gap-3 z-20">
             {/* Reset Button */}
             <button
                 onPointerDown={startResetHold}
@@ -67,7 +67,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute top-2 left-2 px-2 py-1 border border-zinc-800 text-[8px] uppercase tracking-widest touch-none select-none z-20"
+                className="absolute top-2 left-0 px-2 py-1 border border-zinc-800 text-[8px] uppercase tracking-widest touch-none select-none z-20"
             >
                 <div
                     className="absolute inset-0 bg-white origin-left"
@@ -110,7 +110,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </div>
 
             {/* HP & EXP Bars */}
-            <div className="w-full max-w-[8rem] flex flex-col items-center shrink-0 gap-1 mb-1">
+            <div className="w-full flex flex-col items-center shrink-0 gap-1 mb-1">
                 <div className="flex justify-between items-center w-full px-1.5 py-0.5 border border-zinc-800">
                     <span className="text-[10px] font-bold tracking-wider">HP</span>
                     <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[10px] font-bold text-red-500 tracking-wider">
@@ -126,7 +126,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick, onRes
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 max-w-[8rem] mx-auto">
+            <div className="grid grid-cols-2 gap-1.5 w-full shrink-0 mx-auto">
                 <StatBadge label="ATK" value={playerBaseAtk} colorClass="text-orange-500" />
                 <StatBadge label="MGC" value={playerMagic} colorClass="text-pink-500" />
                 <StatBadge label="GER" value={playerGear} colorClass="text-blue-500" />

@@ -85,20 +85,22 @@ export function GameShell() {
             <main className="flex-1 min-h-0 flex flex-col relative">
 
                 {/* Battle / Stats banner */}
-                <section className="flex bg-black relative overflow-visible min-h-0 z-20 border-b border-zinc-800" style={{ flex: 2 }}>
-                    <HeroPanel
-                        playerAnim={playerAnim}
-                        isBattleRunning={isBattleRunning}
-                        onCharacterClick={() => !isBattleRunning && setIsCharacterModalOpen(true)}
-                        onReset={handleReset}
-                    />
-                    <EnemyPanel
-                        enemy1Anim={enemy1Anim}
-                        enemy2Anim={enemy2Anim}
-                        isBattleRunning={isBattleRunning}
-                        isPostBattleScreen={isPostBattleScreen}
-                        onEngage={handleEngage}
-                    />
+                <section className="flex justify-center bg-black relative overflow-visible min-h-0 z-20 border-b border-zinc-800" style={{ flex: 2 }}>
+                    <div className="flex w-full h-full" style={{ maxWidth: 'calc(var(--cell) * 5 + var(--gap) * 4)' }}>
+                        <HeroPanel
+                            playerAnim={playerAnim}
+                            isBattleRunning={isBattleRunning}
+                            onCharacterClick={() => !isBattleRunning && setIsCharacterModalOpen(true)}
+                            onReset={handleReset}
+                        />
+                        <EnemyPanel
+                            enemy1Anim={enemy1Anim}
+                            enemy2Anim={enemy2Anim}
+                            isBattleRunning={isBattleRunning}
+                            isPostBattleScreen={isPostBattleScreen}
+                            onEngage={handleEngage}
+                        />
+                    </div>
                 </section>
 
                 {/* Board / Inventory / Controls */}

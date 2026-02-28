@@ -5,7 +5,7 @@
 /* ─── Design tokens ─── */
 :root {
   --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
-  --cell-sm: calc(var(--cell) * 0.8);
+  --cell-sm: calc((var(--cell) * 5 - var(--gap)) / 6);
   --gap: min(1.5vw, 10px);
   --text-xs: clamp(10px, 2.6vw, 13px);
   --text-sm: clamp(13px, 3.5vw, 16px);
