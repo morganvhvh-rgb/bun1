@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full h-[86px] sm:h-[96px] shrink-0 p-1.5 sm:p-2.5 surface-panel relative flex z-10 overflow-hidden"
+            className="absolute inset-0 w-full h-full p-1.5 sm:p-2.5 surface-panel flex z-10 overflow-visible"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -42,9 +42,9 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
             {/* Stats block */}
             <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
-                <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-hidden">
+                <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-visible">
                     <span
-                        className="text-sm sm:text-[15px] font-bold uppercase tracking-widest leading-[1.15] truncate block w-full"
+                        className="text-[12px] sm:text-[13px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2 w-full whitespace-normal break-words"
                         title={name.replace('-', ' ')}
                     >
                         {name.replace('-', ' ')}
@@ -90,9 +90,9 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10">
+        <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-hidden py-1 min-h-0 gap-2 sm:gap-3">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0 gap-2 sm:gap-3">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 surface-panel">
@@ -100,10 +100,18 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                         </motion.div>
                     </div>
                 ) : (
-                    <AnimatePresence>
-                        {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
-                        {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
-                    </AnimatePresence>
+                    <>
+                        <div className="w-full h-[86px] sm:h-[96px] shrink-0 relative flex z-10">
+                            <AnimatePresence>
+                                {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
+                            </AnimatePresence>
+                        </div>
+                        <div className="w-full h-[86px] sm:h-[96px] shrink-0 relative flex z-10">
+                            <AnimatePresence>
+                                {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
+                            </AnimatePresence>
+                        </div>
+                    </>
                 )}
             </div>
 

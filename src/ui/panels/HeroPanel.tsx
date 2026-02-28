@@ -18,7 +18,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
     const playerBaseAtk = useGameStore(selectTotalAttack);
 
     return (
-        <div className="flex-1 flex flex-col relative overflow-hidden w-full max-w-[50%] h-full py-2 pr-1.5 pl-0 sm:py-3 sm:pr-2 sm:pl-0 items-center justify-between z-20">
+        <div className="flex-1 flex flex-col relative overflow-visible w-full max-w-[50%] h-full py-2 pr-1.5 pl-0 sm:py-3 sm:pr-2 sm:pl-0 items-center justify-between z-20">
             {/* Avatar Section */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible z-20 py-1 min-h-0">
                 <div className="relative flex flex-col items-center shrink-0 z-20">
