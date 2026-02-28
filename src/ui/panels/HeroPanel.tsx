@@ -23,7 +23,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             <div className="w-full flex-1 flex flex-col surface-panel overflow-hidden z-20 min-h-0 mb-2 sm:mb-3">
 
                 {/* Header: Avatar + Title */}
-                <div className="flex items-center gap-2.5 p-2 sm:p-2.5 border-b border-white/5 bg-black/20 shrink-0">
+                <div className="flex items-center gap-2.5 p-2 sm:p-2.5 shrink-0">
                     <div className="relative shrink-0 flex items-center justify-center">
                         <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative z-20 drop-shadow-md">
                             <Icon name="hood" scale={2.5} tintColor={ICON_THEME['hood']} className={cn('cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-200', isBattleRunning && 'pointer-events-none')} onClick={onCharacterClick} />
@@ -50,22 +50,22 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 </div>
 
                 {/* Stats List */}
-                <div className="flex-1 flex flex-col py-1 px-2.5 sm:px-3 overflow-y-auto bg-black/10 min-h-0 justify-center" style={{ fontFamily: 'var(--font-mono)' }}>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-white/5 last:border-0">
+                <div className="flex-1 flex flex-col py-1 px-2.5 sm:px-3 overflow-y-auto min-h-0 justify-center gap-1.5" style={{ fontFamily: 'var(--font-mono)' }}>
+                    <div className="flex justify-between items-center py-0.5 sm:py-1">
                         <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>HP</span>
                         <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[13px] font-bold text-red-400 tracking-wider">
                             {playerHp} / {playerMaxHp}
                         </motion.span>
                     </div>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-white/5 last:border-0">
+                    <div className="flex justify-between items-center py-0.5 sm:py-1">
                         <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>ATK</span>
                         <span className="text-[13px] sm:text-[14px] font-bold text-orange-400">{playerBaseAtk}</span>
                     </div>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-white/5 last:border-0">
+                    <div className="flex justify-between items-center py-0.5 sm:py-1">
                         <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>MGC</span>
                         <span className="text-[13px] sm:text-[14px] font-bold text-pink-400">{playerMagic}</span>
                     </div>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-white/5 last:border-0">
+                    <div className="flex justify-between items-center py-0.5 sm:py-1">
                         <span className="text-[11px] sm:text-[12px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>GER</span>
                         <span className="text-[13px] sm:text-[14px] font-bold text-blue-400">{playerGear}</span>
                     </div>
@@ -73,8 +73,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             </div>
 
             {/* GOLD Button */}
-            <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto rounded-xl">
-                <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/5 to-transparent pointer-events-none" />
+            <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto !rounded-2xl">
                 <div className="flex items-center gap-2.5 z-10" style={{ fontFamily: 'var(--font-mono)' }}>
                     <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>GOLD</span>
                     <span className="text-xl sm:text-2xl font-bold text-yellow-400 tracking-wider">

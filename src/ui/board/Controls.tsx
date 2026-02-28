@@ -50,7 +50,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
     }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
-    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800/80 active:scale-95 transition-all';
+    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800/80 active:scale-95 transition-all !rounded-2xl';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>

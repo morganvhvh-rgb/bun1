@@ -71,16 +71,15 @@ export function GridBoard({
                                 animate={isShaking ? 'shake' : undefined}
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
-                                    'flex items-center justify-center relative transition-colors duration-300 rounded-lg',
-                                    isNonTargetMatch ? 'bg-[#0a1b1a] shadow-[inset_0_0_12px_rgba(20,184,166,0.3)] border border-teal-500/50'
-                                        : isSelected ? 'bg-[#0c232b] shadow-inner border border-white/20'
-                                            : !item ? 'bg-[#061216] border border-white/5 hover:bg-[#08161a] hover:border-white/10'
-                                                : 'bg-[#08161a] border border-white/5 hover:border-white/10'
+                                    'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
+                                    isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'
+                                        : isSelected ? 'bg-zinc-800/80 border border-white/20'
+                                            : !item ? 'bg-zinc-900/30 border border-white/5 hover:bg-zinc-800/50 hover:border-white/10'
+                                                : 'bg-zinc-900/50 border border-white/5 hover:border-white/10 hover:bg-zinc-800/50'
                                 )}
                                 style={{
                                     width: 'var(--cell)',
-                                    height: 'var(--cell)',
-                                    background: (!isNonTargetMatch && !isSelected && item) ? `linear-gradient(0deg, ${ICON_THEME[item.name]}26, ${ICON_THEME[item.name]}26), #08161a` : undefined
+                                    height: 'var(--cell)'
                                 }}
                             >
                                 {isTarget && (
@@ -91,7 +90,7 @@ export function GridBoard({
                                     </div>
                                 )}
                                 {item ? (
-                                    <div className="relative z-10 active:opacity-50 cursor-pointer drop-shadow-[0_4px_10px_rgba(0,0,0,1)]">
+                                    <div className="relative z-10 active:opacity-50 cursor-pointer">
                                         <Icon
                                             name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
                                             onClick={() => onIconClick(item, index)}
@@ -110,7 +109,7 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center surface-panel p-2 relative text-white" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-white" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2" style={{ fontSize: 'var(--text-base)', fontFamily: 'var(--font-mono)' }}>
