@@ -28,22 +28,24 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                         <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative z-20 drop-shadow-md">
                             <Icon name="hood" scale={2.5} tintColor={ICON_THEME['hood']} className={cn('cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-200', isBattleRunning && 'pointer-events-none')} onClick={onCharacterClick} />
                         </motion.div>
-                        <AnimatePresence>
-                            {moves >= 10 && (
-                                <motion.div
-                                    initial={{ scale: 0, opacity: 0, y: 10 }}
-                                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                                    exit={{ scale: 0, opacity: 0, y: -10 }}
-                                    className="absolute -bottom-2 -right-2 text-black font-bold text-xs z-30 flex items-center justify-center w-5 h-5 bg-white border border-black rounded-full"
-                                >
-                                    <i className="ra ra-muscle-up" />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
                     </div>
                     <div className="flex flex-col min-w-0 justify-center">
                         <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none truncate text-white">HERO</span>
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 mt-1.5">LVL {moves}</span>
+                        <div className="flex items-center gap-1.5 mt-1.5">
+                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400">LVL {moves}</span>
+                            <AnimatePresence>
+                                {moves >= 10 && (
+                                    <motion.span
+                                        initial={{ opacity: 0, x: -5 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -5 }}
+                                        className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md ml-1"
+                                    >
+                                        LEVEL UP
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
 

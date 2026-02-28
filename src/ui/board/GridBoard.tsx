@@ -91,7 +91,7 @@ export function GridBoard({
                                     </div>
                                 )}
                                 {item ? (
-                                    <div className="relative z-10 active:opacity-50 cursor-pointer drop-shadow-md">
+                                    <div className="relative z-10 active:opacity-50 cursor-pointer drop-shadow-[0_4px_10px_rgba(0,0,0,1)]">
                                         <Icon
                                             name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
                                             onClick={() => onIconClick(item, index)}
