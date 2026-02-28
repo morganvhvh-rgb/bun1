@@ -10,8 +10,7 @@ interface GameState {
     grid: (GridItem | null)[];
     keptIcons: (KeptIcon | null)[];
     keptScrolls: IconName[];
-    unlockedSections: { 0: boolean; 1: boolean; 2: boolean };
-    isUnlockingMode: boolean;
+    unlockedSlots: { 3: boolean; 4: boolean; 5: boolean };
 
     // Progression
     levelUpPerks: string[];
@@ -40,7 +39,6 @@ interface GameState {
     keepItem: (item: GridItem, isBoosted?: boolean) => void;
     removeGridItem: (id: string) => void;
     addKeptScroll: (name: IconName) => void;
-    unlockSection: (sectionId: 0 | 1 | 2) => void;
     spendGold: (amount: number) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
@@ -78,8 +76,7 @@ export const useGameStore = create<GameState>()(
             grid: generateRandomIcons(),
             keptIcons: [null, null, null, null, null, null],
             keptScrolls: [],
-            unlockedSections: { 0: false, 1: false, 2: false },
-            isUnlockingMode: false,
+            unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
 
             gold: GAME_CONSTANTS.INITIAL_GOLD,
@@ -160,9 +157,9 @@ export const useGameStore = create<GameState>()(
                 state.moves += 1;
 
                 if (targetHasKey) {
-                    if (!state.unlockedSections[0] || !state.unlockedSections[1] || !state.unlockedSections[2]) {
-                        state.isUnlockingMode = true;
-                    }
+                    if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
+                    else if (!state.unlockedSlots[4]) state.unlockedSlots[4] = true;
+                    else if (!state.unlockedSlots[5]) state.unlockedSlots[5] = true;
                 }
             }),
 
@@ -170,28 +167,16 @@ export const useGameStore = create<GameState>()(
                 if (item.name === 'key') return;
                 if (state.gold < GAME_CONSTANTS.KEEP_ITEM_COST) return;
 
-                const category = ICON_CATEGORIES[item.name];
-                let targetSlots: number[] = [];
+                const availableSlots = [0, 1, 2];
+                if (state.unlockedSlots[3]) availableSlots.push(3);
+                if (state.unlockedSlots[4]) availableSlots.push(4);
+                if (state.unlockedSlots[5]) availableSlots.push(5);
 
-                if (category === 'Food' || category === 'Item') {
-                    if (!state.unlockedSections[0]) return;
-                    targetSlots = [0, 1];
-                }
-                else if (category === 'Armor' || category === 'Magic') {
-                    if (!state.unlockedSections[1]) return;
-                    targetSlots = [2, 3];
-                }
-                else if (category === 'Weapon' || category === 'Music') {
-                    if (!state.unlockedSections[2]) return;
-                    targetSlots = [4, 5];
-                }
-
-                if (targetSlots.length > 0) {
-                    const emptySlotIndex = targetSlots.find(slot => state.keptIcons[slot] === null);
-                    if (emptySlotIndex !== undefined) {
-                        state.gold -= GAME_CONSTANTS.KEEP_ITEM_COST;
-                        state.grid = state.grid.map(s => s?.id === item.id ? null : s);
-                        state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
+                const emptySlotIndex = availableSlots.find(slot => state.keptIcons[slot] === null);
+                if (emptySlotIndex !== undefined) {
+                    state.gold -= GAME_CONSTANTS.KEEP_ITEM_COST;
+                    state.grid = state.grid.map(s => s?.id === item.id ? null : s);
+                    state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
                         switch (item.name) {
                             case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
@@ -210,7 +195,6 @@ export const useGameStore = create<GameState>()(
                             case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                         }
                     }
-                }
             }),
 
             removeGridItem: (id) => set((state) => {
@@ -220,13 +204,6 @@ export const useGameStore = create<GameState>()(
             addKeptScroll: (name) => set((state) => {
                 if (state.keptScrolls.length < GAME_CONSTANTS.MAX_KEPT_SCROLLS) {
                     state.keptScrolls.push(name);
-                }
-            }),
-
-            unlockSection: (sectionId) => set((state) => {
-                if (state.isUnlockingMode && !state.unlockedSections[sectionId]) {
-                    state.unlockedSections[sectionId] = true;
-                    state.isUnlockingMode = false;
                 }
             }),
 
@@ -330,8 +307,7 @@ export const useGameStore = create<GameState>()(
                 state.grid = generateRandomIcons();
                 state.keptIcons = [null, null, null, null, null, null];
                 state.keptScrolls = [];
-                state.unlockedSections = { 0: false, 1: false, 2: false };
-                state.isUnlockingMode = false;
+                state.unlockedSlots = { 3: false, 4: false, 5: false };
                 state.levelUpPerks = [];
                 state.gold = GAME_CONSTANTS.INITIAL_GOLD;
                 state.moves = GAME_CONSTANTS.INITIAL_MOVES;

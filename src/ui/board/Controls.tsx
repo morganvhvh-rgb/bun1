@@ -14,18 +14,18 @@ interface ControlsProps {
 }
 
 export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOpen, onCoffeeOpen }: ControlsProps) {
-    const { gold, isUnlockingMode, keptScrolls } = useGameStore();
+    const { gold, keptScrolls } = useGameStore();
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
     const btnClass = 'relative bg-black border border-zinc-800 flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
-            <motion.button onClick={onSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating || isUnlockingMode} className={btnClass} style={btnStyle} title="Spin">
+            <motion.button onClick={onSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating} className={btnClass} style={btnStyle} title="Spin">
                 <i className="ra ra-cycle text-white" style={{ fontSize: 'calc(var(--cell) * 0.55)' }} />
             </motion.button>
 
-            <motion.button onClick={onVary} disabled={gold < shuffleCost || isAnimating || isUnlockingMode} className={btnClass} style={btnStyle} title="Shuffle">
+            <motion.button onClick={onVary} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={btnStyle} title="Shuffle">
                 <i className="ra ra-perspective-dice-random text-white" style={{ fontSize: 'calc(var(--cell) * 0.55)' }} />
             </motion.button>
 

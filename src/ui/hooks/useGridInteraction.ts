@@ -12,7 +12,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const {
         grid: gridIcons,
         keptScrolls,
-        isUnlockingMode,
+
         spinBoard,
         shuffleBoard,
         moveCharacter,
@@ -42,7 +42,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
 
     const handleSpin = () => {
         const gold = useGameStore.getState().gold;
-        if (gold < GAME_CONSTANTS.SPIN_COST || isUnlockingMode) return;
+        if (gold < GAME_CONSTANTS.SPIN_COST) return;
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
@@ -53,7 +53,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
 
     const handleVary = () => {
         const gold = useGameStore.getState().gold;
-        if (gold < shuffleCost || isUnlockingMode) return;
+        if (gold < shuffleCost) return;
         shuffleBoard();
         resetSelection();
         setHasMoved(false);
@@ -69,7 +69,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     };
 
     const handleIconClick = (item: GridItem, index: number) => {
-        if (isAnimating || isUnlockingMode) return;
+        if (isAnimating) return;
         const isBoosted = matchingIndices.has(index);
 
         // Hood movement target
