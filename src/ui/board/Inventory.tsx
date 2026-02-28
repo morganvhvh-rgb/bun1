@@ -8,7 +8,7 @@ const SLOTS = [0, 1, 2, 3, 4, 5];
 function KeptIconDisplay({ icon, onClick }: { icon: KeptIcon; onClick: (e: React.MouseEvent) => void }) {
     return (
         <div className="shrink-0 flex items-center justify-center relative cursor-pointer opacity-80 active:opacity-50 transition-opacity" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} onClick={onClick}>
-            <span className="absolute bottom-0.5 right-1 z-20 text-white font-mono font-bold leading-none" style={{ fontSize: '10px' }}>
+            <span className="absolute bottom-0 right-0.5 z-20 text-white font-mono font-bold leading-none select-none" style={{ fontSize: '13px', textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
                 {icon.battleCount}
             </span>
             <div className="relative z-10">

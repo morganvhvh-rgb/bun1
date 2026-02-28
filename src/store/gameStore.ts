@@ -167,6 +167,13 @@ export const useGameStore = create<GameState>()(
                 if (item.name === 'key') return;
                 if (state.gold < GAME_CONSTANTS.KEEP_ITEM_COST) return;
 
+                const category = ICON_CATEGORIES[item.name];
+                const sameCategoryCount = state.keptIcons.filter(
+                    icon => icon && ICON_CATEGORIES[icon.name] === category
+                ).length;
+
+                if (sameCategoryCount >= 2) return;
+
                 const availableSlots = [0, 1, 2];
                 if (state.unlockedSlots[3]) availableSlots.push(3);
                 if (state.unlockedSlots[4]) availableSlots.push(4);
@@ -178,23 +185,23 @@ export const useGameStore = create<GameState>()(
                     state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                     state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
-                        switch (item.name) {
-                            case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
-                            case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
-                            case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); break;
-                            case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
-                            case 'axe': state.playerBaseAtk += (isBoosted ? 6 : 3); state.playerGear += (isBoosted ? 4 : 2); break;
-                            case 'relic-blade':
-                            case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
-                            case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
-                            case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
-                            case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
-                            case 'crystal-wand':
-                            case 'fairy-wand': state.playerMagic += (isBoosted ? 10 : 5); break;
-                            case 'bell':
-                            case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
-                        }
+                    switch (item.name) {
+                        case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
+                        case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
+                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); break;
+                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
+                        case 'axe': state.playerBaseAtk += (isBoosted ? 6 : 3); state.playerGear += (isBoosted ? 4 : 2); break;
+                        case 'relic-blade':
+                        case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
+                        case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
+                        case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
+                        case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
+                        case 'crystal-wand':
+                        case 'fairy-wand': state.playerMagic += (isBoosted ? 10 : 5); break;
+                        case 'bell':
+                        case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                     }
+                }
             }),
 
             removeGridItem: (id) => set((state) => {
