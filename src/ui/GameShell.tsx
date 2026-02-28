@@ -86,8 +86,7 @@ export function GameShell() {
 
                 {/* Battle / Stats banner */}
                 <section className="flex justify-center relative overflow-visible min-h-0 z-20" style={{ flex: 2 }}>
-                    <div className="absolute inset-x-0 bottom-0 border-b-2 border-zinc-700 pointer-events-none z-0" />
-                    <div className="flex w-full h-full relative z-10" style={{ maxWidth: 'calc(var(--cell) * 5 + var(--gap) * 4)' }}>
+                    <div className="flex w-full h-full relative z-10" style={{ maxWidth: 'calc(var(--cell) * 5 + var(--gap) * 4)', gap: 'var(--gap)' }}>
                         <HeroPanel
                             playerAnim={playerAnim}
                             isBattleRunning={isBattleRunning}

@@ -23,55 +23,47 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full flex z-10 overflow-visible"
+            className="absolute inset-0 w-full h-full flex flex-col z-10 overflow-hidden surface-panel"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            <div className="absolute inset-0 surface-panel overflow-hidden pointer-events-none" style={{ zIndex: 1 }} />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-0" />
 
-            <div className="relative w-full h-full p-1.5 sm:p-2.5 flex items-center z-10">
-                {/* Avatar block */}
-                <div className="relative shrink-0 flex flex-col items-center justify-center w-14 sm:w-16 z-20">
-                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20">
-                        <Icon name={name} scale={3.0} tintColor={ICON_THEME[name]} />
+            {/* Header: Avatar + Title */}
+            <div className="flex items-center gap-2.5 p-1.5 sm:p-2 border-b border-white/5 bg-black/20 shrink-0 z-10">
+                <div className="relative shrink-0 flex items-center justify-center w-8 h-8">
+                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20 drop-shadow-md">
+                        <Icon name={name} scale={2.0} tintColor={ICON_THEME[name]} />
                     </motion.div>
-                    {hasType && (
-                        <span className="text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 mt-1.5 text-center w-full">
-                            {type}
-                        </span>
-                    )}
                 </div>
-
-                {/* Stats block */}
-                <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
-                    <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-visible">
-                        <span
-                            className="text-[12px] sm:text-[13px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2 w-full whitespace-normal break-words"
-                            title={name.replace('-', ' ')}
-                        >
-                            {name.replace('-', ' ')}
-                        </span>
+                <div className="flex flex-col min-w-0 justify-center">
+                    <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest leading-none truncate w-full text-zinc-100" title={name.replace('-', ' ')}>
+                        {name.replace('-', ' ')}
+                    </span>
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                        <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest leading-none text-emerald-400 shrink-0">LVL {lvl}</span>
+                        {hasType && (
+                            <>
+                                <span className="text-[9px] text-zinc-600 shrink-0 mb-0.5">•</span>
+                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 truncate">{type}</span>
+                            </>
+                        )}
                     </div>
+                </div>
+            </div>
 
-                    <div className="flex flex-col gap-1 sm:gap-1.5 w-full shrink-0" style={{ fontFamily: 'var(--font-mono)' }}>
-                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
-                            <span className="text-zinc-500 uppercase">HP</span>
-                            <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-red-400 font-bold">
-                                {hp} / {maxHp}
-                            </motion.span>
-                        </div>
-
-                        <div className="flex justify-between items-center text-[12px] sm:text-[13px] font-bold tracking-wider leading-none">
-                            <div className="flex items-center gap-1.5">
-                                <span className="text-zinc-500 uppercase">ATK</span>
-                                <span className="text-orange-400 font-bold">{atk}</span>
-                            </div>
-                            <span className="text-emerald-400 font-bold tracking-widest shrink-0 whitespace-nowrap">
-                                LVL {lvl}
-                            </span>
-                        </div>
-                    </div>
+            {/* Stats List */}
+            <div className="flex-1 flex flex-col py-1 px-2.5 sm:px-3 justify-center z-10 min-h-0 bg-black/10" style={{ fontFamily: 'var(--font-mono)' }}>
+                <div className="flex justify-between items-center py-0.5 sm:py-1 border-b border-white/5 last:border-0">
+                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>HP</span>
+                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[12px] font-bold text-red-400 tracking-wider">
+                        {hp} / {maxHp}
+                    </motion.span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 sm:py-1 border-b border-white/5 last:border-0">
+                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>ATK</span>
+                    <span className="text-[12px] sm:text-[13px] font-bold text-orange-400">{atk}</span>
                 </div>
             </div>
         </motion.div>
@@ -94,9 +86,9 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative overflow-visible w-full max-w-[50%] h-full py-2 px-1.5 sm:py-3 sm:px-2 items-center justify-between z-10">
+        <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 sm:py-3 z-10">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0 gap-2 sm:gap-3">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible min-h-0 gap-2 sm:gap-3 mb-2 sm:mb-3">
                 {isPostBattleScreen ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 surface-panel">
@@ -120,26 +112,24 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
             </div>
 
             {/* Engage Button */}
-            <div className="w-full shrink-0 flex justify-center mt-auto pb-1 pt-2 sm:pt-3">
-                <button
-                    onClick={onEngage}
-                    disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
-                    className={cn(
-                        "relative w-full h-[46px] sm:h-[50px] overflow-hidden active:opacity-50 touch-manipulation z-20 rounded-xl font-bold tracking-[0.1em]",
-                        isPostBattleScreen ? "bg-white text-black shadow-md border-b-2 border-zinc-200"
-                            : showBattleState ? "bg-zinc-800/40 text-zinc-500 cursor-not-allowed border border-white/5"
-                                : canConjureMagic ? "bg-zinc-900 border border-white/10 shadow-[0_2px_8px_rgba(244,114,182,0.15)]"
-                                    : "bg-red-950 text-red-100 border border-red-900/50 shadow-sm border-b-2 border-b-red-950/80"
-                    )}
-                >
-                    <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs sm:text-sm">
-                        {isPostBattleScreen ? "NEXT ROUND"
-                            : showBattleState ? <span className="text-red-500 text-[11px] sm:text-xs">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
-                                : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1 text-[11px] sm:text-xs"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
-                                    : <span className="text-red-400">ENGAGE</span>}
-                    </div>
-                </button>
-            </div>
+            <button
+                onClick={onEngage}
+                disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
+                className={cn(
+                    "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 rounded-xl font-bold tracking-[0.1em]",
+                    isPostBattleScreen ? "bg-white text-black shadow-md border-b-2 border-zinc-200"
+                        : showBattleState ? "bg-zinc-800/40 text-zinc-500 cursor-not-allowed border border-white/5"
+                            : canConjureMagic ? "bg-zinc-900 border border-white/10 shadow-[0_2px_8px_rgba(244,114,182,0.15)]"
+                                : "bg-red-950 text-red-100 border border-red-900/50 shadow-sm border-b-2 border-b-red-950/80"
+                )}
+            >
+                <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs sm:text-sm">
+                    {isPostBattleScreen ? "NEXT ROUND"
+                        : showBattleState ? <span className="text-red-500 text-[11px] sm:text-xs">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
+                            : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1 text-[11px] sm:text-xs"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
+                                : <span className="text-red-400">ENGAGE</span>}
+                </div>
+            </button>
         </div>
     );
 }
