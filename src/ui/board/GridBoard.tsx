@@ -72,15 +72,15 @@ export function GridBoard({
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-lg',
-                                    isNonTargetMatch ? 'bg-zinc-800/80 shadow-[inset_0_0_12px_rgba(236,72,153,0.3)] border border-pink-500/50'
-                                        : isSelected ? 'bg-zinc-800 shadow-inner border border-white/20'
-                                            : !item ? 'bg-zinc-900/60 border border-white/5 hover:bg-zinc-800/80 hover:border-white/10'
-                                                : 'border border-white/5 hover:border-white/10'
+                                    isNonTargetMatch ? 'bg-[#1a0f14] shadow-[inset_0_0_12px_rgba(236,72,153,0.3)] border border-pink-500/50'
+                                        : isSelected ? 'bg-[#0c232b] shadow-inner border border-white/20'
+                                            : !item ? 'bg-[#061216] border border-white/5 hover:bg-[#08161a] hover:border-white/10'
+                                                : 'bg-[#08161a] border border-white/5 hover:border-white/10'
                                 )}
                                 style={{
                                     width: 'var(--cell)',
                                     height: 'var(--cell)',
-                                    backgroundColor: (!isNonTargetMatch && !isSelected && item) ? `${ICON_THEME[item.name]}26` : undefined
+                                    background: (!isNonTargetMatch && !isSelected && item) ? `linear-gradient(0deg, ${ICON_THEME[item.name]}26, ${ICON_THEME[item.name]}26), #08161a` : undefined
                                 }}
                             >
                                 {isTarget && (
