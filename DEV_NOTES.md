@@ -33,6 +33,8 @@ Whenever you are adding, modifying, or removing a feature, you must follow this 
 * **Shared Modal Pattern**: All modals extend `shared/Modal.tsx` which provides consistent overlay, enter/exit animation, and close behavior in three positions (`center`, `top`, `bottom`).
 * **Design Tokens**: All responsive sizing flows from CSS custom properties in `index.css` (`--cell`, `--cell-sm`, `--gap`, `--text-xs`, etc.). Components reference these via `var()` — never use inline `clamp()`.
 * **CSS Grid Layout**: The root `#root` element uses a CSS Grid (`grid-template-rows: var(--header-h) 2fr 3fr`) to define the header / battle / board layout.
+* **Strict Flex Boundaries**: Because `#root` CSS Grid divides the screen rigidly, internal flex components (like Panels) MUST respect dynamic vertical bounds on small screens. Use `flex-1`, `overflow-hidden`, and `min-h-0` aggressively on flex children to prevent them from blowing out their grid row boundaries. Avoid large hardcoded minimum heights or huge structural paddings that force overflow.
+* **Anchor Bottom UI**: Statically sized elements at the bottom of dynamic panels (like the Engage Button or Gold Counter) should use `mt-auto` and `shrink-0` to guarantee they anchor safely to the bottom boundary without clipping.
 * **Styling**: Always use the `cn(...)` utility (`clsx` + `tailwind-merge`) for conditional classes. Never use template literals for dynamic class combinations.
 * **Mobile-First**: The game mimics a native app. Keep viewport constraints (`dvh`) and gesture lockdowns (`touch-action: manipulation`, `user-select: none`) intact for all interactive UI layers.
 
