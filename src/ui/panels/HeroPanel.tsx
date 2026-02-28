@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack } from '@/store/gameStore';
