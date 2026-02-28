@@ -18,9 +18,9 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
     const playerBaseAtk = useGameStore(selectTotalAttack);
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full max-w-[50%] pb-2 pr-1.5 pl-0 pt-10 sm:pb-3 sm:pr-2 sm:pl-0 sm:pt-10 items-center justify-between z-20">
+        <div className="flex-1 flex flex-col relative overflow-hidden w-full max-w-[50%] h-full py-2 pr-1.5 pl-0 sm:py-3 sm:pr-2 sm:pl-0 items-center justify-between z-20">
             {/* Avatar Section */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible z-20 py-1">
+            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible z-20 py-1 min-h-0">
                 <div className="relative flex flex-col items-center shrink-0 z-20">
                     <div className="relative z-10 p-2 sm:p-2.5 border border-zinc-800 bg-black">
                         <motion.div
@@ -55,7 +55,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             </div>
 
             {/* Unified Stats Grid */}
-            <div className="flex flex-col gap-1.5 w-full shrink-0 mx-auto pb-1 pt-3">
+            <div className="flex flex-col gap-1.5 w-full shrink-0 mx-auto mt-auto pb-1 pt-2 sm:pt-3">
                 {/* Row 1: HP & LVL */}
                 <div className="flex justify-between items-center w-full px-2 py-0.5 border border-zinc-800">
                     <div className="flex items-center gap-2">

@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full h-[96px] sm:h-[106px] p-2 sm:p-2.5 border border-zinc-800 relative shrink-0 bg-black flex z-10"
+            className="w-full flex-1 max-h-[96px] sm:max-h-[106px] min-h-[70px] p-1.5 sm:p-2.5 border border-zinc-800 relative bg-black flex z-10 overflow-hidden"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -43,7 +43,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             {/* Stats block */}
             <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
                 <div className="flex items-start justify-between gap-1 w-full min-h-0">
-                    <span 
+                    <span
                         className="text-sm sm:text-[15px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2"
                         title={name.replace('-', ' ')}
                     >
@@ -90,7 +90,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
-        <div className="flex-1 flex flex-col relative min-h-0 w-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10 border-l border-zinc-800 bg-black">
+        <div className="flex-1 flex flex-col relative overflow-hidden w-full h-full py-2 pl-1.5 pr-0 sm:py-3 sm:pl-2 sm:pr-0 items-center justify-between z-10 border-l border-zinc-800 bg-black">
             {/* Enemies list */}
             <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible py-1 min-h-0">
                 {isPostBattleScreen ? (
@@ -116,7 +116,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
             </div>
 
             {/* Engage Button */}
-            <div className="w-full shrink-0 flex justify-center pb-1 pt-3">
+            <div className="w-full shrink-0 flex justify-center mt-auto pb-1 pt-2 sm:pt-3">
                 <button
                     onClick={onEngage}
                     disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
