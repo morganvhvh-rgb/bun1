@@ -13,7 +13,7 @@ interface HeroPanelProps {
 
 function StatBadge({ label, value, colorClass }: { label: string, value: string | number, colorClass: string, flash?: boolean }) {
     return (
-        <div className="flex flex-col items-center justify-center py-0.5 px-1 rounded-none border border-zinc-800 min-w-[3.25rem]">
+        <div className="flex flex-col items-center justify-center py-0.5 px-1 border border-zinc-800 min-w-[3.25rem]">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-bold mb-0">{label}</span>
             <span className={cn("text-xs sm:text-sm font-bold leading-none", colorClass)}>
                 {value}

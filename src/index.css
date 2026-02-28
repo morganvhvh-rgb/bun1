@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+
+  .border,
+  .border-zinc-800,
+  canvas {
+    border-radius: 0.5rem;
+  }
+}
+
 /* ─── Design tokens ─── */
 :root {
   --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
@@ -31,7 +40,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #000;
+  background-color: #121214;
   position: fixed;
 }
 
