@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="w-full flex-1 max-h-[96px] sm:max-h-[106px] min-h-[70px] p-1.5 sm:p-2.5 surface-panel relative flex z-10 overflow-hidden"
+            className="w-full max-h-[88px] sm:max-h-[100px] min-h-[88px] sm:min-h-[100px] shrink-0 p-1.5 sm:p-2.5 surface-panel relative flex z-10 overflow-hidden"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
@@ -42,9 +42,9 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
             {/* Stats block */}
             <div className="flex-1 flex flex-col justify-between gap-1 ml-1 min-w-0 z-10 pl-1 sm:pl-2">
-                <div className="flex items-start justify-between gap-1 w-full min-h-0">
+                <div className="flex items-start justify-between gap-1 w-full min-h-0 overflow-hidden">
                     <span
-                        className="text-sm sm:text-[15px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2"
+                        className="text-sm sm:text-[15px] font-bold uppercase tracking-widest leading-[1.15] line-clamp-2 truncate whitespace-normal break-words"
                         title={name.replace('-', ' ')}
                     >
                         {name.replace('-', ' ')}

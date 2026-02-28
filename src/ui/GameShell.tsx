@@ -70,7 +70,7 @@ export function GameShell() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col tracking-wide text-white overflow-hidden" style={{ backgroundColor: '#0d0f12', fontFamily: 'var(--font-sans)' }}>
+        <div className="w-full h-full flex flex-col tracking-wide text-white overflow-hidden" style={{ backgroundColor: '#1a1c21', fontFamily: 'var(--font-sans)' }}>
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-zinc-800 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
