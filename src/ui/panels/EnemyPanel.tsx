@@ -23,47 +23,45 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full flex flex-col z-10 overflow-hidden surface-panel"
+            className="absolute inset-0 w-full h-full flex items-center justify-between z-10 overflow-hidden surface-panel p-2 sm:p-3"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none z-0" />
-
-            {/* Header: Avatar + Title */}
-            <div className="flex items-center gap-2.5 p-1.5 sm:p-2 shrink-0 z-10">
-                <div className="relative shrink-0 flex items-center justify-center w-8 h-8">
-                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative z-20 drop-shadow-md">
-                        <Icon name={name} scale={2.0} tintColor={ICON_THEME[name]} />
-                    </motion.div>
-                </div>
-                <div className="flex flex-col min-w-0 justify-center">
-                    <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-widest leading-none truncate w-full text-zinc-100" title={name.replace('-', ' ')}>
-                        {name.replace('-', ' ')}
-                    </span>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                        <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest leading-none text-emerald-400 shrink-0">LVL {lvl}</span>
-                        {hasType && (
-                            <>
-                                <span className="text-[9px] text-zinc-600 shrink-0 mb-0.5">•</span>
-                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest leading-none text-zinc-400 truncate">{type}</span>
-                            </>
-                        )}
-                    </div>
-                </div>
+            {/* Big Avatar */}
+            <div className="absolute top-1/2 -translate-y-1/2 left-1 sm:left-3 z-0 pointer-events-none scale-[0.85] sm:scale-100">
+                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto origin-left">
+                    <Icon name={name} scale={3.8} tintColor={ICON_THEME[name]} />
+                </motion.div>
             </div>
 
-            {/* Stats List */}
-            <div className="flex-1 flex flex-col py-1 px-2.5 sm:px-3 justify-center gap-0.5 z-10 min-h-0" style={{ fontFamily: 'var(--font-mono)' }}>
-                <div className="flex justify-between items-center py-0.5 sm:py-1">
-                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>HP</span>
-                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[12px] font-bold text-red-400 tracking-wider">
-                        {hp} / {maxHp}
-                    </motion.span>
+            {/* Stats Area right-aligned */}
+            <div className="flex flex-col h-full justify-between z-10 w-1/2 min-w-0 pt-0.5 pb-0.5 ml-auto text-right">
+                <div className="flex flex-col min-w-0 items-end">
+                    <div className="text-[12px] sm:text-[14px] font-bold uppercase leading-tight text-zinc-100 drop-shadow-md break-words truncate w-full">
+                        {name.replace('-', ' ')}
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-emerald-400 mt-0.5">
+                        LVL {lvl}
+                    </div>
+                    {hasType && (
+                        <div className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 mt-0.5 max-w-full truncate">
+                            {type}
+                        </div>
+                    )}
                 </div>
-                <div className="flex justify-between items-center py-0.5 sm:py-1">
-                    <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-500 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>ATK</span>
-                    <span className="text-[12px] sm:text-[13px] font-bold text-orange-400">{atk}</span>
+
+                <div className="flex gap-4 mt-auto justify-end">
+                    <div className="flex flex-col items-end">
+                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none mb-1">HP</span>
+                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-red-400 leading-none">
+                            {hp}<span className="text-[9px] sm:text-[10px] text-red-400/60">/{maxHp}</span>
+                        </motion.span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none mb-1">ATK</span>
+                        <span className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-orange-400 leading-none">{atk}</span>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -97,12 +95,12 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                     </div>
                 ) : (
                     <>
-                        <div className="w-full h-[86px] sm:h-[96px] shrink-0 relative flex z-10">
+                        <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
                             <AnimatePresence>
                                 {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
                             </AnimatePresence>
                         </div>
-                        <div className="w-full h-[86px] sm:h-[96px] shrink-0 relative flex z-10">
+                        <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
                             <AnimatePresence>
                                 {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
                             </AnimatePresence>
