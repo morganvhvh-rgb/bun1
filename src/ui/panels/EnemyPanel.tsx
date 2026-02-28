@@ -58,11 +58,9 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                 <div className="flex justify-between items-center text-[11px] sm:text-[12px] font-bold tracking-wider">
                     <div className="flex items-center gap-1.5">
                         <span className="text-zinc-500 uppercase">ATK</span>
-                        <span className="text-orange-500 flex items-center gap-1">
-                            <i className="ra ra-sword text-[13px] sm:text-[14px]" /> {atk}
-                        </span>
+                        <span className="text-orange-500">{atk}</span>
                     </div>
-                    <span className="text-blue-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
+                    <span className="text-green-500 font-bold tracking-widest shrink-0 whitespace-nowrap">
                         LVL {lvl}
                     </span>
                 </div>
@@ -118,13 +116,12 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                     onClick={onEngage}
                     disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
                     className={cn(
-                        "relative w-full overflow-hidden active:opacity-50 touch-manipulation z-20 border border-zinc-800",
+                        "relative w-full h-[46px] sm:h-[50px] overflow-hidden active:opacity-50 touch-manipulation z-20 border border-zinc-800",
                         isPostBattleScreen ? "bg-white text-black"
                             : showBattleState ? "bg-black opacity-50 cursor-not-allowed"
                                 : canConjureMagic ? "bg-black"
                                     : "bg-black text-white"
                     )}
-                    style={{ height: 'var(--slider-h)' }}
                 >
                     <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-[11px] sm:text-xs">
                         {isPostBattleScreen ? "NEXT ROUND"
