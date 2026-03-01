@@ -62,7 +62,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
                 <i className="ra ra-perspective-dice-random text-white" style={{ fontSize: 'calc(var(--cell) * 0.55)' }} />
             </motion.button>
 
-            <motion.button type="button" onClick={onScrollsOpen} className={cn(btnClass)} style={btnStyle} title="Scrolls">
+            <motion.button type="button" onClick={onScrollsOpen} disabled={isAnimating} className={cn(btnClass)} style={btnStyle} title="Scrolls">
                 <Icon name="scroll-unfurled" scale={1.8} tintColor="#fff" />
                 <div className="absolute inset-0 text-white font-bold flex items-center justify-center pointer-events-none" style={{ fontSize: 'var(--text-base)' }}>
                     {keptScrolls.length}
@@ -73,7 +73,8 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
             <button
                 type="button"
                 onClick={onCoffeeOpen}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800/80 active:scale-95 transition-all rounded-full border-white/10"
+                disabled={isAnimating}
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800/80 active:scale-95 transition-all rounded-full border-white/10 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-zinc-900/50"
                 style={{
                     top: 'var(--coffee-btn-offset)',
                     width: 'var(--coffee-btn-size)',
@@ -87,12 +88,13 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
 
             {/* Reset Button */}
             <button
+                disabled={isAnimating}
                 onPointerDown={startResetHold}
                 onPointerUp={clearResetHold}
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 opacity-60 hover:opacity-100 transition-opacity"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
                 style={{
                     top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
                     width: 'var(--coffee-btn-size)',

@@ -34,7 +34,7 @@ export function GridBoard({
     };
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
-    const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : false;
+    const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : !!selectedEquippedItem?.isBoosted;
 
     return (
         <div className="flex flex-col items-center shrink-0" style={{ gap: 'var(--gap)', width: 'calc(var(--cell) * 4 + var(--gap) * 3)' }}>

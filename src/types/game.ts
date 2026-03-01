@@ -5,6 +5,7 @@ export type IconName = keyof typeof ICON_MAP;
 export interface GridItem {
     id: string;
     name: IconName;
+    isBoosted?: boolean;
 }
 
 export interface KeptIcon {

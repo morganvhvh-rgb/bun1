@@ -64,7 +64,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
 
     const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {
         e.stopPropagation();
-        setSelectedEquippedItem({ id: `equipped-${icon.name}`, name: icon.name } as GridItem);
+        setSelectedEquippedItem({ id: `equipped-${icon.name}`, name: icon.name, isBoosted: icon.isBoosted } as GridItem);
         setSelectedIndex(null);
     };
 
