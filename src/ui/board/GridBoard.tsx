@@ -21,6 +21,10 @@ interface GridBoardProps {
 }
 
 function formatStatText(text: string, iconName: string) {
+    if (iconName === 'brandy-bottle') {
+        return <span className="text-red-500">{text}</span>;
+    }
+
     const regex = /(Heal \d+ HP|[+-]?\d+(?:%)? (?:Max )?(?:Gold|Gear|ATK|Magic|HP|EXP)|\?\?\?)/gi;
     const parts = text.split(regex);
 

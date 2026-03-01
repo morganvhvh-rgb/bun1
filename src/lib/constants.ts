@@ -161,11 +161,11 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
 
     "apple": "Heal 8 HP",
     "meat": "Heal 12 HP",
-    "crab-claw": "+3 Max HP",
-    "brandy-bottle": "-25% HP & +5 Max HP",
+    "crab-claw": "+3 Max HP +1 EXP",
+    "brandy-bottle": "-10 HP & +5 Max HP",
 
-    "clover": "+1 EXP +1 Magic",
-    "pine-tree": "+2 EXP",
+    "clover": "+2 EXP +2 Magic",
+    "pine-tree": "+4 EXP",
     "dead-tree": "-3 EXP +5 Magic",
 
     "axe": "+3 ATK +2 Gear",

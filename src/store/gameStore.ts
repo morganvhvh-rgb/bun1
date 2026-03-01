@@ -161,8 +161,8 @@ export const useGameStore = create<GameState>()(
                     const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
                     if (category === 'Treasure' || category === 'Nature') {
                         switch (targetItem.name) {
-                            case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
-                            case 'pine-tree': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); break;
+                            case 'clover': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); state.playerMagic += (isBoosted ? 4 : 2); break;
+                            case 'pine-tree': state.moves += ((isBoosted ? 8 : 4) * expMultiplier); break;
                             case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
                             case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
@@ -182,7 +182,7 @@ export const useGameStore = create<GameState>()(
                 }
 
                 state.grid[toIndex] = { ...character };
-                state.moves += 1;
+
 
                 if (targetHasKey) {
                     if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
@@ -221,10 +221,13 @@ export const useGameStore = create<GameState>()(
                     switch (item.name) {
                         case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 16 : 8) * foodMultiplier); break;
                         case 'meat': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 24 : 12) * foodMultiplier); break;
-                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier; break;
+                        case 'crab-claw':
+                            state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
+                            state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
+                            break;
                         case 'brandy-bottle':
                             for (let i = 0; i < foodMultiplier; i++) {
-                                state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75));
+                                state.playerHp = Math.max(0, state.playerHp - (isBoosted ? 20 : 10));
                                 state.playerMaxHp += (isBoosted ? 10 : 5);
                             }
                             break;

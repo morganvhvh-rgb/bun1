@@ -62,8 +62,8 @@ export const getStatText = (
     const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
 
     if (!isBoosted) {
-        if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
-        if (name === 'pine-tree') return `+${2 * expMultiplier} EXP`;
+        if (name === 'clover') return `+${2 * expMultiplier} EXP +2 Magic`;
+        if (name === 'pine-tree') return `+${4 * expMultiplier} EXP`;
         if (name === 'dead-tree') return `-${3 * expMultiplier} EXP +5 Magic`;
         if (name === 'key' && hasSpecialScroll && areAllSlotsUnlocked) return '+16 gold';
         return ICON_STATS[name] || "???";
@@ -72,10 +72,10 @@ export const getStatText = (
     switch (name) {
         case 'apple': return "Heal 16 HP";
         case 'meat': return "Heal 24 HP";
-        case 'crab-claw': return "+6 Max HP";
-        case 'brandy-bottle': return "-25% HP & +10 Max HP";
-        case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
-        case 'pine-tree': return `+${4 * expMultiplier} EXP`;
+        case 'crab-claw': return "+6 Max HP +2 EXP";
+        case 'brandy-bottle': return "-20 HP & +10 Max HP";
+        case 'clover': return `+${4 * expMultiplier} EXP +4 Magic`;
+        case 'pine-tree': return `+${8 * expMultiplier} EXP`;
         case 'dead-tree': return `-${3 * expMultiplier} EXP +10 Magic`;
         case 'axe': return "";
         case 'relic-blade':
