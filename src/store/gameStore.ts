@@ -196,9 +196,11 @@ export const useGameStore = create<GameState>()(
 
             keepItem: (item, isBoosted = false) => set((state) => {
                 if (item.name === 'key') return;
-                if (state.gold < GAME_CONSTANTS.KEEP_ITEM_COST) return;
 
                 const category = ICON_CATEGORIES[item.name];
+                const keepCost = (category === 'Weapon' && state.keptScrolls.includes('weapon-scroll')) ? 0 : GAME_CONSTANTS.KEEP_ITEM_COST;
+
+                if (state.gold < keepCost) return;
                 const sameCategoryCount = state.keptIcons.filter(
                     icon => icon && ICON_CATEGORIES[icon.name] === category
                 ).length;
@@ -212,7 +214,7 @@ export const useGameStore = create<GameState>()(
 
                 const emptySlotIndex = availableSlots.find(slot => state.keptIcons[slot] === null);
                 if (emptySlotIndex !== undefined) {
-                    state.gold -= GAME_CONSTANTS.KEEP_ITEM_COST;
+                    state.gold -= keepCost;
                     state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                     state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 

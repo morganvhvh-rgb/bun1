@@ -80,7 +80,7 @@ export function Modal({
                                 className
                             )}
                             onClick={(e) => e.stopPropagation()}
-                            style={pos !== 'center' ? { height: '50%' } : undefined}
+                            style={pos !== 'center' ? { height: '60%' } : undefined}
                         >
                             {/* Header */}
                             {showHeader && (

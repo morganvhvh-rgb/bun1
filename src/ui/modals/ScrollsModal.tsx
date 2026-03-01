@@ -24,7 +24,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
                                 <div className="text-white font-bold uppercase text-xs tracking-wider">
                                     {scrollName.replace('-scroll', '')} Scroll
                                 </div>
-                                <div className="text-[10px] text-zinc-500">{ICON_EXTRA_EFFECTS[scrollName] ?? '???'}</div>
+                                <div className="text-xs text-zinc-500 leading-tight mt-0.5">{ICON_EXTRA_EFFECTS[scrollName] ?? '???'}</div>
                             </div>
                         </div>
                     ))
