@@ -198,11 +198,19 @@ export const useGameStore = create<GameState>()(
                     state.grid = state.grid.map(s => s?.id === item.id ? null : s);
                     state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
+                    const foodMultiplier = state.keptScrolls.includes('food-scroll') && ICON_CATEGORIES[item.name as IconName] === 'Food' ? 2 : 1;
+
                     switch (item.name) {
-                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 16 : 8)); break;
-                        case 'meat': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 24 : 12)); break;
-                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 6 : 3); break;
-                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 10 : 5); state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 10 : 5)); break;
+                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 16 : 8) * foodMultiplier); break;
+                        case 'meat': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 24 : 12) * foodMultiplier); break;
+                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier; break;
+                        case 'brandy-bottle':
+                            for (let i = 0; i < foodMultiplier; i++) {
+                                state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75));
+                                state.playerMaxHp += (isBoosted ? 10 : 5);
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 10 : 5));
+                            }
+                            break;
                         case 'relic-blade':
                         case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                         case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
@@ -310,7 +318,8 @@ export const useGameStore = create<GameState>()(
                         icon.battleCount -= 1;
                         if (icon.battleCount <= 0) {
                             if (icon.name === 'apple') {
-                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 16 : 8));
+                                const foodMultiplier = state.keptScrolls.includes('food-scroll') ? 2 : 1;
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 16 : 8) * foodMultiplier);
                             }
                             state.keptIcons[i] = null;
                         }

@@ -269,6 +269,7 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "bell": "every attack reduces all future enemies HP by 1 / stacks",
     "armor-scroll": "+2 max HP for every 5 GEAR",
     "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",
+    "food-scroll": "all food effects happen twice",
 };
 
 export const GAME_CONSTANTS = {
