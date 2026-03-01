@@ -14,6 +14,7 @@ interface GameState {
 
     // Progression
     levelUpPerks: string[];
+    hasSeenTutorial: boolean;
 
     // Stats & Resources
     gold: number;
@@ -47,6 +48,7 @@ interface GameState {
     resetBattleTarget: () => void;
     resetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
+    setHasSeenTutorial: (value: boolean) => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
@@ -92,6 +94,7 @@ export const useGameStore = create<GameState>()(
             keptScrolls: [],
             unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
+            hasSeenTutorial: false,
 
             gold: GAME_CONSTANTS.INITIAL_GOLD,
             moves: GAME_CONSTANTS.INITIAL_MOVES,
@@ -425,6 +428,10 @@ export const useGameStore = create<GameState>()(
 
             healPlayer: (amount) => set((state) => {
                 state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + amount);
+            }),
+
+            setHasSeenTutorial: (value) => set((state) => {
+                state.hasSeenTutorial = value;
             }),
 
         })),

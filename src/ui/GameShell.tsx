@@ -12,13 +12,14 @@ import { ScrollsModal } from './modals/ScrollsModal';
 import { ScrollBuyModal } from './modals/ScrollBuyModal';
 import { ConjureModal } from './modals/ConjureModal';
 import { CoffeeModal } from './modals/CoffeeModal';
+import { TutorialModal } from './modals/TutorialModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridItem } from '@/types/game';
 
 export function GameShell() {
-    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots } = useGameStore();
+    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
 
@@ -162,6 +163,7 @@ export function GameShell() {
             </AnimatePresence>
             <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
             <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
+            <TutorialModal isOpen={!hasSeenTutorial} onClose={() => setHasSeenTutorial(true)} />
         </div >
     );
 }
