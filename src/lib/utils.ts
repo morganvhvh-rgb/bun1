@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { GridItem, IconName } from '@/types/game';
-import { ICON_STATS } from '@/lib/constants';
+import type { GridSymbol, SymbolName } from '@/types/game';
+import { SYMBOL_STATS } from '@/lib/constants';
 
 /**
  * Merges Tailwind classes safely.
@@ -15,14 +15,14 @@ export function cn(...inputs: ClassValue[]) {
 export const getCoordinates = (index: number, columns: number = 4) => ({ row: Math.floor(index / columns), col: index % columns });
 export const getIndex = (row: number, col: number, columns: number = 4) => row * columns + col;
 
-export const findMatchingIndices = (gridIcons: (GridItem | null)[], columns: number = 4, rows: number = 3): Set<number> => {
+export const findMatchingIndices = (gridSymbols: (GridSymbol | null)[], columns: number = 4, rows: number = 3): Set<number> => {
     const matches = new Set<number>();
     const visited = new Set<number>();
 
-    for (let i = 0; i < gridIcons.length; i++) {
-        if (visited.has(i) || !gridIcons[i]) continue;
+    for (let i = 0; i < gridSymbols.length; i++) {
+        if (visited.has(i) || !gridSymbols[i]) continue;
 
-        const name = gridIcons[i]!.name;
+        const name = gridSymbols[i]!.name;
         const group = [i];
         const queue = [i];
         visited.add(i);
@@ -38,7 +38,7 @@ export const findMatchingIndices = (gridIcons: (GridItem | null)[], columns: num
             for (const n of neighbors) {
                 if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < columns) {
                     const nIdx = getIndex(n.r, n.c, columns);
-                    if (!visited.has(nIdx) && gridIcons[nIdx]?.name === name) {
+                    if (!visited.has(nIdx) && gridSymbols[nIdx]?.name === name) {
                         visited.add(nIdx);
                         group.push(nIdx);
                         queue.push(nIdx);
@@ -53,7 +53,7 @@ export const findMatchingIndices = (gridIcons: (GridItem | null)[], columns: num
 };
 
 export const getStatText = (
-    name: IconName,
+    name: SymbolName,
     isBoosted: boolean,
     levelUpPerks: string[],
     hasSpecialScroll: boolean = false,
@@ -68,7 +68,7 @@ export const getStatText = (
         if (name === 'pine-tree') return `+${4 * expMultiplier} EXP`;
         if (name === 'dead-tree') return `-${3 * expMultiplier} EXP +5 Magic`;
         if (name === 'key' && hasSpecialScroll && areAllSlotsUnlocked) return '+16 gold';
-        return ICON_STATS[name] || "???";
+        return SYMBOL_STATS[name] || "???";
     }
 
     switch (name) {
@@ -91,7 +91,7 @@ export const getStatText = (
         case 'gem-pendant': return "+16 Gold +4 Gear";
         case 'key':
             if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 gold';
-            return ICON_STATS[name] || "???";
-        default: return ICON_STATS[name] || "???";
+            return SYMBOL_STATS[name] || "???";
+        default: return SYMBOL_STATS[name] || "???";
     }
 };

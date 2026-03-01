@@ -31,7 +31,7 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                         <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
                             <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Top Half</p>
                             <p>A turn-based auto-battler. Defeat waves of enemies to win.</p>
-                            <p className="text-zinc-400">You can tap your Rogue icon for level-up bonuses.</p>
+                            <p className="text-zinc-400">You can tap your Rogue symbol for level-up bonuses.</p>
                         </div>
 
                         <div className="flex flex-col gap-1.5">

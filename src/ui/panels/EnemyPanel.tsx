@@ -2,12 +2,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectHasTwoFairyWands } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME, GAME_CONSTANTS } from '@/lib/constants';
+import { SYMBOL_THEME, GAME_CONSTANTS } from '@/lib/constants';
 import { enemyIconVariants, hpVariants } from '../animations';
-import type { IconName } from '@/types/game';
+import type { SymbolName } from '@/types/game';
 
 interface EnemyColumnProps {
-    name: IconName;
+    name: SymbolName;
     hp: number;
     maxHp: number;
     atk: number;
@@ -33,7 +33,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                 {/* Left: Avatar */}
                 <div className="shrink-0 flex items-center justify-center scale-[0.9] sm:scale-100 origin-center pl-1 w-[4.5rem] sm:w-[5.5rem]">
                     <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto flex justify-center items-center">
-                        <Icon name={name} scale={4.5} tintColor={ICON_THEME[name]} />
+                        <Icon name={name} scale={4.5} tintColor={SYMBOL_THEME[name]} />
                         {hasType && (
                             <span className="absolute z-10 text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,1)] pointer-events-none" style={{ textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,0.8)' }}>
                                 {type}

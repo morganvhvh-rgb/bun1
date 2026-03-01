@@ -1,15 +1,15 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME } from '@/lib/constants';
-import type { IconName } from '@/types/game';
+import { SYMBOL_THEME } from '@/lib/constants';
+import type { SymbolName } from '@/types/game';
 
 interface ScrollBuyModalProps {
     isOpen: boolean;
     onClose: () => void;
     onBuyScroll: () => void;
     scrollStage: 'initial' | 'lifting' | 'faded';
-    availableScrolls: IconName[];
-    revealedScrollColor: IconName | null;
+    availableScrolls: SymbolName[];
+    revealedScrollColor: SymbolName | null;
     gold: number;
     scrollCost: number;
 }
@@ -86,7 +86,7 @@ export function ScrollBuyModal({
                                                 }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
                                             >
-                                                <Icon name={color} scale={4} tintColor={ICON_THEME[color]} />
+                                                <Icon name={color} scale={4} tintColor={SYMBOL_THEME[color]} />
                                             </motion.div>
                                         );
                                     })}

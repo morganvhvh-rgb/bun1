@@ -16,7 +16,7 @@ import { TutorialModal } from './modals/TutorialModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
-import type { GridItem } from '@/types/game';
+import type { GridSymbol } from '@/types/game';
 
 export function GameShell() {
     const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial } = useGameStore();
@@ -106,21 +106,21 @@ export function GameShell() {
 
                 {/* Board / Inventory / Controls */}
                 <section className="min-h-0 flex flex-col items-center justify-start relative overflow-visible z-10" style={{ flex: 3.3, padding: 'var(--gap) 0' }}>
-                    <Inventory onKeptIconClick={(e, icon) => { if (!isBattleRunning) grid.handleKeptIconClick(e, icon); }} />
+                    <Inventory onKeptSymbolClick={(e, symbol) => { if (!isBattleRunning) grid.handleKeptSymbolClick(e, symbol); }} />
 
                     <div className="flex items-start justify-center flex-1 min-h-0 w-full" style={{ gap: 'var(--gap)', padding: '0 var(--gap)' }}>
                         <div className="min-w-0">
                             <GridBoard
-                                gridIcons={grid.gridIcons}
+                                gridSymbols={grid.gridSymbols}
                                 spinKey={grid.spinKey}
                                 matchingIndices={grid.matchingIndices}
                                 glowingIndices={grid.glowingIndices}
                                 activeRogueIndex={grid.activeRogueIndex}
                                 selectedIndex={grid.selectedIndex}
-                                selectedEquippedItem={grid.selectedEquippedItem}
+                                selectedEquippedSymbol={grid.selectedEquippedSymbol}
                                 isSpinning={grid.isSpinning}
-                                onIconClick={(item, index) => { if (!isBattleRunning) grid.handleIconClick(item, index); }}
-                                onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeRogueIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
+                                onSymbolClick={(symbol, index) => { if (!isBattleRunning) grid.handleSymbolClick(symbol, index); }}
+                                onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeRogueIndex !== null) grid.handleSymbolClick({ id: 'empty', name: 'hood' } as GridSymbol, index); }}
                                 levelUpPerks={levelUpPerks}
                                 hasSpecialScroll={keptScrolls.includes('special-scroll')}
                                 areAllSlotsUnlocked={unlockedSlots[3] && unlockedSlots[4] && unlockedSlots[5]}

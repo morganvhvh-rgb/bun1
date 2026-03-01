@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ICON_MAP } from '@/lib/constants';
-import type { IconName } from '@/types/game';
+import { SYMBOL_MAP } from '@/lib/constants';
+import type { SymbolName } from '@/types/game';
 import 'rpg-awesome/css/rpg-awesome.min.css';
 
 export interface IconProps {
-    name: IconName;
+    name: SymbolName;
     className?: string;
     scale?: number;
     onClick?: () => void;
@@ -16,7 +16,7 @@ export interface IconProps {
 }
 
 export function Icon({ name, className, scale = 4, onClick, tintColor, gradient, animateGradient, idleAnimation }: IconProps) {
-    const iconClass = ICON_MAP[name];
+    const iconClass = SYMBOL_MAP[name];
     if (!iconClass) return null;
 
     const size = 16 * scale;

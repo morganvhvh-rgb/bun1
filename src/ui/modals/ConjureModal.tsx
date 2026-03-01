@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Icon } from '../shared/Icon';
-import type { IconName } from '@/types/game';
+import type { SymbolName } from '@/types/game';
 
 interface ConjureModalProps {
     isOpen: boolean;
@@ -9,7 +9,7 @@ interface ConjureModalProps {
     onResult: (winner: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
 }
 
-const CONJURE_ICONS: IconName[] = ['two-hearts', 'sapphire', 'lightning-trio'];
+const CONJURE_SYMBOLS: SymbolName[] = ['two-hearts', 'sapphire', 'lightning-trio'];
 const REVEAL_DELAY = 2500;
 const FADE_DURATION = 400;
 const SPARKLE_COUNT = 40;
@@ -43,7 +43,7 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
     if (isOpen && !prevOpenRef.current) {
         // Reset session on open (synchronous, avoids setState-in-effect)
         setPhase('waiting');
-        setWinnerIndex(Math.floor(Math.random() * CONJURE_ICONS.length));
+        setWinnerIndex(Math.floor(Math.random() * CONJURE_SYMBOLS.length));
         setSessionKey(prev => prev + 1);
     }
     prevOpenRef.current = isOpen;
@@ -58,13 +58,13 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
         if (!isOpen || phase !== 'fading') return;
         const timer = setTimeout(() => {
             setPhase('revealed');
-            onResult(CONJURE_ICONS[winnerIndex] as 'two-hearts' | 'sapphire' | 'lightning-trio');
+            onResult(CONJURE_SYMBOLS[winnerIndex] as 'two-hearts' | 'sapphire' | 'lightning-trio');
         }, FADE_DURATION);
         return () => clearTimeout(timer);
     }, [isOpen, phase, winnerIndex, onResult]);
 
     if (!isOpen) return null;
-    const winnerName = CONJURE_ICONS[winnerIndex];
+    const winnerName = CONJURE_SYMBOLS[winnerIndex];
 
     return (
         <>
@@ -90,11 +90,11 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                                     initial={{ opacity: 1 }} animate={{ opacity: phase === 'fading' ? 0 : 1 }} exit={{ opacity: 0 }}
                                     transition={{ duration: FADE_DURATION / 1000, ease: 'easeOut' }}
                                 >
-                                    {CONJURE_ICONS.map((iconName, i) => (
-                                        <div key={iconName} className="flex items-center justify-center" style={{
+                                    {CONJURE_SYMBOLS.map((symbolName, i) => (
+                                        <div key={symbolName} className="flex items-center justify-center" style={{
                                             animation: phase === 'waiting' ? `conjure-color-pulse ${COLOR_CYCLE_SPEED}s linear infinite ${i * 0.1}s` : undefined,
                                         }}>
-                                            <Icon name={iconName} scale={4} />
+                                            <Icon name={symbolName} scale={4} />
                                         </div>
                                     ))}
                                 </motion.div>

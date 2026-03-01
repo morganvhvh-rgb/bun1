@@ -1,31 +1,31 @@
 import { useState } from 'react';
 import { useGameStore, selectShuffleCost } from '@/store/gameStore';
 import { findMatchingIndices, getCoordinates, getIndex } from '@/lib/utils';
-import { GAME_CONSTANTS, ALL_SCROLL_COLORS, ICON_CATEGORIES } from '@/lib/constants';
-import type { GridItem, IconName, KeptIcon } from '@/types/game';
+import { GAME_CONSTANTS, ALL_SCROLL_COLORS, SYMBOL_CATEGORIES } from '@/lib/constants';
+import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
 
 interface ScrollFlowCallbacks {
-    openScrollModal: (scrolls: IconName[], target: IconName, itemId: string) => void;
+    openScrollModal: (scrolls: SymbolName[], target: SymbolName, symbolId: string) => void;
 }
 
 export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const {
-        grid: gridIcons,
+        grid: gridSymbols,
         keptScrolls,
 
         spinBoard,
         payForShuffle,
         applySwaps,
         slideRogue,
-        equipItem,
-        removeGridItem,
+        equipSymbol,
+        removeGridSymbol,
     } = useGameStore();
 
     const shuffleCost = useGameStore(selectShuffleCost);
 
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [selectedEquippedItem, setSelectedEquippedItem] = useState<GridItem | null>(null);
+    const [selectedEquippedSymbol, setSelectedEquippedSymbol] = useState<GridSymbol | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSpinning, setIsSpinning] = useState(false);
     const [isShuffling, setIsShuffling] = useState(false);
@@ -33,11 +33,11 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [activeRogueIndex, setActiveRogueIndex] = useState<number | null>(null);
     const [hasSlid, setHasSlid] = useState(false);
 
-    const matchingIndices = findMatchingIndices(gridIcons);
+    const matchingIndices = findMatchingIndices(gridSymbols);
 
     const resetSelection = () => {
         setSelectedIndex(null);
-        setSelectedEquippedItem(null);
+        setSelectedEquippedSymbol(null);
         setGlowingIndices([]);
         setActiveRogueIndex(null);
     };
@@ -62,7 +62,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         const gold = state.gold;
 
         // Prevent action if not enough gold (pre-check via cost logic)
-        const cost = (state.keptIcons.some(i => i?.name === 'spades-card') && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+        const cost = (state.keptSymbols.some(symbol => symbol?.name === 'spades-card') && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
         if (gold < cost) return;
 
         const success = payForShuffle();
@@ -74,8 +74,8 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setIsShuffling(true);
 
         const currentGrid = useGameStore.getState().grid;
-        // Only shuffle indices that currently contain an item
-        const filledIndices = currentGrid.map((item, i) => item !== null ? i : -1).filter(i => i !== -1);
+        // Only shuffle indices that currently contain a symbol
+        const filledIndices = currentGrid.map((symbol, i) => symbol !== null ? i : -1).filter(i => i !== -1);
 
         // Generate Fisher-Yates swaps on the filled slots only
         const steps: [number, number][] = [];
@@ -102,19 +102,19 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setIsAnimating(false);
     };
 
-    const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {
+    const handleKeptSymbolClick = (e: React.MouseEvent, symbol: KeptSymbol) => {
         e.stopPropagation();
-        setSelectedEquippedItem({ id: `equipped-${icon.name}`, name: icon.name, isBoosted: icon.isBoosted } as GridItem);
+        setSelectedEquippedSymbol({ id: `equipped-${symbol.name}`, name: symbol.name, isBoosted: symbol.isBoosted } as GridSymbol);
         setSelectedIndex(null);
     };
 
-    const handleIconClick = (item: GridItem, index: number) => {
+    const handleSymbolClick = (symbol: GridSymbol, index: number) => {
         if (isAnimating) return;
         const isBoosted = matchingIndices.has(index);
 
         // Rogue slide target
         if (glowingIndices.includes(index) && activeRogueIndex !== null) {
-            const character = gridIcons[activeRogueIndex];
+            const character = gridSymbols[activeRogueIndex];
             if (character && character.name === 'hood') {
                 slideRogue(activeRogueIndex, index, isBoosted);
                 resetSelection();
@@ -124,7 +124,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         }
 
         // Rogue selection
-        if (item.name === 'hood') {
+        if (symbol.name === 'hood') {
             if (hasSlid) return;
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
@@ -142,43 +142,43 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         if (selectedIndex === index) {
             if (activeRogueIndex !== null) resetSelection();
 
-            if (item.name === 'key') { resetSelection(); return; }
+            if (symbol.name === 'key') { resetSelection(); return; }
 
-            if (item.name === 'scroll-unfurled') {
+            if (symbol.name === 'scroll-unfurled') {
                 const available = ALL_SCROLL_COLORS.filter(c => !keptScrolls.includes(c));
                 if (available.length > 0) {
                     resetSelection();
                     const shuffled = [...available].sort(() => Math.random() - 0.5);
                     const target = shuffled[Math.floor(Math.random() * shuffled.length)];
-                    scrollFlow.openScrollModal(shuffled, target, item.id);
+                    scrollFlow.openScrollModal(shuffled, target, symbol.id);
                 } else {
-                    removeGridItem(item.id);
+                    removeGridSymbol(symbol.id);
                     resetSelection();
                 }
                 return;
             }
 
-            const category = ICON_CATEGORIES[item.name as IconName];
+            const category = SYMBOL_CATEGORIES[symbol.name as SymbolName];
             if (category === 'Nature' || category === 'Treasure') { resetSelection(); return; }
 
-            equipItem(item, isBoosted);
+            equipSymbol(symbol, isBoosted);
             resetSelection();
         } else {
             setSelectedIndex(index);
-            setSelectedEquippedItem(null);
+            setSelectedEquippedSymbol(null);
             setGlowingIndices([]);
             setActiveRogueIndex(null);
         }
     };
 
     return {
-        gridIcons,
+        gridSymbols,
         spinKey,
         matchingIndices,
         glowingIndices,
         activeRogueIndex,
         selectedIndex,
-        selectedEquippedItem,
+        selectedEquippedSymbol,
         isAnimating,
         isSpinning,
         isShuffling,
@@ -187,8 +187,8 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         resetSelection,
         handleSpin,
         handleShuffle,
-        handleIconClick,
-        handleKeptIconClick,
+        handleSymbolClick,
+        handleKeptSymbolClick,
         setSpinKey,
     };
 }

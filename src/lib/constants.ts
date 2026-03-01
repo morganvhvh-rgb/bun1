@@ -1,4 +1,4 @@
-export const ICON_MAP = {
+export const SYMBOL_MAP = {
     // Character
     "hood": "hood",
     // Enemies
@@ -62,9 +62,9 @@ export const ICON_MAP = {
     "lightning-trio": "lightning-trio",
 } as const;
 
-type IconName = keyof typeof ICON_MAP;
+type SymbolName = keyof typeof SYMBOL_MAP;
 
-export const ICON_KEYS: IconName[] = [
+export const SYMBOL_KEYS: SymbolName[] = [
     // Food
     "apple", "crab-claw", "brandy-bottle",
     // Nature
@@ -83,7 +83,7 @@ export const ICON_KEYS: IconName[] = [
     "bell", "ocarina",
 ];
 
-export const ICON_THEME: Record<IconName, string> = {
+export const SYMBOL_THEME: Record<SymbolName, string> = {
     "hood": "#7e22ce",   // Darker Purple (Hero)
     "wyvern": "#15803d",   // Dark Green (Enemy)
     "octopus": "#f9a8d4", // Light Pink (Enemy)
@@ -147,7 +147,7 @@ export const ICON_THEME: Record<IconName, string> = {
     "lightning-trio": "#eab308",
 };
 
-export const ICON_STATS: Partial<Record<IconName, string>> = {
+export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",
@@ -196,7 +196,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "ocarina": "-1 ATK",
 };
 
-export const ICON_CATEGORIES: Record<IconName, string> = {
+export const SYMBOL_CATEGORIES: Record<SymbolName, string> = {
     "hood": "Hero",
     "wyvern": "Enemy",
     "octopus": "Enemy",
@@ -292,14 +292,14 @@ export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
     },
 };
 
-export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
+export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "apple": "also heal when symbol is removed",
     "daggers": "first attack happens 3 times / doesnt stack",
     "relic-blade": "increase attack by current experience / doesnt stack",
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
-    "spades-card": "[perspective-dice-random icon] costs 1 if experience is <3",
+    "spades-card": "[perspective-dice-random symbol] costs 1 if experience is <3",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
     "book": "conjure magic effect applies twice",
     "crystal-wand": "increase attack by current magic / doesnt stack",
@@ -325,24 +325,24 @@ export const GAME_CONSTANTS = {
     SPIN_COST: 3,
     SHUFFLE_COST: 3,
     MOVE_COST: 3,
-    KEEP_ITEM_COST: 3,
+    EQUIP_SYMBOL_COST: 3,
     SCROLL_COST: 20,
     MAX_KEPT_SCROLLS: 6,
     MAX_BATTLES: 8,
     LEVEL_UP_MOVES_REQUIRED: 10,
 };
 
-export const ALL_SCROLL_COLORS: IconName[] = [
+export const ALL_SCROLL_COLORS: SymbolName[] = [
     "item-scroll", "food-scroll", "armor-scroll", "magic-scroll",
     "weapon-scroll", "music-scroll", "special-scroll", "nature-scroll"
 ];
 
 export const INITIAL_ENEMIES = {
-    wyvern: { name: 'wyvern' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'flying' },
-    octopus: { name: 'octopus' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'monster-skull': { name: 'monster-skull' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'evil' },
-    snail: { name: 'snail' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    hydra: { name: 'hydra' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'spider-face': { name: 'spider-face' as IconName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'eye-monster': { name: 'eye-monster' as IconName, hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'flying / boss' },
+    wyvern: { name: 'wyvern' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'flying' },
+    octopus: { name: 'octopus' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'monster-skull': { name: 'monster-skull' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'evil' },
+    snail: { name: 'snail' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    hydra: { name: 'hydra' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'spider-face': { name: 'spider-face' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
+    'eye-monster': { name: 'eye-monster' as SymbolName, hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'flying / boss' },
 };

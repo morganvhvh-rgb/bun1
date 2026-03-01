@@ -1,15 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { GridItem, IconName, KeptIcon } from '@/types/game';
-import { ICON_KEYS, ICON_CATEGORIES, GAME_CONSTANTS, INITIAL_ENEMIES } from '@/lib/constants';
+import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
+import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, INITIAL_ENEMIES } from '@/lib/constants';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
     // Grid State
-    grid: (GridItem | null)[];
-    keptIcons: (KeptIcon | null)[];
-    keptScrolls: IconName[];
+    grid: (GridSymbol | null)[];
+    keptSymbols: (KeptSymbol | null)[];
+    keptScrolls: SymbolName[];
     unlockedSlots: { 3: boolean; 4: boolean; 5: boolean };
 
     // Progression
@@ -33,17 +33,17 @@ interface GameState {
     battleCount: number;
     globalEnemyHpDebuff: number;
 
-    enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
-    enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
+    enemy1: { name: SymbolName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
+    enemy2: { name: SymbolName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
 
     // Actions
     spinBoard: () => void;
     payForShuffle: () => boolean;
     applySwaps: (swaps: [number, number][]) => void;
     slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
-    equipItem: (item: GridItem, isBoosted?: boolean) => void;
-    removeGridItem: (id: string) => void;
-    addKeptScroll: (name: IconName) => void;
+    equipSymbol: (symbol: GridSymbol, isBoosted?: boolean) => void;
+    removeGridSymbol: (id: string) => void;
+    addKeptScroll: (name: SymbolName) => void;
     spendGold: (amount: number) => void;
     addGold: (amount: number) => void;
     resetBattleTarget: () => void;
@@ -59,7 +59,7 @@ interface GameState {
     healPlayer: (amount: number) => void;
 }
 
-const generateRandomIcons = (): GridItem[] => {
+const generateRandomSymbols = (): GridSymbol[] => {
     const totalSlots = 12;
     const characterIndex = Math.floor(Math.random() * totalSlots);
 
@@ -67,11 +67,11 @@ const generateRandomIcons = (): GridItem[] => {
         if (index === characterIndex) {
             return {
                 id: crypto.randomUUID(),
-                name: "hood" as IconName
+                name: "hood" as SymbolName
             };
         }
-        const randomIndex = Math.floor(Math.random() * ICON_KEYS.length);
-        const name = ICON_KEYS[randomIndex];
+        const randomIndex = Math.floor(Math.random() * SYMBOL_KEYS.length);
+        const name = SYMBOL_KEYS[randomIndex];
         return {
             id: crypto.randomUUID(),
             name: name
@@ -79,7 +79,7 @@ const generateRandomIcons = (): GridItem[] => {
     });
 };
 
-const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: IconName[]; playerGear: number }) => {
+const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: SymbolName[]; playerGear: number }) => {
     let bonus = 0;
     if (state.keptScrolls.includes('armor-scroll')) {
         bonus = Math.floor(state.playerGear / 5) * 2;
@@ -90,8 +90,8 @@ const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: IconName
 export const useGameStore = create<GameState>()(
     persist(
         immer((set) => ({
-            grid: generateRandomIcons(),
-            keptIcons: [null, null, null, null, null, null],
+            grid: generateRandomSymbols(),
+            keptSymbols: [null, null, null, null, null, null],
             keptScrolls: [],
             unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
@@ -119,13 +119,13 @@ export const useGameStore = create<GameState>()(
             spinBoard: () => set((state) => {
                 if (state.gold < GAME_CONSTANTS.SPIN_COST) return;
                 state.gold -= GAME_CONSTANTS.SPIN_COST;
-                state.grid = generateRandomIcons();
+                state.grid = generateRandomSymbols();
             }),
 
             payForShuffle: () => {
                 let success = false;
                 set((state) => {
-                    const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
+                    const hasSpadesCard = state.keptSymbols.some(symbol => symbol?.name === 'spades-card');
                     const cost = (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
 
                     if (state.gold >= cost) {
@@ -154,14 +154,14 @@ export const useGameStore = create<GameState>()(
                 const pCoords = getCoordinates(fromIndex);
                 const tCoords = getCoordinates(toIndex);
 
-                const targetItem = state.grid[toIndex];
-                const targetHasKey = targetItem?.name === 'key';
+                const targetSymbol = state.grid[toIndex];
+                const targetHasKey = targetSymbol?.name === 'key';
 
-                if (targetItem) {
-                    const category = ICON_CATEGORIES[targetItem.name];
+                if (targetSymbol) {
+                    const category = SYMBOL_CATEGORIES[targetSymbol.name];
                     const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
                     if (category === 'Treasure' || category === 'Nature') {
-                        switch (targetItem.name) {
+                        switch (targetSymbol.name) {
                             case 'clover': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); state.playerMagic += (isBoosted ? 4 : 2); break;
                             case 'pine-tree': state.moves += ((isBoosted ? 8 : 4) * expMultiplier); break;
                             case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
@@ -195,15 +195,15 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            equipItem: (item, isBoosted = false) => set((state) => {
-                if (item.name === 'key') return;
+            equipSymbol: (symbol, isBoosted = false) => set((state) => {
+                if (symbol.name === 'key') return;
 
-                const category = ICON_CATEGORIES[item.name];
-                const keepCost = (category === 'Weapon' && state.keptScrolls.includes('weapon-scroll')) ? 0 : GAME_CONSTANTS.KEEP_ITEM_COST;
+                const category = SYMBOL_CATEGORIES[symbol.name];
+                const keepCost = (category === 'Weapon' && state.keptScrolls.includes('weapon-scroll')) ? 0 : GAME_CONSTANTS.EQUIP_SYMBOL_COST;
 
                 if (state.gold < keepCost) return;
-                const sameCategoryCount = state.keptIcons.filter(
-                    icon => icon && ICON_CATEGORIES[icon.name] === category
+                const sameCategoryCount = state.keptSymbols.filter(
+                    keptSymbol => keptSymbol && SYMBOL_CATEGORIES[keptSymbol.name] === category
                 ).length;
 
                 if (sameCategoryCount >= 2) return;
@@ -213,15 +213,15 @@ export const useGameStore = create<GameState>()(
                 if (state.unlockedSlots[4]) availableSlots.push(4);
                 if (state.unlockedSlots[5]) availableSlots.push(5);
 
-                const emptySlotIndex = availableSlots.find(slot => state.keptIcons[slot] === null);
+                const emptySlotIndex = availableSlots.find(slot => state.keptSymbols[slot] === null);
                 if (emptySlotIndex !== undefined) {
                     state.gold -= keepCost;
-                    state.grid = state.grid.map(s => s?.id === item.id ? null : s);
-                    state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
+                    state.grid = state.grid.map(s => s?.id === symbol.id ? null : s);
+                    state.keptSymbols[emptySlotIndex] = { name: symbol.name, battleCount: 2, isBoosted };
 
-                    const foodMultiplier = state.keptScrolls.includes('food-scroll') && ICON_CATEGORIES[item.name as IconName] === 'Food' ? 2 : 1;
+                    const foodMultiplier = state.keptScrolls.includes('food-scroll') && SYMBOL_CATEGORIES[symbol.name as SymbolName] === 'Food' ? 2 : 1;
 
-                    switch (item.name) {
+                    switch (symbol.name) {
                         case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 20 : 10) * foodMultiplier); break;
                         case 'crab-claw':
                             state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
@@ -250,8 +250,8 @@ export const useGameStore = create<GameState>()(
                     }
 
                     if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
-                        const itemCount = state.keptIcons.filter(i => i && ICON_CATEGORIES[i.name] === 'Item').length;
-                        if (itemCount >= 2) {
+                        const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
+                        if (itemCategoryCount >= 2) {
                             state.gold += 80;
                             state.itemScrollClaimed = true;
                         }
@@ -259,7 +259,7 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            removeGridItem: (id) => set((state) => {
+            removeGridSymbol: (id) => set((state) => {
                 state.grid = state.grid.map(s => s?.id === id ? null : s);
             }),
 
@@ -268,8 +268,8 @@ export const useGameStore = create<GameState>()(
                     state.keptScrolls.push(name);
 
                     if (name === 'item-scroll' && !state.itemScrollClaimed) {
-                        const itemCount = state.keptIcons.filter(i => i && ICON_CATEGORIES[i.name] === 'Item').length;
-                        if (itemCount >= 2) {
+                        const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
+                        if (itemCategoryCount >= 2) {
                             state.gold += 80;
                             state.itemScrollClaimed = true;
                         }
@@ -290,12 +290,12 @@ export const useGameStore = create<GameState>()(
                     let finalDamage = amount;
 
                     if (state.playerGear > 3) {
-                        const helmetCount = state.keptIcons.filter(item => item?.name === 'knight-helmet').length;
+                        const helmetCount = state.keptSymbols.filter(symbol => symbol?.name === 'knight-helmet').length;
                         finalDamage = Math.max(0, finalDamage - helmetCount);
                     }
 
                     if (state.isFirstEnemyAttack) {
-                        const hasShield = state.keptIcons.some(item => item?.name === 'shield');
+                        const hasShield = state.keptSymbols.some(symbol => symbol?.name === 'shield');
                         if (hasShield) {
                             state.playerGear = Math.max(0, state.playerGear - finalDamage);
                             finalDamage = 0;
@@ -348,16 +348,16 @@ export const useGameStore = create<GameState>()(
                     return;
                 }
 
-                for (let i = 0; i < state.keptIcons.length; i++) {
-                    const icon = state.keptIcons[i];
-                    if (icon !== null) {
-                        icon.battleCount -= 1;
-                        if (icon.battleCount <= 0) {
-                            if (icon.name === 'apple') {
+                for (let i = 0; i < state.keptSymbols.length; i++) {
+                    const keptSymbol = state.keptSymbols[i];
+                    if (keptSymbol !== null) {
+                        keptSymbol.battleCount -= 1;
+                        if (keptSymbol.battleCount <= 0) {
+                            if (keptSymbol.name === 'apple') {
                                 const foodMultiplier = state.keptScrolls.includes('food-scroll') ? 2 : 1;
-                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 20 : 10) * foodMultiplier);
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (keptSymbol.isBoosted ? 20 : 10) * foodMultiplier);
                             }
-                            state.keptIcons[i] = null;
+                            state.keptSymbols[i] = null;
                         }
                     }
                 }
@@ -391,8 +391,8 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetGame: () => set((state) => {
-                state.grid = generateRandomIcons();
-                state.keptIcons = [null, null, null, null, null, null];
+                state.grid = generateRandomSymbols();
+                state.keptSymbols = [null, null, null, null, null, null];
                 state.keptScrolls = [];
                 state.unlockedSlots = { 3: false, 4: false, 5: false };
                 state.levelUpPerks = [];
@@ -416,7 +416,7 @@ export const useGameStore = create<GameState>()(
 
             applyConjureMagic: (result) => set((state) => {
                 if (state.conjureMagicUsed) return;
-                const hasBook = state.keptIcons.some(item => item?.name === 'book');
+                const hasBook = state.keptSymbols.some(symbol => symbol?.name === 'book');
                 const multiplier = hasBook ? 2 : 1;
                 const magic = state.playerMagic * multiplier;
                 switch (result) {
@@ -451,49 +451,61 @@ export const useGameStore = create<GameState>()(
         })),
         {
             name: 'daily-rogue-storage',
-            version: 1,
+            version: 2,
+            migrate: (persistedState: unknown, version) => {
+                if (version >= 2 || !persistedState || typeof persistedState !== 'object') {
+                    return persistedState as GameState;
+                }
+
+                const state = persistedState as Record<string, unknown>;
+                if (!state.keptSymbols && Array.isArray(state.keptIcons)) {
+                    state.keptSymbols = state.keptIcons;
+                }
+
+                return state as unknown as GameState;
+            },
         }
     )
 );
 
 export const selectTotalAttack = (state: GameState) => {
-    const hasCrystalWand = state.keptIcons.some(item => item?.name === 'crystal-wand');
+    const hasCrystalWand = state.keptSymbols.some(symbol => symbol?.name === 'crystal-wand');
     const magicBonus = hasCrystalWand ? state.playerMagic : 0;
-    const relicBladeBonus = state.keptIcons.some(item => item?.name === 'relic-blade') ? state.moves : 0;
+    const relicBladeBonus = state.keptSymbols.some(symbol => symbol?.name === 'relic-blade') ? state.moves : 0;
     return state.playerBaseAtk + magicBonus + relicBladeBonus;
 };
 
 export const selectTotalMaxHp = (state: GameState) => calculateTotalMaxHp(state);
 
 export const selectHasDaggers = (state: GameState) =>
-    state.keptIcons.some(item => item?.name === 'daggers');
+    state.keptSymbols.some(symbol => symbol?.name === 'daggers');
 
 export const selectCrossbowCount = (state: GameState) =>
-    state.keptIcons.filter(item => item?.name === 'crossbow').length;
+    state.keptSymbols.filter(symbol => symbol?.name === 'crossbow').length;
 
 export const selectShuffleCost = (state: GameState) => {
-    const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
+    const hasSpadesCard = state.keptSymbols.some(symbol => symbol?.name === 'spades-card');
     return (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
 };
 
 export const selectHasTwoFairyWands = (state: GameState) =>
-    state.keptIcons.filter(item => item?.name === 'fairy-wand').length >= 2;
+    state.keptSymbols.filter(symbol => symbol?.name === 'fairy-wand').length >= 2;
 
 export const selectAxeActive = (state: GameState) => {
-    const hasAxe = state.keptIcons.some(item => item?.name === 'axe');
+    const hasAxe = state.keptSymbols.some(symbol => symbol?.name === 'axe');
     if (!hasAxe) return false;
-    const hasOtherWeapon = state.keptIcons.some(item => item && item.name !== 'axe' && ICON_CATEGORIES[item.name] === 'Weapon');
+    const hasOtherWeapon = state.keptSymbols.some(symbol => symbol && symbol.name !== 'axe' && SYMBOL_CATEGORIES[symbol.name] === 'Weapon');
     return !hasOtherWeapon;
 };
 
 export const selectBellCount = (state: GameState) =>
-    state.keptIcons.filter(item => item?.name === 'bell').length;
+    state.keptSymbols.filter(symbol => symbol?.name === 'bell').length;
 
 export const selectHasOcarina = (state: GameState) =>
-    state.keptIcons.some(item => item?.name === 'ocarina');
+    state.keptSymbols.some(symbol => symbol?.name === 'ocarina');
 
 export const selectIsMusicScrollActive = (state: GameState) => {
     if (!state.keptScrolls.includes('music-scroll')) return false;
-    const musicCount = state.keptIcons.filter(item => item && ICON_CATEGORIES[item.name] === 'Music').length;
+    const musicCount = state.keptSymbols.filter(symbol => symbol && SYMBOL_CATEGORIES[symbol.name] === 'Music').length;
     return musicCount >= 2;
 };

@@ -1,15 +1,15 @@
-import { ICON_MAP } from '@/lib/constants';
+import { SYMBOL_MAP } from '@/lib/constants';
 
-export type IconName = keyof typeof ICON_MAP;
+export type SymbolName = keyof typeof SYMBOL_MAP;
 
-export interface GridItem {
+export interface GridSymbol {
     id: string;
-    name: IconName;
+    name: SymbolName;
     isBoosted?: boolean;
 }
 
-export interface KeptIcon {
-    name: IconName;
+export interface KeptSymbol {
+    name: SymbolName;
     battleCount: number;
     isBoosted?: boolean;
 }
@@ -24,7 +24,7 @@ export interface CharacterStats {
 
 export interface EnemyStats {
     id: string;
-    name: IconName;
+    name: SymbolName;
     hp: number;
     maxHp: number;
     atk: number;

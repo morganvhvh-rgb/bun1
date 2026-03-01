@@ -1,27 +1,27 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS, CATEGORY_BADGE_THEME } from '@/lib/constants';
-import type { GridItem } from '@/types/game';
+import { SYMBOL_THEME, SYMBOL_CATEGORIES, SYMBOL_EXTRA_EFFECTS, CATEGORY_BADGE_THEME } from '@/lib/constants';
+import type { GridSymbol } from '@/types/game';
 
 interface GridBoardProps {
-    gridIcons: (GridItem | null)[];
+    gridSymbols: (GridSymbol | null)[];
     spinKey: number;
     matchingIndices: Set<number>;
     glowingIndices: number[];
     activeRogueIndex: number | null;
     selectedIndex: number | null;
-    selectedEquippedItem: GridItem | null;
+    selectedEquippedSymbol: GridSymbol | null;
     isSpinning: boolean;
-    onIconClick: (item: GridItem, index: number) => void;
+    onSymbolClick: (symbol: GridSymbol, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
     levelUpPerks: string[];
     hasSpecialScroll: boolean;
     areAllSlotsUnlocked: boolean;
 }
 
-function formatStatText(text: string, iconName: string) {
-    if (iconName === 'brandy-bottle') {
+function formatStatText(text: string, symbolName: string) {
+    if (symbolName === 'brandy-bottle') {
         return <span className="text-red-500">{text}</span>;
     }
 
@@ -45,7 +45,7 @@ function formatStatText(text: string, iconName: string) {
             colorClass = "text-red-500";
         } else if (lower.includes('exp')) {
             colorClass = "text-green-500";
-        } else if (lower.includes('???') && iconName === 'spades-card') {
+        } else if (lower.includes('???') && symbolName === 'spades-card') {
             colorClass = "text-white";
         }
 
@@ -54,8 +54,8 @@ function formatStatText(text: string, iconName: string) {
 }
 
 export function GridBoard({
-    gridIcons, spinKey, matchingIndices, glowingIndices, activeRogueIndex,
-    selectedIndex, selectedEquippedItem, isSpinning, onIconClick, onEmptyGlowClick, levelUpPerks,
+    gridSymbols, spinKey, matchingIndices, glowingIndices, activeRogueIndex,
+    selectedIndex, selectedEquippedSymbol, isSpinning, onSymbolClick, onEmptyGlowClick, levelUpPerks,
     hasSpecialScroll, areAllSlotsUnlocked,
 }: GridBoardProps) {
 
@@ -63,7 +63,7 @@ export function GridBoard({
         hidden: { opacity: 0 },
         show: { opacity: 1 },
     };
-    const itemVariants = {
+    const symbolVariants = {
         hidden: ({ isSpinning }: { index: number, isSpinning: boolean }) => ({
             opacity: isSpinning ? 0 : 1,
             scale: isSpinning ? 0.8 : 1,
@@ -91,9 +91,9 @@ export function GridBoard({
         },
     };
 
-    const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
-    const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : !!selectedEquippedItem?.isBoosted;
-    const displayCategory = displayItem ? ICON_CATEGORIES[displayItem.name] : null;
+    const displaySymbol = selectedIndex !== null ? gridSymbols[selectedIndex] : selectedEquippedSymbol;
+    const isDisplaySymbolBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : !!selectedEquippedSymbol?.isBoosted;
+    const displayCategory = displaySymbol ? SYMBOL_CATEGORIES[displaySymbol.name] : null;
     const categoryTheme = displayCategory ? CATEGORY_BADGE_THEME[displayCategory] : null;
 
     return (
@@ -107,7 +107,7 @@ export function GridBoard({
                 animate="show"
             >
                 <AnimatePresence mode="popLayout">
-                    {gridIcons.map((item, index) => {
+                    {gridSymbols.map((symbol, index) => {
                         const isMatching = matchingIndices.has(index);
                         const isNonTargetMatch = isMatching && !glowingIndices.includes(index);
                         const isSelected = selectedIndex === index && !glowingIndices.includes(index);
@@ -125,10 +125,10 @@ export function GridBoard({
 
                         return (
                             <motion.div
-                                key={item?.id ?? `empty-${index}`}
+                                key={symbol?.id ?? `empty-${index}`}
                                 layout
                                 custom={{ index, isSpinning }}
-                                variants={itemVariants}
+                                variants={symbolVariants}
                                 initial="hidden"
                                 animate="show"
                                 transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
@@ -136,7 +136,7 @@ export function GridBoard({
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
                                     isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'
                                         : isSelected ? 'bg-zinc-800/80 border border-white/20'
-                                            : !item ? 'bg-zinc-900/30 border border-white/5 hover:bg-zinc-800/50 hover:border-white/10'
+                                            : !symbol ? 'bg-zinc-900/30 border border-white/5 hover:bg-zinc-800/50 hover:border-white/10'
                                                 : 'bg-zinc-900/50 border border-white/5 hover:border-white/10 hover:bg-zinc-800/50'
                                 )}
                                 style={{
@@ -151,12 +151,12 @@ export function GridBoard({
                                         </svg>
                                     </div>
                                 )}
-                                {item ? (
+                                {symbol ? (
                                     <div className="relative z-10 active:opacity-50 cursor-pointer">
                                         <Icon
-                                            name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
-                                            onClick={() => onIconClick(item, index)}
-                                            className={cn((activeRogueIndex === index && item.name === 'hood') && 'opacity-80')}
+                                            name={symbol.name} scale={3} tintColor={SYMBOL_THEME[symbol.name]}
+                                            onClick={() => onSymbolClick(symbol, index)}
+                                            className={cn((activeRogueIndex === index && symbol.name === 'hood') && 'opacity-80')}
                                         />
                                     </div>
                                 ) : glowingIndices.includes(index) ? (
@@ -172,10 +172,10 @@ export function GridBoard({
 
             {/* Info Text */}
             <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-white" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
-                {displayItem ? (
+                {displaySymbol ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
-                            <span className="text-white drop-shadow-sm">{displayItem.name.replace(/_/g, ' ')}</span>
+                            <span className="text-white drop-shadow-sm">{displaySymbol.name.replace(/_/g, ' ')}</span>
                             <span className={cn(
                                 "text-[10px] sm:text-[11px] px-1.5 py-0.5 border rounded-md leading-none font-sans",
                                 categoryTheme?.className ?? 'text-zinc-200 border-zinc-300/35 bg-zinc-500/12'
@@ -185,23 +185,23 @@ export function GridBoard({
                         </div>
                         <div className={cn(
                             "font-bold tracking-widest uppercase w-full min-w-0 break-words",
-                            ICON_CATEGORIES[displayItem.name] === 'Special' ? 'text-[#a16207]' : 'text-teal-400'
+                            SYMBOL_CATEGORIES[displaySymbol.name] === 'Special' ? 'text-[#a16207]' : 'text-teal-400'
                         )} style={{ fontSize: 'var(--text-sm)' }}>
-                            {formatStatText(getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked), displayItem.name)}
+                            {formatStatText(getStatText(displaySymbol.name, isDisplaySymbolBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked), displaySymbol.name)}
                         </div>
                         <div className="font-bold tracking-wider uppercase text-zinc-400 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-xs)', minHeight: 14 }}>
-                            {ICON_EXTRA_EFFECTS[displayItem.name] ? (
-                                ICON_EXTRA_EFFECTS[displayItem.name]?.includes('[perspective-dice-random icon]') ? (
+                            {SYMBOL_EXTRA_EFFECTS[displaySymbol.name] ? (
+                                SYMBOL_EXTRA_EFFECTS[displaySymbol.name]?.includes('[perspective-dice-random symbol]') ? (
                                     <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
                                         <i className="ra ra-perspective-dice-random" style={{ fontSize: 12 }} /> costs 1 if experience is {'<'}3
                                     </span>
-                                ) : ICON_EXTRA_EFFECTS[displayItem.name]
+                                ) : SYMBOL_EXTRA_EFFECTS[displaySymbol.name]
                             ) : ''}
                         </div>
                     </div>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-widest" style={{ fontSize: 'var(--text-sm)', minHeight: '3rem' }}>
-                        Select an icon
+                        Select a symbol
                     </div>
                 )}
             </div>

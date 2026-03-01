@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack, selectTotalMaxHp } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME, GAME_CONSTANTS } from '@/lib/constants';
+import { SYMBOL_THEME, GAME_CONSTANTS } from '@/lib/constants';
 import { hpVariants, playerIconVariants } from '../animations';
 
 interface HeroPanelProps {
@@ -49,7 +49,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                            <Icon name="hood" scale={5.5} tintColor={ICON_THEME['hood']} className={cn('cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-200', isBattleRunning && 'pointer-events-none')} onClick={onCharacterClick} />
+                            <Icon name="hood" scale={5.5} tintColor={SYMBOL_THEME['hood']} className={cn('cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-200', isBattleRunning && 'pointer-events-none')} onClick={onCharacterClick} />
                         </motion.div>
                     </div>
                 </div>
