@@ -43,7 +43,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                                         initial={{ opacity: 0, scale: 0 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0 }}
-                                        className="absolute -top-3 -right-3 z-30 flex items-center justify-center w-6 h-6 bg-red-500 rounded-full border-2 border-zinc-900 shadow-lg"
+                                        className="absolute -bottom-1 -right-1 z-30 flex items-center justify-center w-6 h-6 bg-red-500 rounded-full border-2 border-zinc-900 shadow-lg"
                                     >
                                         <i className="ra ra-muscle-up text-white text-[12px] leading-none" />
                                     </motion.div>
