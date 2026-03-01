@@ -208,7 +208,6 @@ export const useGameStore = create<GameState>()(
                             for (let i = 0; i < foodMultiplier; i++) {
                                 state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75));
                                 state.playerMaxHp += (isBoosted ? 10 : 5);
-                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 10 : 5));
                             }
                             break;
                         case 'relic-blade':
