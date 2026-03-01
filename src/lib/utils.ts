@@ -57,27 +57,28 @@ export const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: st
 
     if (!isBoosted) {
         if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
-        if (name === 'pine-tree') return `+${1 * expMultiplier} EXP`;
+        if (name === 'pine-tree') return `+${2 * expMultiplier} EXP`;
         if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
         return ICON_STATS[name] || "???";
     }
 
     switch (name) {
-        case 'apple': return "Heal 12 HP";
-        case 'meat': return "Heal 20 HP";
-        case 'crab-claw': return "+2 Max HP";
-        case 'brandy-bottle': return "-50% HP & +8 Max HP";
+        case 'apple': return "Heal 16 HP";
+        case 'meat': return "Heal 24 HP";
+        case 'crab-claw': return "+6 Max HP";
+        case 'brandy-bottle': return "-25% HP & +10 Max HP";
         case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
-        case 'pine-tree': return `+${2 * expMultiplier} EXP`;
+        case 'pine-tree': return `+${4 * expMultiplier} EXP`;
         case 'zigzag-leaf': return `-${3 * expMultiplier} EXP +10 Magic`;
-        case 'axe': return "+4 ATK +2 Gear";
+        case 'axe': return "";
         case 'relic-blade':
         case 'crossbow':
         case 'daggers': return "+2 ATK +2 Gear";
         case 'shield':
         case 'knight-helmet': return "+4 Gear";
         case 'crystal-wand':
-        case 'fairy-wand': return "+10 Magic";
+            return "+10 Magic";
+        case 'fairy-wand': return "+6 Magic";
         case 'gold-bar': return "+20 gold";
         case 'gem-pendant': return "+20 Gold";
         default: return ICON_STATS[name] || "???";
