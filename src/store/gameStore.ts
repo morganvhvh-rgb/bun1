@@ -52,6 +52,7 @@ interface GameState {
     setEnemyVisibility: (target: 'enemy1' | 'enemy2', isVisible: boolean) => void;
     applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
     applyConjureMagic: (result: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
+    healPlayer: (amount: number) => void;
 }
 
 const generateRandomIcons = (): GridItem[] => {
@@ -410,6 +411,10 @@ export const useGameStore = create<GameState>()(
                 state.globalEnemyHpDebuff += amount;
             }),
 
+            healPlayer: (amount) => set((state) => {
+                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + amount);
+            }),
+
         })),
         {
             name: 'daily-rogue-storage',
@@ -450,3 +455,6 @@ export const selectAxeActive = (state: GameState) => {
 
 export const selectBellCount = (state: GameState) =>
     state.keptIcons.filter(item => item?.name === 'bell').length;
+
+export const selectHasOcarina = (state: GameState) =>
+    state.keptIcons.some(item => item?.name === 'ocarina');

@@ -267,6 +267,7 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "crystal-wand": "increase attack by current magic / doesnt stack",
     "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
     "bell": "every attack reduces all future enemies HP by 1 / stacks",
+    "ocarina": "attacks have a 15% chance to heal for same amount / doesnt stack",
     "armor-scroll": "+2 max HP for every 5 GEAR",
     "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",
     "food-scroll": "all food effects happen twice",

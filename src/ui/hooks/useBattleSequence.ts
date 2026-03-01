@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount, selectHasOcarina } from '@/store/gameStore';
 
 type AnimStatus = 'idle' | 'attack' | 'hurt';
 
@@ -28,11 +28,12 @@ export function useBattleSequence() {
         const crossbowCount = selectCrossbowCount(snap);
         const axeActive = selectAxeActive(snap);
         const bellCount = selectBellCount(snap);
+        const hasOcarina = selectHasOcarina(snap);
         const e1AtkVal = snap.enemy1.atk;
         const e2AtkVal = snap.enemy2.atk;
         const e1Type = snap.enemy1.type;
         const e2Type = snap.enemy2.type;
-        const { applyBattleDamage, setEnemyVisibility, incrementEnemyDebuff } = snap;
+        const { applyBattleDamage, setEnemyVisibility, incrementEnemyDebuff, healPlayer } = snap;
 
         if (snap.playerHp === 0) {
             runningRef.current = false;
@@ -83,8 +84,10 @@ export function useBattleSequence() {
                 const target = hp().e1 > 0 ? 1 : 2;
                 if (target === 1) {
                     const bonusAtk = e1Type.includes('flying') ? (crossbowCount * 10) : 0;
-                    applyBattleDamage('enemy1', pAtk + bonusAtk);
+                    const totalAtk = pAtk + bonusAtk;
+                    applyBattleDamage('enemy1', totalAtk);
                     if (bellCount > 0) incrementEnemyDebuff(bellCount);
+                    if (hasOcarina && Math.random() < 0.15) healPlayer(totalAtk);
                     setEnemy1Anim('hurt');
                     await delay(250);
                     setEnemy1Anim('idle');
@@ -94,8 +97,10 @@ export function useBattleSequence() {
                     }
                 } else {
                     const bonusAtk = e2Type.includes('flying') ? (crossbowCount * 10) : 0;
-                    applyBattleDamage('enemy2', pAtk + bonusAtk);
+                    const totalAtk = pAtk + bonusAtk;
+                    applyBattleDamage('enemy2', totalAtk);
                     if (bellCount > 0) incrementEnemyDebuff(bellCount);
+                    if (hasOcarina && Math.random() < 0.15) healPlayer(totalAtk);
                     setEnemy2Anim('hurt');
                     await delay(250);
                     setEnemy2Anim('idle');
