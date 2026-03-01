@@ -42,30 +42,44 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     <div className="text-[12px] sm:text-[14px] font-bold uppercase leading-tight text-white drop-shadow-md truncate w-full">
                         {name.replace('-', ' ')}
                     </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1 min-w-0 w-full">
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-emerald-400 shrink-0">
-                            LVL {lvl}
-                        </span>
-                        {hasType && (
-                            <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 truncate min-w-0">
+                    {hasType && (
+                        <div className="flex items-center mt-0.5 sm:mt-1 min-w-0 w-full">
+                            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-zinc-500 truncate min-w-0">
                                 {type}
                             </span>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Bottom row: HP & ATK */}
-            <div className="flex shrink-0 items-end justify-between w-full mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-white/5">
-                <div className="flex items-baseline gap-1.5">
-                    <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">HP</span>
-                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-red-400 leading-none">
-                        {hp}<span className="text-[10px] sm:text-[11px] text-red-400/60">/{maxHp}</span>
-                    </motion.span>
+            {/* Bottom Section: Stats & HP */}
+            <div className="flex flex-col gap-1.5 sm:gap-2 w-full mt-auto shrink-0 pt-1.5 sm:pt-2 border-t border-white/5">
+                {/* Stats Row */}
+                <div className="flex items-center justify-between w-full px-1">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
+                        <span className="text-[13px] sm:text-[14px] font-bold text-orange-400 leading-none font-mono tracking-wider">{atk}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">LVL</span>
+                        <span className="text-[13px] sm:text-[14px] font-bold text-emerald-400 leading-none font-mono tracking-wider">{lvl}</span>
+                    </div>
                 </div>
-                <div className="flex items-baseline gap-1.5">
-                    <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
-                    <span className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-orange-400 leading-none">{atk}</span>
+
+                {/* HP Bar */}
+                <div className="flex items-center gap-1.5 sm:gap-2 w-full px-1">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-4 shrink-0 text-left">HP</span>
+                    <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
+                        <motion.div
+                            className="absolute left-0 top-0 bottom-0 bg-red-400 rounded-full"
+                            initial={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
+                            animate={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
+                            transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
+                        />
+                    </div>
+                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[13px] font-bold text-red-400 leading-none font-mono tracking-wider shrink-0 text-right min-w-[2.5rem]">
+                        {hp}<span className="text-[9px] sm:text-[10px] text-red-400/60">/{maxHp}</span>
+                    </motion.span>
                 </div>
             </div>
         </motion.div>
