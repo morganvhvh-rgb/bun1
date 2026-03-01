@@ -186,7 +186,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "armor-scroll": "???",
     "magic-scroll": "???",
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
-    "music-scroll": "???",
+    "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "???",
     "nature-scroll": "???",
     "book": "Conjure Magic x2",
@@ -269,6 +269,7 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "food-scroll": "all food effects happen twice",
     "magic-scroll": "next fatal strike will miss, damage added to magic (one-time)",
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
+    "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "if all inventory slots are unlocked, keys are now as valuable as gold bars",
 };
 

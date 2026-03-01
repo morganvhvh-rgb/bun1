@@ -26,23 +26,25 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
             <div className="flex-1 min-h-0 flex flex-col">
                 <div className="flex-1 w-full">
                     <div className="flex flex-col gap-4 text-sm text-zinc-300">
-                        <p><strong className="text-white text-base">DAILY ROGUE</strong> has two sections:</p>
+                        <p><strong className="text-white text-base font-semibold">DAILY ROGUE</strong> has two main sections:</p>
 
-                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-xs">Top</p>
+                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
+                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Top Half</p>
                             <p>A turn-based auto-battler. Defeat waves of enemies to win.</p>
-                            <p className="mt-2">You can tap the Rogue icon for level-up bonuses.</p>
+                            <p className="text-zinc-400">You can tap the Hero icon for level-up bonuses.</p>
                         </div>
 
-                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-xs">Bottom</p>
-                            <p>A grid of unique symbols. Some symbols can be equipped, others have effects when you slide your Rogue over them. Rogue can slide once per spin.</p>
+                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
+                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Bottom Half</p>
+                            <p>A grid of unique symbols. Tap symbols to equip, or slide your Rogue over them to activate.</p>
+                            <p className="text-zinc-400">Rogue can slide once per spin.</p>
                         </div>
 
-                        <div className="h-px w-full bg-white/10 my-1" />
-
-                        <p>Spin, shuffle, equip and slide all cost <strong className="text-yellow-400">gold</strong>, so manage your money wisely.</p>
-                        <p>You can equip up to two of each category, and equipped symbols will be removed after two battles.</p>
+                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
+                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Economy</p>
+                            <p>Spin, shuffle, and equip all cost <strong className="text-yellow-400 font-medium">gold</strong>.</p>
+                            <p className="text-zinc-400">Equip up to two symbols per category. They are removed after two battles.</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount, selectHasOcarina } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount, selectHasOcarina, selectIsMusicScrollActive } from '@/store/gameStore';
 
 type AnimStatus = 'idle' | 'attack' | 'hurt';
 
@@ -29,11 +29,12 @@ export function useBattleSequence() {
         const axeActive = selectAxeActive(snap);
         const bellCount = selectBellCount(snap);
         const hasOcarina = selectHasOcarina(snap);
+        const isMusicScrollActive = selectIsMusicScrollActive(snap);
         const e1AtkVal = snap.enemy1.atk;
         const e2AtkVal = snap.enemy2.atk;
         const e1Type = snap.enemy1.type;
         const e2Type = snap.enemy2.type;
-        const { applyBattleDamage, setEnemyVisibility, incrementEnemyDebuff, healPlayer } = snap;
+        const { applyBattleDamage, setEnemyVisibility, incrementEnemyDebuff, healPlayer, addGold } = snap;
 
         if (snap.playerHp === 0) {
             runningRef.current = false;
@@ -88,6 +89,7 @@ export function useBattleSequence() {
                     applyBattleDamage('enemy1', totalAtk);
                     if (bellCount > 0) incrementEnemyDebuff(bellCount);
                     if (hasOcarina && Math.random() < 0.15) healPlayer(totalAtk);
+                    if (isMusicScrollActive) addGold(1);
                     setEnemy1Anim('hurt');
                     await delay(250);
                     setEnemy1Anim('idle');
@@ -101,6 +103,7 @@ export function useBattleSequence() {
                     applyBattleDamage('enemy2', totalAtk);
                     if (bellCount > 0) incrementEnemyDebuff(bellCount);
                     if (hasOcarina && Math.random() < 0.15) healPlayer(totalAtk);
+                    if (isMusicScrollActive) addGold(1);
                     setEnemy2Anim('hurt');
                     await delay(250);
                     setEnemy2Anim('idle');

@@ -45,6 +45,7 @@ interface GameState {
     removeGridItem: (id: string) => void;
     addKeptScroll: (name: IconName) => void;
     spendGold: (amount: number) => void;
+    addGold: (amount: number) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
@@ -276,6 +277,10 @@ export const useGameStore = create<GameState>()(
                 state.gold = Math.max(0, state.gold - amount);
             }),
 
+            addGold: (amount) => set((state) => {
+                state.gold += amount;
+            }),
+
             applyBattleDamage: (target, amount) => set((state) => {
                 if (target === 'player') {
                     let finalDamage = amount;
@@ -482,3 +487,9 @@ export const selectBellCount = (state: GameState) =>
 
 export const selectHasOcarina = (state: GameState) =>
     state.keptIcons.some(item => item?.name === 'ocarina');
+
+export const selectIsMusicScrollActive = (state: GameState) => {
+    if (!state.keptScrolls.includes('music-scroll')) return false;
+    const musicCount = state.keptIcons.filter(item => item && ICON_CATEGORIES[item.name] === 'Music').length;
+    return musicCount >= 2;
+};
