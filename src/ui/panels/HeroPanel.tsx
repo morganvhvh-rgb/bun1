@@ -70,7 +70,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                             />
                         </div>
                         <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-bold text-red-400 leading-none font-mono tracking-wider shrink-0 text-right min-w-[3rem]">
-                            {playerHp}<span className="text-[9px] sm:text-[10px] text-red-400/50">/{playerTotalMaxHp}</span>
+                            {playerHp}<span className="text-[10px] sm:text-[11px] text-red-400/60">/{playerTotalMaxHp}</span>
                         </motion.span>
                     </div>
 

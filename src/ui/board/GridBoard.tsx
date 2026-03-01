@@ -28,12 +28,24 @@ export function GridBoard({
         show: { opacity: 1 },
     };
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.8, y: -30 },
+        hidden: ({ isSpinning }: { index: number, isSpinning: boolean }) => ({
+            opacity: isSpinning ? 0 : 1,
+            scale: isSpinning ? 0.8 : 1,
+            y: isSpinning ? -30 : 0,
+        }),
         show: ({ index, isSpinning }: { index: number, isSpinning: boolean }) => {
+            if (!isSpinning) {
+                return {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    transition: { duration: 0 }
+                };
+            }
             const col = index % 4;
             const row = Math.floor(index / 4);
             const order = (col * 3) + row;
-            const delay = isSpinning ? order * 0.12 : 0;
+            const delay = order * 0.12;
             return {
                 opacity: 1,
                 scale: 1,
@@ -81,7 +93,7 @@ export function GridBoard({
                                 variants={itemVariants}
                                 initial="hidden"
                                 animate="show"
-                                transition={{ layout: { type: 'spring', stiffness: 350, damping: 28 } }}
+                                transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
                                     isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'
