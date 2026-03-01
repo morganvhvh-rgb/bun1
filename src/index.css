@@ -20,7 +20,7 @@
 /* ─── Typography Defaults ─── */
 :root {
   --font-sans: 'Outfit', sans-serif;
-  --font-mono: 'Space Grotesk', monospace;
+  --font-mono: 'Outfit', sans-serif;
 }
 
 /* ─── Design tokens ─── */

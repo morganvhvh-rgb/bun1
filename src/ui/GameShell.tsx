@@ -115,12 +115,12 @@ export function GameShell() {
                                 spinKey={grid.spinKey}
                                 matchingIndices={grid.matchingIndices}
                                 glowingIndices={grid.glowingIndices}
-                                activeHoodedIndex={grid.activeHoodedIndex}
+                                activeRogueIndex={grid.activeRogueIndex}
                                 selectedIndex={grid.selectedIndex}
                                 selectedEquippedItem={grid.selectedEquippedItem}
                                 isSpinning={grid.isSpinning}
                                 onIconClick={(item, index) => { if (!isBattleRunning) grid.handleIconClick(item, index); }}
-                                onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeHoodedIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
+                                onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeRogueIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
                                 levelUpPerks={levelUpPerks}
                                 hasSpecialScroll={keptScrolls.includes('special-scroll')}
                                 areAllSlotsUnlocked={unlockedSlots[3] && unlockedSlots[4] && unlockedSlots[5]}
@@ -130,7 +130,7 @@ export function GameShell() {
                             shuffleCost={grid.shuffleCost}
                             isAnimating={grid.isAnimating || isBattleRunning}
                             onSpin={grid.handleSpin}
-                            onVary={grid.handleVary}
+                            onShuffle={grid.handleShuffle}
                             onScrollsOpen={() => scrollFlow.setIsScrollWindowOpen(true)}
                             onCoffeeOpen={() => setIsCoffeeOpen(true)}
                             onReset={handleReset}

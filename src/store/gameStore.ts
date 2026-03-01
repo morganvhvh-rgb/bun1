@@ -40,8 +40,8 @@ interface GameState {
     spinBoard: () => void;
     payForShuffle: () => boolean;
     applySwaps: (swaps: [number, number][]) => void;
-    moveCharacter: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
-    keepItem: (item: GridItem, isBoosted?: boolean) => void;
+    slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
+    equipItem: (item: GridItem, isBoosted?: boolean) => void;
     removeGridItem: (id: string) => void;
     addKeptScroll: (name: IconName) => void;
     spendGold: (amount: number) => void;
@@ -144,7 +144,7 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            moveCharacter: (fromIndex, toIndex, isBoosted = false) => set((state) => {
+            slideRogue: (fromIndex, toIndex, isBoosted = false) => set((state) => {
                 const character = state.grid[fromIndex];
                 if (!character || character.name !== "hood") return;
 
@@ -195,7 +195,7 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            keepItem: (item, isBoosted = false) => set((state) => {
+            equipItem: (item, isBoosted = false) => set((state) => {
                 if (item.name === 'key') return;
 
                 const category = ICON_CATEGORIES[item.name];

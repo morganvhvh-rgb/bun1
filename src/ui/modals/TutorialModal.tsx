@@ -12,7 +12,7 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
             onClose={onClose}
             title="Tutorial"
             position="center"
-            className="w-[90vw] h-auto max-w-2xl flex flex-col pt-4 pb-6 px-6"
+            className="w-[90vw] h-auto max-w-2xl flex flex-col pt-4 pb-6 px-6 font-sans"
             closeOnOutsideClick={false}
             backdrop="light"
             showHeader={false}
@@ -31,18 +31,14 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                         <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
                             <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Top Half</p>
                             <p>A turn-based auto-battler. Defeat waves of enemies to win.</p>
-                            <p className="text-zinc-400">You can tap the Hero icon for level-up bonuses.</p>
+                            <p className="text-zinc-400">You can tap your Rogue icon for level-up bonuses.</p>
                         </div>
 
-                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
+                        <div className="flex flex-col gap-1.5">
                             <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Bottom Half</p>
                             <p>A grid of unique symbols. Some symbols are tap to equip, others activate when your Rogue slides over them.</p>
                             <p className="text-zinc-400">Rogue can slide once per spin.</p>
-                        </div>
-
-                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
-                            <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Economy</p>
-                            <p>Spin, shuffle, and equip all cost <strong className="text-yellow-400 font-medium">gold</strong>.</p>
+                            <p>Spin, shuffle, slide and equip all cost <strong className="text-yellow-400 font-medium">gold</strong>.</p>
                             <p className="text-zinc-400">Equip up to two symbols per category. They are removed after two battles.</p>
                         </div>
                     </div>

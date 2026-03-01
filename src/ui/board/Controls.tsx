@@ -9,13 +9,13 @@ interface ControlsProps {
     shuffleCost: number;
     isAnimating: boolean;
     onSpin: () => void;
-    onVary: () => void;
+    onShuffle: () => void;
     onScrollsOpen: () => void;
     onCoffeeOpen: () => void;
     onReset: () => void;
 }
 
-export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOpen, onCoffeeOpen, onReset }: ControlsProps) {
+export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScrollsOpen, onCoffeeOpen, onReset }: ControlsProps) {
     const { gold, keptScrolls } = useGameStore();
 
     const RESET_HOLD_MS = 800;
@@ -58,7 +58,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
                 <i className="ra ra-cycle text-white" style={{ fontSize: 'calc(var(--cell) * 0.55)' }} />
             </motion.button>
 
-            <motion.button onClick={onVary} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={btnStyle} title="Shuffle">
+            <motion.button onClick={onShuffle} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={btnStyle} title="Shuffle">
                 <i className="ra ra-perspective-dice-random text-white" style={{ fontSize: 'calc(var(--cell) * 0.55)' }} />
             </motion.button>
 

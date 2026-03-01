@@ -9,7 +9,7 @@ interface GridBoardProps {
     spinKey: number;
     matchingIndices: Set<number>;
     glowingIndices: number[];
-    activeHoodedIndex: number | null;
+    activeRogueIndex: number | null;
     selectedIndex: number | null;
     selectedEquippedItem: GridItem | null;
     isSpinning: boolean;
@@ -54,7 +54,7 @@ function formatStatText(text: string, iconName: string) {
 }
 
 export function GridBoard({
-    gridIcons, spinKey, matchingIndices, glowingIndices, activeHoodedIndex,
+    gridIcons, spinKey, matchingIndices, glowingIndices, activeRogueIndex,
     selectedIndex, selectedEquippedItem, isSpinning, onIconClick, onEmptyGlowClick, levelUpPerks,
     hasSpecialScroll, areAllSlotsUnlocked,
 }: GridBoardProps) {
@@ -111,11 +111,11 @@ export function GridBoard({
                         const isMatching = matchingIndices.has(index);
                         const isNonTargetMatch = isMatching && !glowingIndices.includes(index);
                         const isSelected = selectedIndex === index && !glowingIndices.includes(index);
-                        const isTarget = glowingIndices.includes(index) && activeHoodedIndex !== null;
+                        const isTarget = glowingIndices.includes(index) && activeRogueIndex !== null;
 
                         let arrowRotation = 0;
-                        if (isTarget && activeHoodedIndex !== null) {
-                            const { row: sr, col: sc } = getCoordinates(activeHoodedIndex);
+                        if (isTarget && activeRogueIndex !== null) {
+                            const { row: sr, col: sc } = getCoordinates(activeRogueIndex);
                             const { row: tr, col: tc } = getCoordinates(index);
                             if (tr < sr) arrowRotation = 0;
                             else if (tr > sr) arrowRotation = 180;
@@ -156,7 +156,7 @@ export function GridBoard({
                                         <Icon
                                             name={item.name} scale={3} tintColor={ICON_THEME[item.name]}
                                             onClick={() => onIconClick(item, index)}
-                                            className={cn((activeHoodedIndex === index && item.name === 'hood') && 'opacity-80')}
+                                            className={cn((activeRogueIndex === index && item.name === 'hood') && 'opacity-80')}
                                         />
                                     </div>
                                 ) : glowingIndices.includes(index) ? (
