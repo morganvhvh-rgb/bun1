@@ -73,10 +73,11 @@ interface EnemyPanelProps {
     enemy2Anim: 'idle' | 'attack' | 'hurt';
     isBattleRunning: boolean;
     isPostBattleScreen: boolean;
+    isAnimating: boolean;
     onEngage: () => void;
 }
 
-export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBattleScreen, onEngage }: EnemyPanelProps) {
+export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBattleScreen, isAnimating, onEngage }: EnemyPanelProps) {
     const { enemy1, enemy2, battleCount, playerHp, conjureMagicUsed } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
@@ -112,7 +113,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
             {/* Engage Button */}
             <button
                 onClick={onEngage}
-                disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen)}
+                disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen) || isAnimating}
                 className={cn(
                     "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 font-bold tracking-[0.1em] rounded-2xl",
                     isPostBattleScreen ? "bg-zinc-100 text-black shadow-none border border-transparent"

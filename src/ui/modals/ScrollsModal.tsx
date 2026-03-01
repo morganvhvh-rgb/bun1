@@ -1,6 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME } from '@/lib/constants';
+import { ICON_THEME, ICON_EXTRA_EFFECTS } from '@/lib/constants';
 import { Modal } from '../shared/Modal';
 
 interface ScrollsModalProps {
@@ -24,7 +24,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
                                 <div className="text-white font-bold uppercase text-xs tracking-wider">
                                     {scrollName.replace('-scroll', '')} Scroll
                                 </div>
-                                <div className="text-[10px] text-zinc-500">Does X to Y twice</div>
+                                <div className="text-[10px] text-zinc-500">{ICON_EXTRA_EFFECTS[scrollName] ?? '???'}</div>
                             </div>
                         </div>
                     ))

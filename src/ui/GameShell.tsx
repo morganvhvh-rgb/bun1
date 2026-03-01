@@ -97,6 +97,7 @@ export function GameShell() {
                             enemy2Anim={enemy2Anim}
                             isBattleRunning={isBattleRunning}
                             isPostBattleScreen={isPostBattleScreen}
+                            isAnimating={grid.isAnimating}
                             onEngage={handleEngage}
                         />
                     </div>
@@ -104,7 +105,7 @@ export function GameShell() {
 
                 {/* Board / Inventory / Controls */}
                 <section className="min-h-0 flex flex-col items-center justify-start relative overflow-visible z-10" style={{ flex: 3.3, padding: 'var(--gap) 0' }}>
-                    <Inventory onKeptIconClick={grid.handleKeptIconClick} />
+                    <Inventory onKeptIconClick={(e, icon) => { if (!isBattleRunning) grid.handleKeptIconClick(e, icon); }} />
 
                     <div className="flex items-start justify-center flex-1 min-h-0 w-full" style={{ gap: 'var(--gap)', padding: '0 var(--gap)' }}>
                         <div className="min-w-0">
@@ -117,14 +118,14 @@ export function GameShell() {
                                 selectedIndex={grid.selectedIndex}
                                 selectedEquippedItem={grid.selectedEquippedItem}
                                 isShaking={grid.isShaking}
-                                onIconClick={grid.handleIconClick}
-                                onEmptyGlowClick={(index) => { if (grid.activeHoodedIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
+                                onIconClick={(item, index) => { if (!isBattleRunning) grid.handleIconClick(item, index); }}
+                                onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeHoodedIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
                                 levelUpPerks={levelUpPerks}
                             />
                         </div>
                         <Controls
                             shuffleCost={grid.shuffleCost}
-                            isAnimating={grid.isAnimating}
+                            isAnimating={grid.isAnimating || isBattleRunning}
                             onSpin={grid.handleSpin}
                             onVary={grid.handleVary}
                             onScrollsOpen={() => scrollFlow.setIsScrollWindowOpen(true)}

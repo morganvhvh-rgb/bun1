@@ -179,7 +179,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "crystal-wand": "+5 Magic",
     "fairy-wand": "+3 Magic",
 
-    "gold-bar": "+14 gold",
+    "gold-bar": "+16 gold",
     "gem-pendant": "+8 Gold +2 Gear",
 
     "key": "unlock symbol inventory",
@@ -267,6 +267,8 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "crystal-wand": "increase attack by current magic / doesnt stack",
     "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
     "bell": "every attack reduces all future enemies HP by 1 / stacks",
+    "armor-scroll": "+2 max HP for every 5 GEAR",
+    "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",
 };
 
 export const GAME_CONSTANTS = {

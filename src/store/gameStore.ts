@@ -27,6 +27,7 @@ interface GameState {
     playerGear: number;
     isFirstEnemyAttack: boolean;
     conjureMagicUsed: boolean;
+    itemScrollClaimed: boolean;
     battleCount: number;
     globalEnemyHpDebuff: number;
 
@@ -72,6 +73,14 @@ const generateRandomIcons = (): GridItem[] => {
     });
 };
 
+const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: IconName[]; playerGear: number }) => {
+    let bonus = 0;
+    if (state.keptScrolls.includes('armor-scroll')) {
+        bonus = Math.floor(state.playerGear / 5) * 2;
+    }
+    return state.playerMaxHp + bonus;
+};
+
 export const useGameStore = create<GameState>()(
     persist(
         immer((set) => ({
@@ -92,6 +101,7 @@ export const useGameStore = create<GameState>()(
             playerGear: GAME_CONSTANTS.INITIAL_PLAYER_GEAR,
             isFirstEnemyAttack: true,
             conjureMagicUsed: false,
+            itemScrollClaimed: false,
             battleCount: 1,
             globalEnemyHpDebuff: 0,
 
@@ -139,7 +149,7 @@ export const useGameStore = create<GameState>()(
                             case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
                             case 'pine-tree': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); break;
                             case 'zigzag-leaf': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
-                            case 'gold-bar': state.gold += (isBoosted ? 28 : 14); break;
+                            case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
                             case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
                         }
                     }
@@ -189,10 +199,10 @@ export const useGameStore = create<GameState>()(
                     state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
                     switch (item.name) {
-                        case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 16 : 8)); break;
-                        case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 24 : 12)); break;
+                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 16 : 8)); break;
+                        case 'meat': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 24 : 12)); break;
                         case 'crab-claw': state.playerMaxHp += (isBoosted ? 6 : 3); break;
-                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 10 : 5); state.playerHp += (isBoosted ? 10 : 5); break;
+                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 10 : 5); state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 10 : 5)); break;
                         case 'relic-blade':
                         case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                         case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
@@ -204,6 +214,14 @@ export const useGameStore = create<GameState>()(
                         case 'bell':
                         case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                     }
+
+                    if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
+                        const itemCount = state.keptIcons.filter(i => i && ICON_CATEGORIES[i.name] === 'Item').length;
+                        if (itemCount >= 2) {
+                            state.gold += 80;
+                            state.itemScrollClaimed = true;
+                        }
+                    }
                 }
             }),
 
@@ -214,6 +232,14 @@ export const useGameStore = create<GameState>()(
             addKeptScroll: (name) => set((state) => {
                 if (state.keptScrolls.length < GAME_CONSTANTS.MAX_KEPT_SCROLLS) {
                     state.keptScrolls.push(name);
+
+                    if (name === 'item-scroll' && !state.itemScrollClaimed) {
+                        const itemCount = state.keptIcons.filter(i => i && ICON_CATEGORIES[i.name] === 'Item').length;
+                        if (itemCount >= 2) {
+                            state.gold += 80;
+                            state.itemScrollClaimed = true;
+                        }
+                    }
                 }
             }),
 
@@ -240,6 +266,7 @@ export const useGameStore = create<GameState>()(
 
                     state.isFirstEnemyAttack = false;
                     state.playerHp = Math.max(0, state.playerHp - finalDamage);
+                    state.playerHp = Math.min(state.playerHp, calculateTotalMaxHp(state));
                 } else if (target === 'enemy1') {
                     state.enemy1.hp = Math.max(0, state.enemy1.hp - amount);
                 } else if (target === 'enemy2') {
@@ -261,12 +288,12 @@ export const useGameStore = create<GameState>()(
 
                 if (perk === "full_heal_max_hp") {
                     state.playerMaxHp += 10;
-                    state.playerHp = state.playerMaxHp;
+                    state.playerHp = calculateTotalMaxHp(state);
                     state.levelUpPerks.push(perk);
                 } else if (perk === "nature_2x_exp") {
                     state.levelUpPerks.push(perk);
                 } else if (perk === "full_heal") {
-                    state.playerHp = state.playerMaxHp;
+                    state.playerHp = calculateTotalMaxHp(state);
                     state.levelUpPerks.push(perk);
                 }
             }),
@@ -283,7 +310,7 @@ export const useGameStore = create<GameState>()(
                         icon.battleCount -= 1;
                         if (icon.battleCount <= 0) {
                             if (icon.name === 'apple') {
-                                state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (icon.isBoosted ? 16 : 8));
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 16 : 8));
                             }
                             state.keptIcons[i] = null;
                         }
@@ -333,6 +360,7 @@ export const useGameStore = create<GameState>()(
                 state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
+                state.itemScrollClaimed = false;
                 state.battleCount = 1;
                 state.globalEnemyHpDebuff = 0;
                 state.enemy1 = { ...INITIAL_ENEMIES.wyvern };
@@ -346,7 +374,7 @@ export const useGameStore = create<GameState>()(
                 const magic = state.playerMagic * multiplier;
                 switch (result) {
                     case 'two-hearts':
-                        state.playerHp = Math.min(state.playerMaxHp, state.playerHp + magic);
+                        state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + magic);
                         break;
                     case 'sapphire':
                         state.gold += magic;
@@ -379,6 +407,8 @@ export const selectTotalAttack = (state: GameState) => {
     const relicBladeBonus = state.keptIcons.some(item => item?.name === 'relic-blade') ? state.moves : 0;
     return state.playerBaseAtk + magicBonus + relicBladeBonus;
 };
+
+export const selectTotalMaxHp = (state: GameState) => calculateTotalMaxHp(state);
 
 export const selectHasDaggers = (state: GameState) =>
     state.keptIcons.some(item => item?.name === 'daggers');

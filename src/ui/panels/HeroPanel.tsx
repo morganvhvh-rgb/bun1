@@ -1,7 +1,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useGameStore, selectTotalAttack } from '@/store/gameStore';
+import { useGameStore, selectTotalAttack, selectTotalMaxHp } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
 import { ICON_THEME, GAME_CONSTANTS } from '@/lib/constants';
 import { hpVariants, playerIconVariants } from '../animations';
@@ -14,8 +14,9 @@ interface HeroPanelProps {
 
 
 export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: HeroPanelProps) {
-    const { playerHp, playerMaxHp, playerMagic, playerGear, gold, moves, levelUpPerks } = useGameStore();
+    const { playerHp, playerMagic, playerGear, gold, moves, levelUpPerks } = useGameStore();
     const playerBaseAtk = useGameStore(selectTotalAttack);
+    const playerTotalMaxHp = useGameStore(selectTotalMaxHp);
 
     const playerLvl = 1 + levelUpPerks.length;
     const isLevelUpReady = moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED;
@@ -56,20 +57,20 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 </div>
 
                 {/* Compact Stats */}
-                <div className="flex flex-col gap-1 w-full bg-black/40 backdrop-blur-md rounded-xl p-1.5 sm:p-2 z-10 relative">
+                <div className="flex flex-col gap-1 w-full p-1.5 sm:p-2 z-10 relative">
                     {/* HP Bar */}
                     <div className="flex items-center gap-1.5 w-full">
                         <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-4 shrink-0">HP</span>
                         <div className="flex-1 h-2 sm:h-2.5 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
                             <motion.div
                                 className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
-                                initial={{ width: `${Math.max(0, Math.min(100, (playerHp / playerMaxHp) * 100))}%` }}
-                                animate={{ width: `${Math.max(0, Math.min(100, (playerHp / playerMaxHp) * 100))}%` }}
+                                initial={{ width: `${Math.max(0, Math.min(100, (playerHp / playerTotalMaxHp) * 100))}%` }}
+                                animate={{ width: `${Math.max(0, Math.min(100, (playerHp / playerTotalMaxHp) * 100))}%` }}
                                 transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
                             />
                         </div>
                         <motion.span animate={playerAnim === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-bold text-red-400 leading-none font-mono tracking-wider shrink-0 text-right min-w-[3rem]">
-                            {playerHp}<span className="text-[9px] sm:text-[10px] text-red-400/50">/{playerMaxHp}</span>
+                            {playerHp}<span className="text-[9px] sm:text-[10px] text-red-400/50">/{playerTotalMaxHp}</span>
                         </motion.span>
                     </div>
 

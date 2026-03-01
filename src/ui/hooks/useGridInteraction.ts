@@ -41,6 +41,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     };
 
     const handleSpin = () => {
+        if (isAnimating) return;
         const gold = useGameStore.getState().gold;
         if (gold < GAME_CONSTANTS.SPIN_COST) return;
         spinBoard();
@@ -48,10 +49,11 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         resetSelection();
         setHasMoved(false);
         setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 250);
+        setTimeout(() => setIsAnimating(false), 800);
     };
 
     const handleVary = () => {
+        if (isAnimating) return;
         const gold = useGameStore.getState().gold;
         if (gold < shuffleCost) return;
         shuffleBoard();
