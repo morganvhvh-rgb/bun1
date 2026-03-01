@@ -23,7 +23,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
     return (
         <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 sm:py-3 z-20">
             {/* Profile Card Main Area */}
-            <div className="w-full flex-1 flex flex-col surface-panel overflow-hidden z-20 min-h-0 mb-2 sm:mb-3 p-2 sm:p-3 relative justify-between">
+            <div className="w-full flex-1 flex flex-col surface-panel overflow-visible z-20 min-h-0 mb-2 sm:mb-3 p-2 sm:p-3 relative justify-between">
 
                 {/* Header: Title */}
                 <div className="flex justify-between items-start z-10 relative pointer-events-none">
@@ -37,8 +37,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 </div>
 
                 {/* Big Avatar Center */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pt-2 lg:pt-0 pointer-events-none">
-                    <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto scale-[0.85] sm:scale-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pt-2 pb-10 lg:pt-0 pointer-events-none">
+                    <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto scale-[0.70] sm:scale-85">
                         <AnimatePresence>
                             {isLevelUpReady && (
                                 <motion.div

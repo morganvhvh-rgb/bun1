@@ -23,7 +23,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full flex items-center justify-between z-10 overflow-hidden surface-panel p-2 sm:p-3"
+            className="absolute inset-0 w-full h-full flex items-center justify-between z-10 overflow-visible surface-panel p-2 sm:p-3"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}

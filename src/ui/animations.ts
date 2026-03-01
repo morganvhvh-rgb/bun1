@@ -8,14 +8,14 @@ export const hpVariants: Variants = {
 
 /** Player character icon — lunges right on attack */
 export const playerIconVariants: Variants = {
-    idle: { scale: 1, x: 0, y: 0 },
+    idle: { scale: 1, x: 0, y: 0, filter: "brightness(1)" },
     attack: { scale: 1.3, x: 20, y: -10, transition: { duration: 0.15, ease: "easeOut" } },
-    hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
+    hurt: { x: [-2, 2, -2, 2, 0], scale: [1, 0.95, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
 };
 
 /** Enemy icon — lunges left on attack */
 export const enemyIconVariants: Variants = {
-    idle: { scale: 1, x: 0, y: 0 },
+    idle: { scale: 1, x: 0, y: 0, filter: "brightness(1)" },
     attack: { scale: 1.3, x: -20, y: 10, transition: { duration: 0.15, ease: "easeOut" } },
-    hurt: { x: [-5, 5, -5, 5, 0], scale: [1, 0.9, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
+    hurt: { x: [-2, 2, -2, 2, 0], scale: [1, 0.95, 1], filter: ["brightness(1)", "brightness(2)", "brightness(1)"], transition: { duration: 0.25 } }
 };

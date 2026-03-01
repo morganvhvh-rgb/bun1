@@ -53,17 +53,34 @@ export function ScrollBuyModal({
                                 <div className="relative flex w-full h-full items-center justify-center">
                                     {availableScrolls.map((color, i) => {
                                         const isRevealed = revealedScrollColor === color;
-                                        const spacing = availableScrolls.length > 5 ? 25 : 35;
-                                        const xPos = (i - (availableScrolls.length - 1) / 2) * spacing;
-                                        const yPos = (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) ? -25 : 10;
+                                        const centerIndex = (availableScrolls.length - 1) / 2;
+                                        const offsetFromCenter = i - centerIndex;
+                                        const spacing = availableScrolls.length > 5 ? 26 : 35;
+
+                                        let xPos = offsetFromCenter * spacing;
+                                        const rotate = offsetFromCenter * 8;
+                                        const archY = Math.pow(offsetFromCenter, 2) * 3;
+                                        let yPos = 10 + archY;
+
+                                        if (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) {
+                                            xPos = 0;
+                                            yPos = -25;
+                                        }
+
                                         const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
 
                                         return (
                                             <motion.div
                                                 key={color}
-                                                className="absolute"
-                                                initial={{ x: xPos, y: 10, opacity: 1 }}
-                                                animate={{ y: yPos, x: xPos, opacity, zIndex: i }}
+                                                className="absolute drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]"
+                                                initial={{ x: xPos, y: 20, opacity: 1, rotate }}
+                                                animate={{
+                                                    y: yPos,
+                                                    x: xPos,
+                                                    opacity,
+                                                    zIndex: (isRevealed && scrollStage !== 'initial') ? 50 : i,
+                                                    rotate: isRevealed && scrollStage !== 'initial' ? 0 : rotate
+                                                }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
                                             >
                                                 <Icon name={color} scale={4} tintColor={ICON_THEME[color]} />
