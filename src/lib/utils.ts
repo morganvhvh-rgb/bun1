@@ -78,7 +78,7 @@ export const getStatText = (
         case 'clover': return `+${4 * expMultiplier} EXP +4 Magic`;
         case 'pine-tree': return `+${8 * expMultiplier} EXP`;
         case 'dead-tree': return `-${3 * expMultiplier} EXP +10 Magic`;
-        case 'axe': return "";
+        case 'axe': return "+6 ATK +4 Gear";
         case 'relic-blade':
         case 'daggers': return "+2 ATK +2 Gear";
         case 'crossbow': return "+2 ATK +8 Gear";

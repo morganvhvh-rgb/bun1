@@ -36,7 +36,7 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
 
                         <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-1.5 shadow-sm">
                             <p className="font-bold text-white mb-1 uppercase tracking-widest text-[11px] opacity-70">Bottom Half</p>
-                            <p>A grid of unique symbols. Tap symbols to equip, or slide your Rogue over them to activate.</p>
+                            <p>A grid of unique symbols. Some symbols are tap to equip, others activate when your Rogue slides over them.</p>
                             <p className="text-zinc-400">Rogue can slide once per spin.</p>
                         </div>
 

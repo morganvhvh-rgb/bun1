@@ -1,0 +1,8 @@
+name,type,level_1_hp,level_1_max_hp,level_1_atk,level_2_hp,level_2_max_hp,level_2_atk
+wyvern,flying,35,35,7,50,50,11
+octopus,---,35,35,7,50,50,11
+monster-skull,evil,35,35,7,50,50,11
+snail,---,35,35,7,50,50,11
+hydra,---,35,35,7,50,50,11
+spider-face,---,35,35,7,50,50,11
+eye-monster,flying / boss,100,100,18,150,150,33

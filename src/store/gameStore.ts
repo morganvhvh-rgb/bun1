@@ -233,6 +233,10 @@ export const useGameStore = create<GameState>()(
                                 state.playerMaxHp += (isBoosted ? 10 : 5);
                             }
                             break;
+                        case 'axe':
+                            state.playerBaseAtk += (isBoosted ? 6 : 3);
+                            state.playerGear += (isBoosted ? 4 : 2);
+                            break;
                         case 'relic-blade':
                         case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                         case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
