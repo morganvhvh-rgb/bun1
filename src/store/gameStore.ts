@@ -28,6 +28,7 @@ interface GameState {
     isFirstEnemyAttack: boolean;
     conjureMagicUsed: boolean;
     battleCount: number;
+    globalEnemyHpDebuff: number;
 
     enemy1: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
     enemy2: { name: IconName; hp: number; maxHp: number; atk: number; isVisible: boolean; lvl: number; type: string };
@@ -42,6 +43,7 @@ interface GameState {
     spendGold: (amount: number) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
+    incrementEnemyDebuff: (amount: number) => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
@@ -91,6 +93,7 @@ export const useGameStore = create<GameState>()(
             isFirstEnemyAttack: true,
             conjureMagicUsed: false,
             battleCount: 1,
+            globalEnemyHpDebuff: 0,
 
             enemy1: { ...INITIAL_ENEMIES.wyvern },
             enemy2: { ...INITIAL_ENEMIES.octopus },
@@ -134,7 +137,7 @@ export const useGameStore = create<GameState>()(
                     if (category === 'Treasure' || category === 'Nature') {
                         switch (targetItem.name) {
                             case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
-                            case 'pine-tree': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); break;
+                            case 'pine-tree': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); break;
                             case 'zigzag-leaf': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'gold-bar': state.gold += (isBoosted ? 28 : 14); break;
                             case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
@@ -186,18 +189,18 @@ export const useGameStore = create<GameState>()(
                     state.keptIcons[emptySlotIndex] = { name: item.name, battleCount: 2, isBoosted };
 
                     switch (item.name) {
-                        case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 12 : 6)); break;
-                        case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 20 : 10)); break;
-                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 2 : 1); break;
-                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 8 : 4); state.playerHp += (isBoosted ? 8 : 4); break;
-                        case 'axe': state.playerBaseAtk += (isBoosted ? 6 : 3); state.playerGear += (isBoosted ? 4 : 2); break;
+                        case 'apple': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 16 : 8)); break;
+                        case 'meat': state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (isBoosted ? 24 : 12)); break;
+                        case 'crab-claw': state.playerMaxHp += (isBoosted ? 6 : 3); break;
+                        case 'brandy-bottle': state.playerHp = Math.max(1, Math.floor(state.playerHp * 0.75)); state.playerMaxHp += (isBoosted ? 10 : 5); state.playerHp += (isBoosted ? 10 : 5); break;
                         case 'relic-blade':
                         case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                         case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
                         case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
                         case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
                         case 'crystal-wand':
-                        case 'fairy-wand': state.playerMagic += (isBoosted ? 10 : 5); break;
+                            state.playerMagic += (isBoosted ? 10 : 5); break;
+                        case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
                         case 'bell':
                         case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                     }
@@ -280,7 +283,7 @@ export const useGameStore = create<GameState>()(
                         icon.battleCount -= 1;
                         if (icon.battleCount <= 0) {
                             if (icon.name === 'apple') {
-                                state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (icon.isBoosted ? 12 : 6));
+                                state.playerHp = Math.min(state.playerMaxHp, state.playerHp + (icon.isBoosted ? 16 : 8));
                             }
                             state.keptIcons[i] = null;
                         }
@@ -291,19 +294,24 @@ export const useGameStore = create<GameState>()(
                 state.conjureMagicUsed = false;
 
                 if (state.battleCount === 4) {
-                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: 50, maxHp: 50, atk: 11, lvl: 2 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 50, maxHp: 50, atk: 11, lvl: 2 };
+                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: Math.max(1, 50 - state.globalEnemyHpDebuff), atk: 11, lvl: 2 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: Math.max(1, 50 - state.globalEnemyHpDebuff), atk: 11, lvl: 2 };
                 } else if (state.enemy1.name === 'wyvern') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: isLvl2 ? 50 : INITIAL_ENEMIES.snail.hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES.snail.maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].hp;
+                    const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES.snail.hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'monster-skull') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: isLvl2 ? 50 : INITIAL_ENEMIES.hydra.hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES.hydra.maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].hp, maxHp: isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].maxHp, atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES.hydra.hp;
+                    const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'hydra') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].hp, maxHp: isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].maxHp, atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
                     state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: isLvl2 ? 2 : 1 };
                 }
 
@@ -326,6 +334,7 @@ export const useGameStore = create<GameState>()(
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
                 state.battleCount = 1;
+                state.globalEnemyHpDebuff = 0;
                 state.enemy1 = { ...INITIAL_ENEMIES.wyvern };
                 state.enemy2 = { ...INITIAL_ENEMIES.octopus };
             }),
@@ -352,6 +361,10 @@ export const useGameStore = create<GameState>()(
                 state.conjureMagicUsed = true;
             }),
 
+            incrementEnemyDebuff: (amount) => set((state) => {
+                state.globalEnemyHpDebuff += amount;
+            }),
+
         })),
         {
             name: 'daily-rogue-storage',
@@ -360,8 +373,12 @@ export const useGameStore = create<GameState>()(
     )
 );
 
-export const selectTotalAttack = (state: GameState) =>
-    state.playerBaseAtk + (state.keptIcons.some(item => item?.name === 'relic-blade') ? state.moves : 0);
+export const selectTotalAttack = (state: GameState) => {
+    const hasCrystalWand = state.keptIcons.some(item => item?.name === 'crystal-wand');
+    const magicBonus = hasCrystalWand ? state.playerMagic : 0;
+    const relicBladeBonus = state.keptIcons.some(item => item?.name === 'relic-blade') ? state.moves : 0;
+    return state.playerBaseAtk + magicBonus + relicBladeBonus;
+};
 
 export const selectHasDaggers = (state: GameState) =>
     state.keptIcons.some(item => item?.name === 'daggers');
@@ -376,3 +393,13 @@ export const selectShuffleCost = (state: GameState) => {
 
 export const selectHasTwoFairyWands = (state: GameState) =>
     state.keptIcons.filter(item => item?.name === 'fairy-wand').length >= 2;
+
+export const selectAxeActive = (state: GameState) => {
+    const hasAxe = state.keptIcons.some(item => item?.name === 'axe');
+    if (!hasAxe) return false;
+    const hasOtherWeapon = state.keptIcons.some(item => item && item.name !== 'axe' && ICON_CATEGORIES[item.name] === 'Weapon');
+    return !hasOtherWeapon;
+};
+
+export const selectBellCount = (state: GameState) =>
+    state.keptIcons.filter(item => item?.name === 'bell').length;

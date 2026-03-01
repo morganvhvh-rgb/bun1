@@ -159,13 +159,13 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "spider-face": "Enemy",
     "eye-monster": "Enemy",
 
-    "apple": "Heal 6 HP",
-    "meat": "Heal 10 HP",
-    "crab-claw": "+1 Max HP",
-    "brandy-bottle": "-25% HP & +4 Max HP",
+    "apple": "Heal 8 HP",
+    "meat": "Heal 12 HP",
+    "crab-claw": "+3 Max HP",
+    "brandy-bottle": "-25% HP & +5 Max HP",
 
     "clover": "+1 EXP +1 Magic",
-    "pine-tree": "+1 EXP",
+    "pine-tree": "+2 EXP",
     "zigzag-leaf": "-3 EXP +5 Magic",
 
     "axe": "+3 ATK +2 Gear",
@@ -177,7 +177,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "knight-helmet": "+2 Gear",
 
     "crystal-wand": "+5 Magic",
-    "fairy-wand": "+5 Magic",
+    "fairy-wand": "+3 Magic",
 
     "gold-bar": "+14 gold",
     "gem-pendant": "+8 Gold +2 Gear",
@@ -264,6 +264,9 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "spades-card": "[perspective-dice-random icon] costs 1 if experience is <3",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
     "book": "conjure magic effect applies twice",
+    "crystal-wand": "increase attack by current magic / doesnt stack",
+    "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
+    "bell": "every attack reduces all future enemies HP by 1 / stacks",
 };
 
 export const GAME_CONSTANTS = {
