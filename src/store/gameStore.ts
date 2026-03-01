@@ -383,6 +383,7 @@ export const useGameStore = create<GameState>()(
                 state.keptScrolls = [];
                 state.unlockedSlots = { 3: false, 4: false, 5: false };
                 state.levelUpPerks = [];
+                state.hasSeenTutorial = false;
                 state.gold = GAME_CONSTANTS.INITIAL_GOLD;
                 state.moves = GAME_CONSTANTS.INITIAL_MOVES;
                 state.playerHp = GAME_CONSTANTS.INITIAL_PLAYER_HP;

@@ -11,6 +11,7 @@ interface ModalProps {
     align?: 'center' | 'top-right';
     showHeader?: boolean;
     closeOnOutsideClick?: boolean;
+    backdrop?: 'dark' | 'light';
     /** Extra classes on the inner card */
     className?: string;
     children: React.ReactNode;
@@ -36,6 +37,7 @@ export function Modal({
     align = 'center',
     showHeader = true,
     closeOnOutsideClick = false,
+    backdrop = 'dark',
     className = '',
     children,
 }: ModalProps) {
@@ -51,7 +53,7 @@ export function Modal({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/90 z-[60]"
+                        className={cn("fixed inset-0 z-[60]", backdrop === 'light' ? 'bg-black/60' : 'bg-black/90')}
                     />
 
                     {/* Positioner */}
