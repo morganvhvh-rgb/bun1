@@ -12,17 +12,19 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
             onClose={onClose}
             title="Tutorial"
             position="center"
-            className="w-[90vw] h-[80vh] max-w-2xl max-h-[600px] flex flex-col pt-6 pb-5 px-6"
+            className="w-[90vw] h-auto max-w-2xl flex flex-col pt-4 pb-6 px-6"
             closeOnOutsideClick={false}
             backdrop="light"
             showHeader={false}
         >
-            <div className="flex justify-between items-center mb-6 shrink-0">
-                <h2 className="text-white font-bold uppercase tracking-widest leading-none text-base">Tutorial</h2>
+            <div className="flex justify-end items-center mb-2 shrink-0">
+                <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
 
             <div className="flex-1 min-h-0 flex flex-col">
-                <div className="flex-1 w-full overflow-y-auto">
+                <div className="flex-1 w-full">
                     <div className="flex flex-col gap-4 text-sm text-zinc-300">
                         <p><strong className="text-white text-base">DAILY ROGUE</strong> has two sections:</p>
 
@@ -42,16 +44,6 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                         <p>Spin, shuffle, equip and slide all cost <strong className="text-yellow-400">gold</strong>, so manage your money wisely.</p>
                         <p>You can equip up to two of each category, and equipped symbols will be removed after two battles.</p>
                     </div>
-                </div>
-
-                {/* Navigation */}
-                <div className="flex pt-4 mt-auto border-t border-white/10 shrink-0">
-                    <button
-                        onClick={onClose}
-                        className="flex-1 flex justify-center items-center bg-white text-black font-bold uppercase tracking-widest text-sm px-6 py-3 rounded-sm hover:focus-visible:ring-2 hover:bg-zinc-200 transition-colors"
-                    >
-                        Close
-                    </button>
                 </div>
             </div>
         </Modal>

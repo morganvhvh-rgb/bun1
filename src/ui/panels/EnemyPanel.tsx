@@ -52,7 +52,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     {/* LVL Row */}
                     <div className="flex items-center md:gap-2 gap-1 w-full">
                         <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">LVL</span>
-                        <span className="text-[13px] sm:text-[15px] font-bold text-emerald-400 leading-none font-mono tracking-wider truncate">{lvl}</span>
+                        <span className="text-[13px] sm:text-[15px] font-bold text-green-500 leading-none font-mono tracking-wider truncate">{lvl}</span>
                     </div>
                 </div>
             </div>

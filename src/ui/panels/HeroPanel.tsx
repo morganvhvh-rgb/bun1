@@ -29,7 +29,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 {/* Header: Name & Level */}
                 <div className="flex items-baseline justify-center gap-2 z-10 w-full shrink-0">
                     <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">ROGUE</span>
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {playerLvl}</span>
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-green-500 drop-shadow-md">LVL {playerLvl}</span>
                 </div>
 
                 {/* Middle: Avatar (Center) */}
@@ -93,14 +93,14 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                         <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-6 shrink-0 text-left pl-1">EXP</span>
                         <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
                             <motion.div
-                                className="absolute left-0 top-0 bottom-0 bg-teal-400 rounded-full"
+                                className="absolute left-0 top-0 bottom-0 bg-green-500 rounded-full"
                                 initial={{ width: `${Math.max(0, Math.min(100, (moves / GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) * 100))}%` }}
                                 animate={{ width: `${Math.max(0, Math.min(100, (moves / GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) * 100))}%` }}
                                 transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
                             />
                         </div>
-                        <span className="text-[12px] sm:text-[14px] font-bold text-teal-400 leading-none font-mono tracking-wider shrink-0 w-8 sm:w-12">
-                            {moves}<span className="text-[10px] sm:text-[12px] text-teal-400/60">/{GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED}</span>
+                        <span className="text-[12px] sm:text-[14px] font-bold text-green-500 leading-none font-mono tracking-wider shrink-0 w-8 sm:w-12">
+                            {moves}<span className="text-[10px] sm:text-[12px] text-green-500/60">/{GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED}</span>
                         </span>
                     </div>
                 </div>
