@@ -28,6 +28,7 @@ interface GameState {
     isFirstEnemyAttack: boolean;
     conjureMagicUsed: boolean;
     itemScrollClaimed: boolean;
+    magicScrollUsed: boolean;
     battleCount: number;
     globalEnemyHpDebuff: number;
 
@@ -104,6 +105,7 @@ export const useGameStore = create<GameState>()(
             isFirstEnemyAttack: true,
             conjureMagicUsed: false,
             itemScrollClaimed: false,
+            magicScrollUsed: false,
             battleCount: 1,
             globalEnemyHpDebuff: 0,
 
@@ -183,6 +185,9 @@ export const useGameStore = create<GameState>()(
                     if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
                     else if (!state.unlockedSlots[4]) state.unlockedSlots[4] = true;
                     else if (!state.unlockedSlots[5]) state.unlockedSlots[5] = true;
+                    else if (state.keptScrolls.includes('special-scroll')) {
+                        state.gold += (isBoosted ? 32 : 16);
+                    }
                 }
             }),
 
@@ -279,6 +284,12 @@ export const useGameStore = create<GameState>()(
                             state.playerGear = Math.max(0, state.playerGear - finalDamage);
                             finalDamage = 0;
                         }
+                    }
+
+                    if (state.playerHp - finalDamage <= 0 && state.keptScrolls.includes('magic-scroll') && !state.magicScrollUsed) {
+                        state.playerMagic += amount;
+                        finalDamage = 0;
+                        state.magicScrollUsed = true;
                     }
 
                     state.isFirstEnemyAttack = false;
@@ -379,6 +390,7 @@ export const useGameStore = create<GameState>()(
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
                 state.itemScrollClaimed = false;
+                state.magicScrollUsed = false;
                 state.battleCount = 1;
                 state.globalEnemyHpDebuff = 0;
                 state.enemy1 = { ...INITIAL_ENEMIES.wyvern };

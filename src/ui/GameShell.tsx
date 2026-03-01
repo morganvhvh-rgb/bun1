@@ -18,7 +18,7 @@ import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridItem } from '@/types/game';
 
 export function GameShell() {
-    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks } = useGameStore();
+    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
 
@@ -121,6 +121,8 @@ export function GameShell() {
                                 onIconClick={(item, index) => { if (!isBattleRunning) grid.handleIconClick(item, index); }}
                                 onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeHoodedIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
                                 levelUpPerks={levelUpPerks}
+                                hasSpecialScroll={keptScrolls.includes('special-scroll')}
+                                areAllSlotsUnlocked={unlockedSlots[3] && unlockedSlots[4] && unlockedSlots[5]}
                             />
                         </div>
                         <Controls

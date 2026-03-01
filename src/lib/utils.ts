@@ -52,13 +52,20 @@ export const findMatchingIndices = (gridIcons: (GridItem | null)[], columns: num
     return matches;
 };
 
-export const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: string[]): string => {
+export const getStatText = (
+    name: IconName,
+    isBoosted: boolean,
+    levelUpPerks: string[],
+    hasSpecialScroll: boolean = false,
+    areAllSlotsUnlocked: boolean = false
+): string => {
     const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
 
     if (!isBoosted) {
         if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
         if (name === 'pine-tree') return `+${2 * expMultiplier} EXP`;
         if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
+        if (name === 'key' && hasSpecialScroll && areAllSlotsUnlocked) return '+16 gold';
         return ICON_STATS[name] || "???";
     }
 
@@ -81,6 +88,9 @@ export const getStatText = (name: IconName, isBoosted: boolean, levelUpPerks: st
         case 'fairy-wand': return "+6 Magic";
         case 'gold-bar': return "+20 gold";
         case 'gem-pendant': return "+20 Gold";
+        case 'key':
+            if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 gold';
+            return ICON_STATS[name] || "???";
         default: return ICON_STATS[name] || "???";
     }
 };

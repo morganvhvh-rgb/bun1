@@ -271,6 +271,8 @@ export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "armor-scroll": "+2 max HP for every 5 GEAR",
     "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",
     "food-scroll": "all food effects happen twice",
+    "magic-scroll": "next fatal strike will miss, damage added to magic (one-time)",
+    "special-scroll": "if all inventory slots are unlocked, keys are now as valuable as gold bars",
 };
 
 export const GAME_CONSTANTS = {

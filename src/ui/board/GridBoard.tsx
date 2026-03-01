@@ -16,11 +16,14 @@ interface GridBoardProps {
     onIconClick: (item: GridItem, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
     levelUpPerks: string[];
+    hasSpecialScroll: boolean;
+    areAllSlotsUnlocked: boolean;
 }
 
 export function GridBoard({
     gridIcons, spinKey, matchingIndices, glowingIndices, activeHoodedIndex,
     selectedIndex, selectedEquippedItem, isSpinning, onIconClick, onEmptyGlowClick, levelUpPerks,
+    hasSpecialScroll, areAllSlotsUnlocked,
 }: GridBoardProps) {
 
     const containerVariants = {
@@ -143,7 +146,7 @@ export function GridBoard({
                             </span>
                         </div>
                         <div className="font-bold tracking-widest text-teal-400 uppercase w-full min-w-0 break-words" style={{ fontSize: 'var(--text-sm)' }}>
-                            {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks)}
+                            {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked)}
                         </div>
                         <div className="font-bold tracking-wider uppercase text-zinc-400 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-xs)', minHeight: 14 }}>
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
