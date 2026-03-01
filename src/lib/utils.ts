@@ -61,6 +61,8 @@ export const getStatText = (
 ): string => {
     const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
 
+    if (name === 'hood') return '';
+
     if (!isBoosted) {
         if (name === 'clover') return `+${2 * expMultiplier} EXP +2 Magic`;
         if (name === 'pine-tree') return `+${4 * expMultiplier} EXP`;
@@ -78,15 +80,15 @@ export const getStatText = (
         case 'dead-tree': return `-${3 * expMultiplier} EXP +10 Magic`;
         case 'axe': return "";
         case 'relic-blade':
-        case 'crossbow':
         case 'daggers': return "+2 ATK +2 Gear";
-        case 'shield':
+        case 'crossbow': return "+2 ATK +8 Gear";
+        case 'shield': return "+10 Gear";
         case 'knight-helmet': return "+4 Gear";
         case 'crystal-wand':
             return "+10 Magic";
         case 'fairy-wand': return "+6 Magic";
-        case 'gold-bar': return "+20 gold";
-        case 'gem-pendant': return "+20 Gold";
+        case 'gold-bar': return "+32 gold";
+        case 'gem-pendant': return "+16 Gold +4 Gear";
         case 'key':
             if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 gold';
             return ICON_STATS[name] || "???";

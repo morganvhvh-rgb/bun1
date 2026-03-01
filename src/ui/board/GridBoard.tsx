@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
-import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS } from '@/lib/constants';
+import { ICON_THEME, ICON_CATEGORIES, ICON_EXTRA_EFFECTS, CATEGORY_BADGE_THEME } from '@/lib/constants';
 import type { GridItem } from '@/types/game';
 
 interface GridBoardProps {
@@ -93,6 +93,8 @@ export function GridBoard({
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
     const isDisplayItemBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : !!selectedEquippedItem?.isBoosted;
+    const displayCategory = displayItem ? ICON_CATEGORIES[displayItem.name] : null;
+    const categoryTheme = displayCategory ? CATEGORY_BADGE_THEME[displayCategory] : null;
 
     return (
         <div className="flex flex-col items-center shrink-0" style={{ gap: 'var(--gap)', width: 'calc(var(--cell) * 4 + var(--gap) * 3)' }}>
@@ -174,8 +176,11 @@ export function GridBoard({
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
                             <span className="text-white drop-shadow-sm">{displayItem.name.replace(/_/g, ' ')}</span>
-                            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 border border-white/10 rounded-md bg-black/40 leading-none font-sans">
-                                {ICON_CATEGORIES[displayItem.name]}
+                            <span className={cn(
+                                "text-[10px] sm:text-[11px] px-1.5 py-0.5 border rounded-md leading-none font-sans",
+                                categoryTheme?.className ?? 'text-zinc-200 border-zinc-300/35 bg-zinc-500/12'
+                            )}>
+                                {categoryTheme?.label ?? displayCategory}
                             </span>
                         </div>
                         <div className={cn(

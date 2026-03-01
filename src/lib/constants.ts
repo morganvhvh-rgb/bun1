@@ -250,6 +250,48 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "lightning-trio": "Magic",
 };
 
+type CategoryBadgeTheme = {
+    label?: string;
+    className: string;
+};
+
+export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
+    Hero: {
+        label: "ROGUE",
+        className: "text-violet-200 border-violet-300/35 bg-violet-500/15",
+    },
+    Enemy: {
+        className: "text-rose-200 border-rose-300/35 bg-rose-500/12",
+    },
+    Food: {
+        className: "text-red-200 border-red-300/35 bg-red-500/12",
+    },
+    Nature: {
+        className: "text-emerald-200 border-emerald-300/35 bg-emerald-500/12",
+    },
+    Weapon: {
+        className: "text-slate-200 border-slate-300/35 bg-slate-500/15",
+    },
+    Armor: {
+        className: "text-sky-200 border-sky-300/35 bg-sky-500/12",
+    },
+    Magic: {
+        className: "text-fuchsia-200 border-fuchsia-300/35 bg-fuchsia-500/12",
+    },
+    Treasure: {
+        className: "text-amber-200 border-amber-300/35 bg-amber-500/12",
+    },
+    Special: {
+        className: "text-yellow-100 border-yellow-300/35 bg-yellow-700/15",
+    },
+    Item: {
+        className: "text-zinc-200 border-zinc-300/35 bg-zinc-500/12",
+    },
+    Music: {
+        className: "text-orange-200 border-orange-300/35 bg-orange-500/12",
+    },
+};
+
 export const ICON_EXTRA_EFFECTS: Partial<Record<IconName, string>> = {
     "apple": "also heal when symbol is removed",
     "daggers": "first attack happens 3 times / doesnt stack",
