@@ -29,7 +29,7 @@ export function ScrollBuyModal({
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-white font-bold uppercase tracking-widest leading-none">SCROLL TYPE</h2>
+                                <h2 className="text-white font-bold uppercase tracking-widest leading-none">SCROLLS</h2>
                                 <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Close</button>
                             </div>
 
@@ -38,18 +38,21 @@ export function ScrollBuyModal({
                                     <button
                                         onClick={onBuyScroll}
                                         disabled={gold < scrollCost}
-                                        className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border ${gold >= scrollCost ? 'bg-black text-white border-zinc-800' : 'bg-black text-zinc-600 border-zinc-800 cursor-not-allowed'}`}
+                                        className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border transition-colors ${gold >= scrollCost
+                                            ? 'bg-[#5c3a21] hover:bg-[#6b442a] text-white border-[#8b5a33] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
+                                            : 'bg-[#3a2012] text-[#8b5a33] border-[#4a2e1b] cursor-not-allowed'
+                                            }`}
                                     >
-                                        Buy Scroll {gold < scrollCost ? `(Need ${scrollCost}g)` : `(${scrollCost}g)`}
+                                        BUY SCROLL - <span className="text-[#eab308]">{scrollCost} GOLD</span>
                                     </button>
                                 ) : (
-                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-black text-white border border-zinc-800 opacity-50">
-                                        Unlocking...
+                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-[#5c3a21] text-[#fcd0a1] border border-[#8b5a33] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] opacity-50">
+                                        REVEALING...
                                     </div>
                                 )}
                             </div>
 
-                            <div className="flex-1 min-h-[12rem] border border-zinc-800 bg-black flex flex-col items-center justify-center relative overflow-hidden p-4">
+                            <div className="flex-1 min-h-[12rem] flex flex-col items-center justify-center relative overflow-hidden p-4">
                                 <div className="relative flex w-full h-full items-center justify-center">
                                     {availableScrolls.map((color, i) => {
                                         const isRevealed = revealedScrollColor === color;
@@ -97,7 +100,7 @@ export function ScrollBuyModal({
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
                                                 className="text-sm text-white font-black uppercase tracking-[0.2em] leading-none text-center"
                                             >
-                                                {revealedScrollColor.replace('-scroll', '')}
+                                                {revealedScrollColor.replace('-scroll', '')} SCROLL
                                             </motion.div>
                                         )}
                                     </AnimatePresence>

@@ -12,7 +12,6 @@ export const ICON_MAP = {
 
     // Food
     "apple": "apple",
-    "meat": "meat",
     "crab-claw": "crab-claw",
     "brandy-bottle": "brandy-bottle",
 
@@ -67,7 +66,7 @@ type IconName = keyof typeof ICON_MAP;
 
 export const ICON_KEYS: IconName[] = [
     // Food
-    "apple", "meat", "crab-claw", "brandy-bottle",
+    "apple", "crab-claw", "brandy-bottle",
     // Nature
     "clover", "pine-tree", "dead-tree",
     // Weapon
@@ -96,7 +95,6 @@ export const ICON_THEME: Record<IconName, string> = {
 
     // Food (Red)
     "apple": "#ef4444",
-    "meat": "#ef4444",
     "crab-claw": "#ef4444",
     "brandy-bottle": "#ef4444",
 
@@ -159,8 +157,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
     "spider-face": "Enemy",
     "eye-monster": "Enemy",
 
-    "apple": "Heal 8 HP",
-    "meat": "Heal 12 HP",
+    "apple": "Heal 10 HP",
     "crab-claw": "+3 Max HP +1 EXP",
     "brandy-bottle": "-10 HP & +5 Max HP",
 
@@ -210,7 +207,6 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
     "eye-monster": "Enemy",
 
     "apple": "Food",
-    "meat": "Food",
     "crab-claw": "Food",
     "brandy-bottle": "Food",
 

@@ -219,8 +219,7 @@ export const useGameStore = create<GameState>()(
                     const foodMultiplier = state.keptScrolls.includes('food-scroll') && ICON_CATEGORIES[item.name as IconName] === 'Food' ? 2 : 1;
 
                     switch (item.name) {
-                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 16 : 8) * foodMultiplier); break;
-                        case 'meat': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 24 : 12) * foodMultiplier); break;
+                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 20 : 10) * foodMultiplier); break;
                         case 'crab-claw':
                             state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
                             state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
@@ -345,7 +344,7 @@ export const useGameStore = create<GameState>()(
                         if (icon.battleCount <= 0) {
                             if (icon.name === 'apple') {
                                 const foodMultiplier = state.keptScrolls.includes('food-scroll') ? 2 : 1;
-                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 16 : 8) * foodMultiplier);
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (icon.isBoosted ? 20 : 10) * foodMultiplier);
                             }
                             state.keptIcons[i] = null;
                         }

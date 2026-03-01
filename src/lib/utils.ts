@@ -70,8 +70,7 @@ export const getStatText = (
     }
 
     switch (name) {
-        case 'apple': return "Heal 16 HP";
-        case 'meat': return "Heal 24 HP";
+        case 'apple': return "Heal 20 HP";
         case 'crab-claw': return "+6 Max HP +2 EXP";
         case 'brandy-bottle': return "-20 HP & +10 Max HP";
         case 'clover': return `+${4 * expMultiplier} EXP +4 Magic`;
