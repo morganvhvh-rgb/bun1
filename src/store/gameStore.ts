@@ -36,7 +36,8 @@ interface GameState {
 
     // Actions
     spinBoard: () => void;
-    shuffleBoard: () => void;
+    payForShuffle: () => boolean;
+    applySwaps: (swaps: [number, number][]) => void;
     moveCharacter: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
     keepItem: (item: GridItem, isBoosted?: boolean) => void;
     removeGridItem: (id: string) => void;
@@ -114,18 +115,26 @@ export const useGameStore = create<GameState>()(
                 state.grid = generateRandomIcons();
             }),
 
-            shuffleBoard: () => set((state) => {
-                const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
-                const cost = (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+            payForShuffle: () => {
+                let success = false;
+                set((state) => {
+                    const hasSpadesCard = state.keptIcons.some(item => item?.name === 'spades-card');
+                    const cost = (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
 
-                if (state.gold < cost) return;
-                state.gold -= cost;
-                const newArr = [...state.grid];
-                for (let i = newArr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+                    if (state.gold >= cost) {
+                        state.gold -= cost;
+                        success = true;
+                    }
+                });
+                return success;
+            },
+
+            applySwaps: (swaps) => set((state) => {
+                for (const [i, j] of swaps) {
+                    const temp = state.grid[i];
+                    state.grid[i] = state.grid[j];
+                    state.grid[j] = temp;
                 }
-                state.grid = newArr;
             }),
 
             moveCharacter: (fromIndex, toIndex, isBoosted = false) => set((state) => {

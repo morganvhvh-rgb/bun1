@@ -14,7 +14,8 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         keptScrolls,
 
         spinBoard,
-        shuffleBoard,
+        payForShuffle,
+        applySwaps,
         moveCharacter,
         keepItem,
         removeGridItem,
@@ -25,8 +26,9 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [spinKey, setSpinKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [selectedEquippedItem, setSelectedEquippedItem] = useState<GridItem | null>(null);
-    const [isShaking, setIsShaking] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isSpinning, setIsSpinning] = useState(false);
+    const [isShuffling, setIsShuffling] = useState(false);
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activeHoodedIndex, setActiveHoodedIndex] = useState<number | null>(null);
     const [hasMoved, setHasMoved] = useState(false);
@@ -47,21 +49,56 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
-        setHasMoved(false);
+        // IsShaking was used for older animation logic
         setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 800);
+        setIsSpinning(true);
+        setTimeout(() => { setIsAnimating(false); setIsSpinning(false); }, 1600);
     };
 
-    const handleVary = () => {
+    const handleVary = async () => {
         if (isAnimating) return;
-        const gold = useGameStore.getState().gold;
-        if (gold < shuffleCost) return;
-        shuffleBoard();
+        const state = useGameStore.getState();
+        const gold = state.gold;
+
+        // Prevent action if not enough gold (pre-check via cost logic)
+        const cost = (state.keptIcons.some(i => i?.name === 'spades-card') && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+        if (gold < cost) return;
+
+        const success = payForShuffle();
+        if (!success) return;
+
         resetSelection();
         setHasMoved(false);
-        setIsShaking(true);
         setIsAnimating(true);
-        setTimeout(() => { setIsShaking(false); setIsAnimating(false); }, 250);
+        setIsShuffling(true);
+
+        const currentGrid = useGameStore.getState().grid;
+        // Only shuffle indices that currently contain an item
+        const filledIndices = currentGrid.map((item, i) => item !== null ? i : -1).filter(i => i !== -1);
+
+        // Generate Fisher-Yates swaps on the filled slots only
+        const steps: [number, number][] = [];
+        const shufflable = [...filledIndices];
+        for (let i = shufflable.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            if (i !== j) {
+                steps.push([shufflable[i], shufflable[j]]);
+                const tmp = shufflable[i];
+                shufflable[i] = shufflable[j];
+                shufflable[j] = tmp;
+            }
+        }
+
+        // Execute swaps in small aesthetic groups
+        const groupSize = 2; // Swapping multiple pairs looks like a cool algorithm
+        for (let g = 0; g < steps.length; g += groupSize) {
+            const swaps = steps.slice(g, g + groupSize);
+            applySwaps(swaps);
+            await new Promise(r => setTimeout(r, 220)); // snappy visual pause
+        }
+
+        setIsShuffling(false);
+        setIsAnimating(false);
     };
 
     const handleKeptIconClick = (e: React.MouseEvent, icon: KeptIcon) => {
@@ -141,8 +178,9 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         activeHoodedIndex,
         selectedIndex,
         selectedEquippedItem,
-        isShaking,
         isAnimating,
+        isSpinning,
+        isShuffling,
         hasMoved,
         shuffleCost,
         resetSelection,

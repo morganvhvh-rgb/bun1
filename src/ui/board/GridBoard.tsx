@@ -12,7 +12,7 @@ interface GridBoardProps {
     activeHoodedIndex: number | null;
     selectedIndex: number | null;
     selectedEquippedItem: GridItem | null;
-    isShaking: boolean;
+    isSpinning: boolean;
     onIconClick: (item: GridItem, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
     levelUpPerks: string[];
@@ -20,17 +20,27 @@ interface GridBoardProps {
 
 export function GridBoard({
     gridIcons, spinKey, matchingIndices, glowingIndices, activeHoodedIndex,
-    selectedIndex, selectedEquippedItem, isShaking, onIconClick, onEmptyGlowClick, levelUpPerks,
+    selectedIndex, selectedEquippedItem, isSpinning, onIconClick, onEmptyGlowClick, levelUpPerks,
 }: GridBoardProps) {
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+        show: { opacity: 1 },
     };
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.5 },
-        show: { opacity: 1, scale: 1 },
-        shake: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+        hidden: { opacity: 0, scale: 0.8, y: -30 },
+        show: ({ index, isSpinning }: { index: number, isSpinning: boolean }) => {
+            const col = index % 4;
+            const row = Math.floor(index / 4);
+            const order = (col * 3) + row;
+            const delay = isSpinning ? order * 0.12 : 0;
+            return {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transition: { delay, type: 'spring' as const, stiffness: 450, damping: 25 }
+            };
+        },
     };
 
     const displayItem = selectedIndex !== null ? gridIcons[selectedIndex] : selectedEquippedItem;
@@ -67,9 +77,11 @@ export function GridBoard({
                             <motion.div
                                 key={item?.id ?? `empty-${index}`}
                                 layout
+                                custom={{ index, isSpinning }}
                                 variants={itemVariants}
-                                animate={isShaking ? 'shake' : undefined}
-                                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                                initial="hidden"
+                                animate="show"
+                                transition={{ layout: { type: 'spring', stiffness: 350, damping: 28 } }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
                                     isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'

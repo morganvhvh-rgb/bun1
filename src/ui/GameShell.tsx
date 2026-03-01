@@ -117,7 +117,7 @@ export function GameShell() {
                                 activeHoodedIndex={grid.activeHoodedIndex}
                                 selectedIndex={grid.selectedIndex}
                                 selectedEquippedItem={grid.selectedEquippedItem}
-                                isShaking={grid.isShaking}
+                                isSpinning={grid.isSpinning}
                                 onIconClick={(item, index) => { if (!isBattleRunning) grid.handleIconClick(item, index); }}
                                 onEmptyGlowClick={(index) => { if (!isBattleRunning && grid.activeHoodedIndex !== null) grid.handleIconClick({ id: 'empty', name: 'hood' } as GridItem, index); }}
                                 levelUpPerks={levelUpPerks}
