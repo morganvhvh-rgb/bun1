@@ -23,45 +23,49 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full flex items-center justify-between z-10 overflow-visible surface-panel p-2 sm:p-3"
+            className="absolute inset-0 w-full h-full flex flex-col justify-between z-10 overflow-hidden surface-panel p-2 sm:p-3"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            {/* Big Avatar */}
-            <div className="absolute top-1/2 -translate-y-1/2 left-1 sm:left-3 z-0 pointer-events-none scale-[0.85] sm:scale-100">
-                <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto origin-left">
-                    <Icon name={name} scale={3.8} tintColor={ICON_THEME[name]} />
-                </motion.div>
-            </div>
-
-            {/* Stats Area right-aligned */}
-            <div className="flex flex-col h-full justify-between z-10 w-1/2 min-w-0 pt-0.5 pb-0.5 ml-auto text-right">
-                <div className="flex flex-col min-w-0 items-end">
-                    <div className="text-[12px] sm:text-[14px] font-bold uppercase leading-tight text-zinc-100 drop-shadow-md break-words truncate w-full">
-                        {name.replace('-', ' ')}
-                    </div>
-                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-emerald-400 mt-0.5">
-                        LVL {lvl}
-                    </div>
-                    {hasType && (
-                        <div className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 mt-0.5 max-w-full truncate">
-                            {type}
-                        </div>
-                    )}
+            {/* Top row: Avatar + Info */}
+            <div className="flex-1 flex items-center min-h-0 min-w-0 w-full gap-2 sm:gap-3">
+                {/* Left: Avatar */}
+                <div className="shrink-0 flex items-center justify-center scale-[0.85] sm:scale-100 origin-center pl-1 sm:pl-2">
+                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto">
+                        <Icon name={name} scale={3.2} tintColor={ICON_THEME[name]} />
+                    </motion.div>
                 </div>
 
-                <div className="flex gap-4 mt-auto justify-end">
-                    <div className="flex flex-col items-end">
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none mb-1">HP</span>
-                        <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-red-400 leading-none">
-                            {hp}<span className="text-[9px] sm:text-[10px] text-red-400/60">/{maxHp}</span>
-                        </motion.span>
+                {/* Right: Info */}
+                <div className="flex-1 flex flex-col min-w-0 justify-center h-full pt-0.5">
+                    <div className="text-[12px] sm:text-[14px] font-bold uppercase leading-tight text-white drop-shadow-md truncate w-full">
+                        {name.replace('-', ' ')}
                     </div>
-                    <div className="flex flex-col items-end">
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none mb-1">ATK</span>
-                        <span className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-orange-400 leading-none">{atk}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1 min-w-0 w-full">
+                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-emerald-400 shrink-0">
+                            LVL {lvl}
+                        </span>
+                        {hasType && (
+                            <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 truncate min-w-0">
+                                {type}
+                            </span>
+                        )}
                     </div>
+                </div>
+            </div>
+
+            {/* Bottom row: HP & ATK */}
+            <div className="flex shrink-0 items-end justify-between w-full mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-white/5">
+                <div className="flex items-baseline gap-1.5">
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">HP</span>
+                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-red-400 leading-none">
+                        {hp}<span className="text-[10px] sm:text-[11px] text-red-400/60">/{maxHp}</span>
+                    </motion.span>
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
+                    <span className="text-[12px] sm:text-[14px] font-mono tracking-wider font-bold text-orange-400 leading-none">{atk}</span>
                 </div>
             </div>
         </motion.div>

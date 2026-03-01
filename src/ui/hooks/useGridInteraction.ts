@@ -49,6 +49,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
+        setHasMoved(false);
         // IsShaking was used for older animation logic
         setIsAnimating(true);
         setIsSpinning(true);
