@@ -8,7 +8,7 @@ interface TutorialModalProps {
 
 export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
     const [page, setPage] = useState(1);
-    const totalPages = 3;
+    const totalPages = 2;
 
     const pageContent = [
         (
@@ -36,16 +36,11 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                     <span className="text-teal-400 font-bold uppercase tracking-widest text-xs mr-2">Note:</span>
                     You can tap symbols to 'keep' and equip them, but they only last for 2 battles!
                 </p>
-            </div>
-        ),
-        (
-            <div className="flex flex-col gap-4 text-sm text-zinc-300">
-                <p>Spins, reshuffles, and movements cost <strong className="text-yellow-400">Gold</strong>. Hitting 0 gold or 0 HP usually ends the run.</p>
 
                 <div className="h-px w-full bg-white/10 my-1" />
 
+                <p>Spins, reshuffles, and movements cost <strong className="text-yellow-400">Gold</strong>. Hitting 0 gold or 0 HP usually ends the run.</p>
                 <p>The rogue icon earns EXP for movement. Save it up to unlock level-up effects in the player menu.</p>
-
                 <p>Buy scrolls to unlock permanent, unique effects for your run.</p>
             </div>
         )
@@ -66,7 +61,7 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
             onClose={onClose}
             title={`Tutorial (${page}/${totalPages})`}
             position="center"
-            className="w-[85vw] h-[75vh] max-w-lg max-h-[500px] flex flex-col pt-6 pb-5 px-6"
+            className="w-[90vw] h-[80vh] max-w-2xl max-h-[600px] flex flex-col pt-6 pb-5 px-6"
             closeOnOutsideClick={false}
             backdrop="light"
             showHeader={false}

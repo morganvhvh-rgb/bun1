@@ -23,62 +23,54 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
 
     return (
         <motion.div
-            className="absolute inset-0 w-full h-full flex flex-col justify-between z-10 overflow-hidden surface-panel p-2 sm:p-3"
+            className="absolute inset-0 w-full h-full flex flex-col justify-between z-10 overflow-visible"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            {/* Top row: Avatar + Info */}
-            <div className="flex-1 flex items-center min-h-0 min-w-0 w-full gap-2 sm:gap-3">
+            {/* Top row: Avatar + Stats */}
+            <div className="flex-1 flex items-center min-h-0 min-w-0 w-full px-1 sm:px-2 gap-2 sm:gap-4">
                 {/* Left: Avatar */}
-                <div className="shrink-0 flex items-center justify-center scale-[0.85] sm:scale-100 origin-center pl-1 sm:pl-2">
-                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto">
-                        <Icon name={name} scale={3.2} tintColor={ICON_THEME[name]} />
+                <div className="shrink-0 flex items-center justify-center scale-[0.9] sm:scale-100 origin-center pl-1 w-[4.5rem] sm:w-[5.5rem]">
+                    <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto flex justify-center items-center">
+                        <Icon name={name} scale={4.5} tintColor={ICON_THEME[name]} />
+                        {hasType && (
+                            <span className="absolute z-10 text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,1)] pointer-events-none" style={{ textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,0.8)' }}>
+                                {type}
+                            </span>
+                        )}
                     </motion.div>
                 </div>
 
-                {/* Right: Info */}
-                <div className="flex-1 flex flex-col min-w-0 justify-center h-full pt-0.5">
-                    <div className="text-[12px] sm:text-[14px] font-bold uppercase leading-tight text-white drop-shadow-md truncate w-full">
-                        {name.replace('-', ' ')}
+                {/* Right: Vertical Stats (3 Rows) */}
+                <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 min-w-0 py-1">
+                    {/* ATK Row */}
+                    <div className="flex items-center md:gap-2 gap-1 w-full">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">ATK</span>
+                        <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider truncate">{atk}</span>
                     </div>
-                    {hasType && (
-                        <div className="flex items-center mt-0.5 sm:mt-1 min-w-0 w-full">
-                            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-zinc-500 truncate min-w-0">
-                                {type}
-                            </span>
-                        </div>
-                    )}
+                    {/* LVL Row */}
+                    <div className="flex items-center md:gap-2 gap-1 w-full">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">LVL</span>
+                        <span className="text-[13px] sm:text-[15px] font-bold text-emerald-400 leading-none font-mono tracking-wider truncate">{lvl}</span>
+                    </div>
                 </div>
             </div>
 
-            {/* Bottom Section: Stats & HP */}
-            <div className="flex flex-col gap-1.5 sm:gap-2 w-full mt-auto shrink-0 pt-1.5 sm:pt-2 border-t border-white/5">
-                {/* Stats Row */}
-                <div className="flex items-center justify-between w-full px-1">
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
-                        <span className="text-[13px] sm:text-[14px] font-bold text-orange-400 leading-none font-mono tracking-wider">{atk}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">LVL</span>
-                        <span className="text-[13px] sm:text-[14px] font-bold text-emerald-400 leading-none font-mono tracking-wider">{lvl}</span>
-                    </div>
-                </div>
-
-                {/* HP Bar */}
+            {/* Bottom Section: HP Bar */}
+            <div className="flex flex-col w-full mt-auto shrink-0 pb-1 pt-1 sm:pt-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 w-full px-1">
                     <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-4 shrink-0 text-left">HP</span>
                     <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
                         <motion.div
-                            className="absolute left-0 top-0 bottom-0 bg-red-400 rounded-full"
+                            className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
                             initial={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
                             animate={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
                             transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
                         />
                     </div>
-                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[13px] font-bold text-red-400 leading-none font-mono tracking-wider shrink-0 text-right min-w-[2.5rem]">
-                        {hp}<span className="text-[9px] sm:text-[10px] text-red-400/60">/{maxHp}</span>
+                    <motion.span animate={animStatus === 'hurt' ? 'hurt' : 'idle'} variants={hpVariants} className="text-[11px] sm:text-[13px] font-bold text-red-500 leading-none font-mono tracking-wider shrink-0 text-right min-w-[2.5rem]">
+                        {hp}<span className="text-[9px] sm:text-[10px] text-red-500/60">/{maxHp}</span>
                     </motion.span>
                 </div>
             </div>
@@ -105,27 +97,29 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     return (
         <div className="flex-1 flex flex-col relative overflow-visible w-full h-full py-2 sm:py-3 z-10">
             {/* Enemies list */}
-            <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible min-h-0 gap-2 sm:gap-3 mb-2 sm:mb-3">
-                {isPostBattleScreen ? (
-                    <div className="w-full h-full flex items-center justify-center">
-                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 surface-panel">
-                            Battle Cleared
-                        </motion.div>
-                    </div>
-                ) : (
-                    <>
-                        <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
-                            <AnimatePresence>
-                                {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
-                            </AnimatePresence>
+            <div className="w-full flex-1 flex flex-col surface-panel overflow-visible z-20 min-h-0 mb-2 sm:mb-3 p-3 relative">
+                <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible min-h-0 gap-2 sm:gap-3">
+                    {isPostBattleScreen ? (
+                        <div className="w-full h-full flex items-center justify-center">
+                            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 text-zinc-400">
+                                Battle Cleared
+                            </motion.div>
                         </div>
-                        <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
-                            <AnimatePresence>
-                                {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
-                            </AnimatePresence>
-                        </div>
-                    </>
-                )}
+                    ) : (
+                        <>
+                            <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
+                                <AnimatePresence>
+                                    {enemy1.isVisible && <EnemyCard key="e1" {...enemy1} animStatus={enemy1Anim} />}
+                                </AnimatePresence>
+                            </div>
+                            <div className="w-full flex-1 shrink min-h-0 relative flex z-10">
+                                <AnimatePresence>
+                                    {enemy2.isVisible && <EnemyCard key="e2" {...enemy2} animStatus={enemy2Anim} />}
+                                </AnimatePresence>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Engage Button */}
