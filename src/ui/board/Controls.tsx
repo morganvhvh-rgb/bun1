@@ -64,7 +64,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onVary, onScrollsOp
 
             <motion.button type="button" onClick={onScrollsOpen} disabled={isAnimating} className={cn(btnClass)} style={btnStyle} title="Scrolls">
                 <Icon name="scroll-unfurled" scale={1.8} tintColor="#fff" />
-                <div className="absolute inset-0 text-black font-bold flex items-center justify-center pointer-events-none" style={{ fontSize: 'var(--text-base)' }}>
+                <div className="absolute inset-0 text-black font-bold font-mono flex items-center justify-center pointer-events-none" style={{ fontSize: 'var(--text-base)' }}>
                     {keptScrolls.length}
                 </div>
             </motion.button>

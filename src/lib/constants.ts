@@ -19,7 +19,7 @@ export const ICON_MAP = {
     // Nature
     "clover": "clover",
     "pine-tree": "pine-tree",
-    "zigzag-leaf": "zigzag-leaf",
+    "dead-tree": "dead-tree",
 
     // Weapon
     "axe": "axe",
@@ -69,7 +69,7 @@ export const ICON_KEYS: IconName[] = [
     // Food
     "apple", "meat", "crab-claw", "brandy-bottle",
     // Nature
-    "clover", "pine-tree", "zigzag-leaf",
+    "clover", "pine-tree", "dead-tree",
     // Weapon
     "axe", "relic-blade", "crossbow", "daggers",
     // Armor
@@ -103,7 +103,7 @@ export const ICON_THEME: Record<IconName, string> = {
     // Nature (Green)
     "clover": "#22c55e",
     "pine-tree": "#22c55e",
-    "zigzag-leaf": "#22c55e",
+    "dead-tree": "#22c55e",
 
     // Weapon (Gray)
     "axe": "#94a3b8",
@@ -166,7 +166,7 @@ export const ICON_STATS: Partial<Record<IconName, string>> = {
 
     "clover": "+1 EXP +1 Magic",
     "pine-tree": "+2 EXP",
-    "zigzag-leaf": "-3 EXP +5 Magic",
+    "dead-tree": "-3 EXP +5 Magic",
 
     "axe": "+3 ATK +2 Gear",
     "relic-blade": "+1 ATK +1 Gear",
@@ -216,7 +216,7 @@ export const ICON_CATEGORIES: Record<IconName, string> = {
 
     "clover": "Nature",
     "pine-tree": "Nature",
-    "zigzag-leaf": "Nature",
+    "dead-tree": "Nature",
 
     "axe": "Weapon",
     "relic-blade": "Weapon",

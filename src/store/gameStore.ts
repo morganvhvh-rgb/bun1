@@ -163,7 +163,7 @@ export const useGameStore = create<GameState>()(
                         switch (targetItem.name) {
                             case 'clover': state.moves += ((isBoosted ? 2 : 1) * expMultiplier); state.playerMagic += (isBoosted ? 2 : 1); break;
                             case 'pine-tree': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); break;
-                            case 'zigzag-leaf': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
+                            case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
                             case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
                         }

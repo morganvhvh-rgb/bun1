@@ -28,7 +28,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
 
                 {/* Header: Name & Level */}
                 <div className="flex items-baseline justify-center gap-2 z-10 w-full shrink-0">
-                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">HERO</span>
+                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">ROGUE</span>
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {playerLvl}</span>
                 </div>
 
@@ -109,8 +109,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
 
             {/* GOLD Button */}
             <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto !rounded-2xl">
-                <div className="flex items-center gap-2.5 z-10" style={{ fontFamily: 'var(--font-mono)' }}>
-                    <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5" style={{ fontFamily: 'var(--font-sans)' }}>GOLD</span>
+                <div className="flex items-center gap-2.5 z-10 font-mono">
+                    <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5 font-sans">GOLD</span>
                     <span className="text-xl sm:text-2xl font-bold text-yellow-400 tracking-wider">
                         {gold}
                     </span>

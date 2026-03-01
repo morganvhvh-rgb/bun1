@@ -64,7 +64,7 @@ export const getStatText = (
     if (!isBoosted) {
         if (name === 'clover') return `+${1 * expMultiplier} EXP +1 Magic`;
         if (name === 'pine-tree') return `+${2 * expMultiplier} EXP`;
-        if (name === 'zigzag-leaf') return `-${3 * expMultiplier} EXP +5 Magic`;
+        if (name === 'dead-tree') return `-${3 * expMultiplier} EXP +5 Magic`;
         if (name === 'key' && hasSpecialScroll && areAllSlotsUnlocked) return '+16 gold';
         return ICON_STATS[name] || "???";
     }
@@ -76,7 +76,7 @@ export const getStatText = (
         case 'brandy-bottle': return "-25% HP & +10 Max HP";
         case 'clover': return `+${2 * expMultiplier} EXP +2 Magic`;
         case 'pine-tree': return `+${4 * expMultiplier} EXP`;
-        case 'zigzag-leaf': return `-${3 * expMultiplier} EXP +10 Magic`;
+        case 'dead-tree': return `-${3 * expMultiplier} EXP +10 Magic`;
         case 'axe': return "";
         case 'relic-blade':
         case 'crossbow':

@@ -5,6 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ['var(--font-sans)'],
+      mono: ['var(--font-mono)'],
+    },
     extend: {
       colors: {
         black: '#121214',

@@ -20,6 +20,35 @@ interface GridBoardProps {
     areAllSlotsUnlocked: boolean;
 }
 
+function formatStatText(text: string, iconName: string) {
+    const regex = /(Heal \d+ HP|[+-]?\d+(?:%)? (?:Max )?(?:Gold|Gear|ATK|Magic|HP|EXP)|\?\?\?)/gi;
+    const parts = text.split(regex);
+
+    return parts.map((part, i) => {
+        if (!part) return null;
+        const lower = part.toLowerCase();
+        let colorClass = "";
+
+        if (lower.includes('gold')) {
+            colorClass = "text-yellow-400";
+        } else if (lower.includes('gear')) {
+            colorClass = "text-blue-400";
+        } else if (lower.includes('atk')) {
+            colorClass = "text-orange-400";
+        } else if (lower.includes('magic')) {
+            colorClass = "text-pink-400";
+        } else if (lower.includes('hp')) {
+            colorClass = "text-red-500";
+        } else if (lower.includes('exp')) {
+            colorClass = "text-green-500";
+        } else if (lower.includes('???') && iconName === 'spades-card') {
+            colorClass = "text-white";
+        }
+
+        return colorClass ? <span key={i} className={colorClass}>{part}</span> : <span key={i}>{part}</span>;
+    });
+}
+
 export function GridBoard({
     gridIcons, spinKey, matchingIndices, glowingIndices, activeHoodedIndex,
     selectedIndex, selectedEquippedItem, isSpinning, onIconClick, onEmptyGlowClick, levelUpPerks,
@@ -139,14 +168,17 @@ export function GridBoard({
             <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-white" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 {displayItem ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
-                        <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2" style={{ fontSize: 'var(--text-base)', fontFamily: 'var(--font-mono)' }}>
+                        <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
                             <span className="text-white drop-shadow-sm">{displayItem.name.replace(/_/g, ' ')}</span>
-                            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 border border-white/10 rounded-md bg-black/40 leading-none" style={{ fontFamily: 'var(--font-sans)' }}>
+                            <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 border border-white/10 rounded-md bg-black/40 leading-none font-sans">
                                 {ICON_CATEGORIES[displayItem.name]}
                             </span>
                         </div>
-                        <div className="font-bold tracking-widest text-teal-400 uppercase w-full min-w-0 break-words" style={{ fontSize: 'var(--text-sm)' }}>
-                            {getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked)}
+                        <div className={cn(
+                            "font-bold tracking-widest uppercase w-full min-w-0 break-words",
+                            ICON_CATEGORIES[displayItem.name] === 'Special' ? 'text-[#a16207]' : 'text-teal-400'
+                        )} style={{ fontSize: 'var(--text-sm)' }}>
+                            {formatStatText(getStatText(displayItem.name, isDisplayItemBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked), displayItem.name)}
                         </div>
                         <div className="font-bold tracking-wider uppercase text-zinc-400 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-xs)', minHeight: 14 }}>
                             {ICON_EXTRA_EFFECTS[displayItem.name] ? (
