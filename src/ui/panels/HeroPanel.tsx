@@ -32,26 +32,10 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {playerLvl}</span>
                 </div>
 
-                {/* Middle: Stats (Left) & Avatar (Center) */}
-                <div className="flex w-full items-center justify-between flex-1 relative z-10 min-h-0 py-1 sm:py-2 px-2 sm:px-4">
-                    {/* Left: Vertical Stats */}
-                    <div className="flex flex-col justify-start items-start gap-1 sm:gap-2 shrink-0 w-16 h-full pt-1 sm:pt-2">
-                        <div className="flex flex-col items-start w-full">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none mb-1">ATK</span>
-                            <span className="text-[14px] sm:text-[16px] font-bold text-orange-400 leading-none font-mono tracking-wider">{playerBaseAtk}</span>
-                        </div>
-                        <div className="flex flex-col items-start w-full">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none mb-1">MGC</span>
-                            <span className="text-[14px] sm:text-[16px] font-bold text-pink-400 leading-none font-mono tracking-wider">{playerMagic}</span>
-                        </div>
-                        <div className="flex flex-col items-start w-full">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none mb-1">GER</span>
-                            <span className="text-[14px] sm:text-[16px] font-bold text-blue-400 leading-none font-mono tracking-wider">{playerGear}</span>
-                        </div>
-                    </div>
-
-                    {/* Center: Big Avatar (Absolute to guarantee true center regardless of stats column) */}
-                    <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-0">
+                {/* Middle: Avatar (Center) */}
+                <div className="flex w-full items-center justify-center flex-1 relative z-10 min-h-0 py-1 sm:py-2 px-2 sm:px-4">
+                    {/* Center: Big Avatar */}
+                    <div className="flex justify-center items-center pointer-events-none z-0">
                         <motion.div animate={playerAnim} variants={playerIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto scale-[0.70] sm:scale-85">
                             <AnimatePresence>
                                 {isLevelUpReady && (
@@ -70,8 +54,24 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     </div>
                 </div>
 
-                {/* Bottom: HP and EXP Meters */}
-                <div className="flex flex-col gap-2 w-full mt-auto z-10 shrink-0">
+                {/* Bottom: Stats, HP, and EXP Rows */}
+                <div className="flex flex-col gap-2.5 w-full mt-auto z-10 shrink-0">
+                    {/* Stats Row */}
+                    <div className="flex items-center justify-between w-full px-2 sm:px-4">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
+                            <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider">{playerBaseAtk}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">MGC</span>
+                            <span className="text-[13px] sm:text-[15px] font-bold text-pink-400 leading-none font-mono tracking-wider">{playerMagic}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">GER</span>
+                            <span className="text-[13px] sm:text-[15px] font-bold text-blue-400 leading-none font-mono tracking-wider">{playerGear}</span>
+                        </div>
+                    </div>
+
                     {/* HP Bar */}
                     <div className="flex items-center gap-2 w-full">
                         <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-6 shrink-0 text-left pl-1">HP</span>
