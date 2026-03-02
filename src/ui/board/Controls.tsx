@@ -50,7 +50,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
     }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
-    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800/80 active:scale-95 transition-all !rounded-2xl';
+    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800 active:scale-95 transition-all !rounded-2xl';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
@@ -74,7 +74,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 type="button"
                 onClick={onCoffeeOpen}
                 disabled={isAnimating}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800/80 active:scale-95 transition-all rounded-full border-white/10 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-zinc-900/50"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800 active:scale-95 transition-all rounded-full border-white/10 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-zinc-900"
                 style={{
                     top: 'var(--coffee-btn-offset)',
                     width: 'var(--coffee-btn-size)',

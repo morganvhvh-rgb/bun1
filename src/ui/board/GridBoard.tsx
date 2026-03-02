@@ -134,10 +134,10 @@ export function GridBoard({
                                 transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
-                                    isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'
-                                        : isSelected ? 'bg-zinc-800/80 border border-white/20'
-                                            : !symbol ? 'bg-zinc-900/30 border border-white/5 hover:bg-zinc-800/50 hover:border-white/10'
-                                                : 'bg-zinc-900/50 border border-white/5 hover:border-white/10 hover:bg-zinc-800/50'
+                                    isNonTargetMatch ? 'bg-teal-900 border border-teal-500/40'
+                                        : isSelected ? 'bg-zinc-700 border border-white/20'
+                                            : !symbol ? 'bg-zinc-900 border border-white/5 hover:bg-zinc-800 hover:border-white/10'
+                                                : 'bg-zinc-900 border border-white/5 hover:border-white/10 hover:bg-zinc-800'
                                 )}
                                 style={{
                                     width: 'var(--cell)',

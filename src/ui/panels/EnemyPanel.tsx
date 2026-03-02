@@ -129,9 +129,9 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                 className={cn(
                     "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 font-bold tracking-[0.1em] rounded-2xl",
                     isPostBattleScreen ? "bg-zinc-100 text-black shadow-none border border-transparent"
-                        : showBattleState ? "bg-zinc-800/20 text-zinc-500 cursor-not-allowed border border-white/5"
-                            : canConjureMagic ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
-                                : "bg-red-500/10 text-red-400 border border-red-500/20"
+                        : showBattleState ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/5"
+                            : canConjureMagic ? "bg-pink-950 text-pink-400 border border-pink-500/30"
+                                : "bg-red-950 text-red-400 border border-red-500/20"
                 )}
             >
                 <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs sm:text-sm">
