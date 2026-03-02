@@ -28,13 +28,13 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                     <div className="flex flex-col gap-4 text-sm text-slate-300">
                         <p><strong className="text-slate-100 text-base font-semibold">DAILY ROGUE</strong> has two main sections:</p>
 
-                        <div className="bg-slate-900/45 border border-slate-400/20 p-4 rounded-xl flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                        <div className="bg-slate-900/68 border border-slate-400/30 p-4 rounded-lg flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                             <p className="font-bold text-slate-100 mb-1 uppercase tracking-widest text-[11px] opacity-80">Top Half</p>
                             <p>A turn-based auto-battler. Defeat waves of enemies to win.</p>
                             <p className="text-slate-400">You can tap your Rogue icon for level-up bonuses.</p>
                         </div>
 
-                        <div className="bg-slate-900/45 border border-slate-400/20 p-4 rounded-xl flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                        <div className="bg-slate-900/68 border border-slate-400/30 p-4 rounded-lg flex flex-col gap-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                             <p className="font-bold text-slate-100 mb-1 uppercase tracking-widest text-[11px] opacity-80">Bottom Half</p>
                             <p>A grid of unique symbols. Some symbols are tap to equip, others activate when your Rogue slides over them.</p>
                             <p className="text-slate-400">Rogue can slide once per spin.</p>

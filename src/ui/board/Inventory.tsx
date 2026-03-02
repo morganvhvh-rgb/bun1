@@ -36,7 +36,7 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                         return (
                             <div
                                 key={`slot-${slot}`}
-                                className="flex flex-col items-center justify-center surface-panel opacity-55 rounded-lg border-slate-500/20"
+                                className="flex flex-col items-center justify-center surface-panel opacity-55 rounded-md border-slate-500/30"
                                 style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}
                             >
                                 <Icon name="key" scale={1.2} tintColor="#93a0b3" />
@@ -45,7 +45,7 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                     }
 
                     return (
-                        <div key={`slot-${slot}`} className="surface-panel flex items-center justify-center relative rounded-lg border-slate-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
+                        <div key={`slot-${slot}`} className="surface-panel flex items-center justify-center relative rounded-md border-slate-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
                             {symbol && <KeptSymbolDisplay symbol={symbol} onClick={(e) => onKeptSymbolClick(e, symbol)} />}
                         </div>
                     );

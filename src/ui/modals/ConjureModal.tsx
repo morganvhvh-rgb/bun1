@@ -76,7 +76,7 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                         <button onClick={onClose} className="text-slate-300 hover:text-slate-100 transition-colors uppercase text-xs tracking-widest">Close</button>
                     </div>
 
-                    <div className="border border-slate-500/25 bg-slate-950/70 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
+                    <div className="border border-slate-500/30 bg-slate-950/92 rounded-lg flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
                         {(phase === 'waiting' || phase === 'revealed') && sparkles.map(s => (
                             <div key={`sparkle-${s.id}`} className="absolute rounded-full bg-white pointer-events-none" style={{
                                 width: s.size, height: s.size, left: `${s.left}%`, top: `${s.top}%`, opacity: 0,

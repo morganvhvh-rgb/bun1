@@ -75,9 +75,9 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     {/* HP Bar */}
                     <div className="flex items-center gap-2 w-full">
                         <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-6 shrink-0 text-left pl-1">HP</span>
-                        <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
+                        <div className="flex-1 h-1.5 sm:h-2 bar-track overflow-hidden relative">
                             <motion.div
-                                className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
+                                className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-[3px]"
                                 initial={{ width: `${Math.max(0, Math.min(100, (playerHp / playerTotalMaxHp) * 100))}%` }}
                                 animate={{ width: `${Math.max(0, Math.min(100, (playerHp / playerTotalMaxHp) * 100))}%` }}
                                 transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
@@ -91,9 +91,9 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     {/* EXP Bar */}
                     <div className="flex items-center gap-2 w-full mb-1">
                         <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-6 shrink-0 text-left pl-1">EXP</span>
-                        <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
+                        <div className="flex-1 h-1.5 sm:h-2 bar-track overflow-hidden relative">
                             <motion.div
-                                className="absolute left-0 top-0 bottom-0 bg-green-500 rounded-full"
+                                className="absolute left-0 top-0 bottom-0 bg-green-500 rounded-[3px]"
                                 initial={{ width: `${Math.max(0, Math.min(100, (moves / GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) * 100))}%` }}
                                 animate={{ width: `${Math.max(0, Math.min(100, (moves / GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) * 100))}%` }}
                                 transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
@@ -108,7 +108,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             </div>
 
             {/* GOLD Button */}
-            <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto !rounded-2xl">
+            <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel border-slate-300/30 shrink-0 relative overflow-hidden group mt-auto !rounded-lg">
                 <div className="flex items-center gap-2.5 z-10 font-mono">
                     <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-slate-300 uppercase mt-0.5 font-sans">GOLD</span>
                     <span className="text-xl sm:text-2xl font-bold text-amber-300 tracking-wider">
