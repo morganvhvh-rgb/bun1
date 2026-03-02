@@ -1,4 +1,4 @@
-﻿import { Modal } from '../shared/Modal';
+import { Modal } from '../shared/Modal';
 
 interface CoffeeModalProps {
     isOpen: boolean;
@@ -18,10 +18,10 @@ export function CoffeeModal({ isOpen, onClose }: CoffeeModalProps) {
             <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-2 right-2 w-6 h-6 border border-slate-400/25 bg-slate-950/85 text-slate-100 hover:bg-slate-800/80 transition-colors grid place-items-center leading-none rounded-md"
+                className="absolute top-2 right-2 w-6 h-6 border border-zinc-800 bg-black text-white hover:bg-zinc-800 transition-colors grid place-items-center leading-none"
                 aria-label="Close coffee popup"
             >
-                <span style={{ fontSize: '16px', lineHeight: 1 }}>&times;</span>
+                <span style={{ fontSize: '16px', lineHeight: 1 }}>×</span>
             </button>
         </Modal>
     );

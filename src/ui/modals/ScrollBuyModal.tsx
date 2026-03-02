@@ -21,16 +21,16 @@ export function ScrollBuyModal({
         <AnimatePresence>
             {isOpen && (
                 <>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-950/80 z-[80] flex items-center justify-center p-4" onClick={onClose}>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4" onClick={onClose}>
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
-                            className="surface-modal flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
+                            className="bg-black border border-zinc-800 flex flex-col p-5 relative overflow-hidden w-full max-w-sm"
                             style={{ minHeight: 'min(380px, 60svh)' }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-slate-100 font-bold uppercase tracking-widest leading-none">SCROLLS</h2>
-                                <button onClick={onClose} className="text-slate-400 hover:text-slate-100 transition-colors uppercase text-xs tracking-widest">Close</button>
+                                <h2 className="text-white font-bold uppercase tracking-widest leading-none">SCROLLS</h2>
+                                <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Close</button>
                             </div>
 
                             <div className="flex justify-center mb-6">
@@ -39,14 +39,14 @@ export function ScrollBuyModal({
                                         onClick={onBuyScroll}
                                         disabled={gold < scrollCost}
                                         className={`py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border transition-colors ${gold >= scrollCost
-                                            ? 'bg-[#4b3624] hover:bg-[#5d4530] text-[#fef4dd] border-[#8c6c47] shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]'
-                                            : 'bg-[#332214] text-[#846649] border-[#47321f] cursor-not-allowed'
+                                            ? 'bg-[#5c3a21] hover:bg-[#6b442a] text-white border-[#8b5a33] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
+                                            : 'bg-[#3a2012] text-[#8b5a33] border-[#4a2e1b] cursor-not-allowed'
                                             }`}
                                     >
                                         BUY SCROLL - <span className="text-[#eab308]">{scrollCost} GOLD</span>
                                     </button>
                                 ) : (
-                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-[#4b3624] text-[#f3d5ac] border border-[#8c6c47] shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] opacity-60">
+                                    <div className="py-3 px-6 w-full text-center font-bold uppercase tracking-widest text-sm bg-[#5c3a21] text-[#fcd0a1] border border-[#8b5a33] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] opacity-50">
                                         REVEALING...
                                     </div>
                                 )}
@@ -98,7 +98,7 @@ export function ScrollBuyModal({
                                             <motion.div
                                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
-                                                className="text-sm text-slate-100 font-black uppercase tracking-[0.2em] leading-none text-center"
+                                                className="text-sm text-white font-black uppercase tracking-[0.2em] leading-none text-center"
                                             >
                                                 {revealedScrollColor.replace('-scroll', '')} SCROLL
                                             </motion.div>

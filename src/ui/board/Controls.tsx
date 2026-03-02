@@ -50,7 +50,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
     }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
-    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-slate-800/70 hover:border-slate-200/25 active:scale-95 transition-all !rounded-2xl';
+    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-zinc-800/80 active:scale-95 transition-all !rounded-2xl';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
@@ -74,7 +74,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 type="button"
                 onClick={onCoffeeOpen}
                 disabled={isAnimating}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-slate-800/70 hover:border-slate-200/25 active:scale-95 transition-all rounded-full border-slate-300/20 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-slate-900/50"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-zinc-800/80 active:scale-95 transition-all rounded-full border-white/10 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-zinc-900/50"
                 style={{
                     top: 'var(--coffee-btn-offset)',
                     width: 'var(--coffee-btn-size)',
@@ -94,7 +94,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-slate-300/20 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
                 style={{
                     top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
                     width: 'var(--coffee-btn-size)',
@@ -104,10 +104,10 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 aria-label="Hold to reset game"
             >
                 <div
-                    className="absolute inset-x-0 bottom-0 bg-amber-300/85 origin-bottom z-0"
+                    className="absolute inset-x-0 bottom-0 bg-white origin-bottom z-0"
                     style={{ height: `${resetProgress * 100}%`, transition: resetProgress === 0 ? 'height 0.1s' : 'none' }}
                 />
-                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-slate-900' : 'text-slate-400')}>
+                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-zinc-500')}>
                     Reset
                 </span>
             </button>

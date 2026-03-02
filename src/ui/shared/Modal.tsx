@@ -53,7 +53,7 @@ export function Modal({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className={cn("fixed inset-0 z-[60]", backdrop === 'light' ? 'bg-black/60' : 'bg-slate-950/85')}
+                        className={cn("fixed inset-0 z-[60]", backdrop === 'light' ? 'bg-black/60' : 'bg-black/90')}
                     />
 
                     {/* Positioner */}
@@ -75,7 +75,7 @@ export function Modal({
                             exit="exit"
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                             className={cn(
-                                'surface-modal flex flex-col p-5 pointer-events-auto',
+                                'bg-black border border-zinc-800 flex flex-col p-5 pointer-events-auto',
                                 positionClasses[pos],
                                 className
                             )}
@@ -85,8 +85,8 @@ export function Modal({
                             {/* Header */}
                             {showHeader && (
                                 <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-slate-100 font-bold uppercase tracking-widest leading-none text-sm">{title}</h2>
-                                    <button onClick={onClose} className="text-slate-400 hover:text-slate-100 transition-colors uppercase text-xs tracking-widest">Close</button>
+                                    <h2 className="text-white font-bold uppercase tracking-widest leading-none text-sm">{title}</h2>
+                                    <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Close</button>
                                 </div>
                             )}
 

@@ -7,8 +7,8 @@ const SLOTS = [0, 1, 2, 3, 4, 5];
 
 function KeptSymbolDisplay({ symbol, onClick }: { symbol: KeptSymbol; onClick: (e: React.MouseEvent) => void }) {
     return (
-        <div className="shrink-0 flex items-center justify-center relative cursor-pointer opacity-85 active:opacity-50 transition-opacity" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} onClick={onClick}>
-            <span className="absolute bottom-0 right-0.5 z-20 text-slate-100 font-mono font-bold leading-none select-none" style={{ fontSize: '13px', textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
+        <div className="shrink-0 flex items-center justify-center relative cursor-pointer opacity-80 active:opacity-50 transition-opacity" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }} onClick={onClick}>
+            <span className="absolute bottom-0 right-0.5 z-20 text-white font-mono font-bold leading-none select-none" style={{ fontSize: '13px', textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
                 {symbol.battleCount}
             </span>
             <div className="relative z-10">
@@ -36,16 +36,16 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                         return (
                             <div
                                 key={`slot-${slot}`}
-                                className="flex flex-col items-center justify-center surface-panel opacity-55 rounded-lg border-slate-500/20"
+                                className="flex flex-col items-center justify-center surface-panel opacity-60 rounded-md"
                                 style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}
                             >
-                                <Icon name="key" scale={1.2} tintColor="#93a0b3" />
+                                <Icon name="key" scale={1.2} tintColor="#71717a" />
                             </div>
                         );
                     }
 
                     return (
-                        <div key={`slot-${slot}`} className="surface-panel flex items-center justify-center relative rounded-lg border-slate-400/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
+                        <div key={`slot-${slot}`} className="surface-panel flex items-center justify-center relative rounded-md shadow-sm" style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}>
                             {symbol && <KeptSymbolDisplay symbol={symbol} onClick={(e) => onKeptSymbolClick(e, symbol)} />}
                         </div>
                     );

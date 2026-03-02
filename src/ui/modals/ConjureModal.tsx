@@ -68,15 +68,15 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
 
     return (
         <>
-            <div onClick={phase === 'revealed' ? onClose : undefined} className="fixed inset-0 bg-slate-950/85 z-[60]" />
+            <div onClick={phase === 'revealed' ? onClose : undefined} className="fixed inset-0 bg-black/90 z-[60]" />
             <div className="fixed inset-0 z-[70] flex items-center justify-center p-6 pointer-events-none">
-                <div className="surface-modal flex flex-col p-5 w-full max-w-sm pointer-events-auto">
+                <div className="bg-black border border-zinc-800 flex flex-col p-5 w-full max-w-sm pointer-events-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-slate-100 font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
-                        <button onClick={onClose} className="text-slate-300 hover:text-slate-100 transition-colors uppercase text-xs tracking-widest">Close</button>
+                        <h2 className="text-white font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
+                        <button onClick={onClose} className="text-white uppercase text-xs tracking-widest">Close</button>
                     </div>
 
-                    <div className="border border-slate-500/25 bg-slate-950/70 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
+                    <div className="border border-zinc-800 bg-black flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
                         {(phase === 'waiting' || phase === 'revealed') && sparkles.map(s => (
                             <div key={`sparkle-${s.id}`} className="absolute rounded-full bg-white pointer-events-none" style={{
                                 width: s.size, height: s.size, left: `${s.left}%`, top: `${s.top}%`, opacity: 0,
@@ -111,8 +111,8 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                         <AnimatePresence>
                             {phase === 'revealed' && (
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.3, duration: 0.4 }} className="flex flex-col gap-1">
-                                    <span className="text-slate-100 text-xs uppercase tracking-[0.2em] font-bold">{winnerName.replace(/-/g, ' ')}</span>
-                                    <span className="text-slate-300 text-[10px] uppercase tracking-widest">{EFFECT_LABELS[winnerName]}</span>
+                                    <span className="text-white text-xs uppercase tracking-[0.2em] font-bold">{winnerName.replace(/-/g, ' ')}</span>
+                                    <span className="text-white text-[10px] uppercase tracking-widest">{EFFECT_LABELS[winnerName]}</span>
                                 </motion.div>
                             )}
                         </AnimatePresence>
