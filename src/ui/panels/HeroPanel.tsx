@@ -28,8 +28,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
 
                 {/* Header: Name & Level */}
                 <div className="flex items-baseline justify-center gap-2 z-10 w-full shrink-0">
-                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">ROGUE</span>
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-green-500 drop-shadow-md">LVL {playerLvl}</span>
+                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-slate-100 drop-shadow-md">ROGUE</span>
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-emerald-400 drop-shadow-md">LVL {playerLvl}</span>
                 </div>
 
                 {/* Middle: Avatar (Center) */}
@@ -59,23 +59,23 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     {/* Stats Row */}
                     <div className="flex items-center justify-between w-full px-2 sm:px-4">
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none">ATK</span>
                             <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider">{playerBaseAtk}</span>
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">MGC</span>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none">MGC</span>
                             <span className="text-[13px] sm:text-[15px] font-bold text-pink-400 leading-none font-mono tracking-wider">{playerMagic}</span>
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">GER</span>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none">GER</span>
                             <span className="text-[13px] sm:text-[15px] font-bold text-blue-400 leading-none font-mono tracking-wider">{playerGear}</span>
                         </div>
                     </div>
 
                     {/* HP Bar */}
                     <div className="flex items-center gap-2 w-full">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-6 shrink-0 text-left pl-1">HP</span>
-                        <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-6 shrink-0 text-left pl-1">HP</span>
+                        <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
                             <motion.div
                                 className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
                                 initial={{ width: `${Math.max(0, Math.min(100, (playerHp / playerTotalMaxHp) * 100))}%` }}
@@ -90,8 +90,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
 
                     {/* EXP Bar */}
                     <div className="flex items-center gap-2 w-full mb-1">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-6 shrink-0 text-left pl-1">EXP</span>
-                        <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-6 shrink-0 text-left pl-1">EXP</span>
+                        <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
                             <motion.div
                                 className="absolute left-0 top-0 bottom-0 bg-green-500 rounded-full"
                                 initial={{ width: `${Math.max(0, Math.min(100, (moves / GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) * 100))}%` }}
@@ -110,8 +110,8 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             {/* GOLD Button */}
             <div className="flex items-center justify-center w-full h-[46px] sm:h-[50px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto !rounded-2xl">
                 <div className="flex items-center gap-2.5 z-10 font-mono">
-                    <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5 font-sans">GOLD</span>
-                    <span className="text-xl sm:text-2xl font-bold text-yellow-400 tracking-wider">
+                    <span className="text-[13px] sm:text-[14px] font-bold tracking-widest text-slate-300 uppercase mt-0.5 font-sans">GOLD</span>
+                    <span className="text-xl sm:text-2xl font-bold text-amber-300 tracking-wider">
                         {gold}
                     </span>
                 </div>

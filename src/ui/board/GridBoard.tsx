@@ -134,10 +134,10 @@ export function GridBoard({
                                 transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
-                                    isNonTargetMatch ? 'bg-teal-500/20 border border-teal-500/30'
-                                        : isSelected ? 'bg-zinc-800/80 border border-white/20'
-                                            : !symbol ? 'bg-zinc-900/30 border border-white/5 hover:bg-zinc-800/50 hover:border-white/10'
-                                                : 'bg-zinc-900/50 border border-white/5 hover:border-white/10 hover:bg-zinc-800/50'
+                                    isNonTargetMatch ? 'bg-emerald-500/14 border border-emerald-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]'
+                                        : isSelected ? 'bg-slate-700/55 border border-sky-300/35 shadow-[0_0_0_1px_rgba(125,211,252,0.08)]'
+                                            : !symbol ? 'bg-slate-950/60 border border-slate-500/25 hover:bg-slate-900/70 hover:border-slate-300/30'
+                                                : 'bg-slate-900/62 border border-slate-400/20 hover:border-slate-200/30 hover:bg-slate-800/68'
                                 )}
                                 style={{
                                     width: 'var(--cell)',
@@ -171,25 +171,25 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-white" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-slate-100" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 {displaySymbol ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
-                            <span className="text-white drop-shadow-sm">{displaySymbol.name.replace(/_/g, ' ')}</span>
+                            <span className="text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]">{displaySymbol.name.replace(/_/g, ' ')}</span>
                             <span className={cn(
                                 "text-[10px] sm:text-[11px] px-1.5 py-0.5 border rounded-md leading-none font-sans",
-                                categoryTheme?.className ?? 'text-zinc-200 border-zinc-300/35 bg-zinc-500/12'
+                                categoryTheme?.className ?? 'text-slate-200 border-slate-300/35 bg-slate-500/12'
                             )}>
                                 {categoryTheme?.label ?? displayCategory}
                             </span>
                         </div>
                         <div className={cn(
                             "font-bold tracking-widest uppercase w-full min-w-0 break-words",
-                            SYMBOL_CATEGORIES[displaySymbol.name] === 'Special' ? 'text-[#a16207]' : 'text-teal-400'
+                            SYMBOL_CATEGORIES[displaySymbol.name] === 'Special' ? 'text-amber-600' : 'text-cyan-300'
                         )} style={{ fontSize: 'var(--text-sm)' }}>
                             {formatStatText(getStatText(displaySymbol.name, isDisplaySymbolBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked), displaySymbol.name)}
                         </div>
-                        <div className="font-bold tracking-wider uppercase text-zinc-400 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-xs)', minHeight: 14 }}>
+                        <div className="font-bold tracking-wider uppercase text-slate-400 flex items-center justify-center w-full min-w-0 leading-tight whitespace-normal break-words" style={{ fontSize: 'var(--text-xs)', minHeight: 14 }}>
                             {SYMBOL_EXTRA_EFFECTS[displaySymbol.name] ? (
                                 SYMBOL_EXTRA_EFFECTS[displaySymbol.name]?.includes('[perspective-dice-random symbol]') ? (
                                     <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
@@ -200,7 +200,7 @@ export function GridBoard({
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-widest" style={{ fontSize: 'var(--text-sm)', minHeight: '3rem' }}>
+                    <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-widest text-slate-300" style={{ fontSize: 'var(--text-sm)', minHeight: '3rem' }}>
                         Select a symbol
                     </div>
                 )}

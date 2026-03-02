@@ -46,13 +46,13 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                 <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 min-w-0 py-1">
                     {/* ATK Row */}
                     <div className="flex items-center md:gap-2 gap-1 w-full">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">ATK</span>
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-8 shrink-0">ATK</span>
                         <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider truncate">{atk}</span>
                     </div>
                     {/* LVL Row */}
                     <div className="flex items-center md:gap-2 gap-1 w-full">
-                        <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">LVL</span>
-                        <span className="text-[13px] sm:text-[15px] font-bold text-green-500 leading-none font-mono tracking-wider truncate">{lvl}</span>
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-8 shrink-0">LVL</span>
+                        <span className="text-[13px] sm:text-[15px] font-bold text-emerald-400 leading-none font-mono tracking-wider truncate">{lvl}</span>
                     </div>
                 </div>
             </div>
@@ -60,8 +60,8 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             {/* Bottom Section: HP Bar */}
             <div className="flex flex-col w-full mt-auto shrink-0 pb-1 pt-1 sm:pt-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 w-full px-1">
-                    <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none w-4 shrink-0 text-left">HP</span>
-                    <div className="flex-1 h-1.5 sm:h-2 bg-black/50 rounded-full overflow-hidden relative border border-white/5">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-4 shrink-0 text-left">HP</span>
+                    <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
                         <motion.div
                             className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
                             initial={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
@@ -101,7 +101,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                 <div className="w-full flex-1 flex flex-col justify-center items-center overflow-visible min-h-0 gap-2 sm:gap-3">
                     {isPostBattleScreen ? (
                         <div className="w-full h-full flex items-center justify-center">
-                            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 text-zinc-400">
+                            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold px-3 py-1.5 text-slate-300">
                                 Battle Cleared
                             </motion.div>
                         </div>
@@ -128,17 +128,17 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                 disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen) || isAnimating}
                 className={cn(
                     "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 font-bold tracking-[0.1em] rounded-2xl",
-                    isPostBattleScreen ? "bg-zinc-100 text-black shadow-none border border-transparent"
-                        : showBattleState ? "bg-zinc-800/20 text-zinc-500 cursor-not-allowed border border-white/5"
-                            : canConjureMagic ? "bg-pink-500/10 text-pink-400 border border-pink-500/20"
-                                : "bg-red-500/10 text-red-400 border border-red-500/20"
+                    isPostBattleScreen ? "bg-slate-100 text-slate-900 shadow-none border border-transparent"
+                        : showBattleState ? "bg-slate-900/40 text-slate-500 cursor-not-allowed border border-slate-500/20"
+                            : canConjureMagic ? "bg-fuchsia-500/12 text-fuchsia-300 border border-fuchsia-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                                : "bg-rose-500/12 text-rose-300 border border-rose-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                 )}
             >
                 <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs sm:text-sm">
                     {isPostBattleScreen ? "NEXT ROUND"
-                        : showBattleState ? <span className="text-red-500 text-[11px] sm:text-xs">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
-                            : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1 text-[11px] sm:text-xs"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
-                                : <span className="text-red-400">ENGAGE</span>}
+                        : showBattleState ? <span className="text-rose-400 text-[11px] sm:text-xs">{battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : battleCount > 8 ? 'VICTORY' : `BATTLE ${battleCount}`}</span>
+                            : canConjureMagic ? <span className="text-fuchsia-300 flex items-center gap-1 text-[11px] sm:text-xs"><Icon name="fairy-wand" scale={1.2} tintColor="#f0abfc" /> CONJURE</span>
+                                : <span className="text-rose-300">ENGAGE</span>}
                 </div>
             </button>
         </div>

@@ -3,27 +3,49 @@
 @tailwind utilities;
 
 @layer components {
-
   .border,
   .border-zinc-800,
   canvas {
-    border-radius: 0.5rem;
+    border-radius: 0.625rem;
   }
 }
 
 @layer utilities {
   .surface-panel {
-    @apply bg-zinc-900/40 border border-white/5 backdrop-blur-md rounded-2xl;
+    background: linear-gradient(165deg, rgba(32, 39, 52, 0.72) 0%, rgba(12, 15, 24, 0.86) 75%);
+    border: 1px solid rgba(164, 184, 205, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(232, 240, 255, 0.06),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.28),
+      0 10px 22px rgba(2, 6, 14, 0.45);
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+  }
+
+  .surface-modal {
+    background: linear-gradient(170deg, rgba(24, 31, 45, 0.96) 0%, rgba(10, 13, 22, 0.96) 80%);
+    border: 1px solid rgba(166, 188, 212, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(236, 244, 255, 0.08),
+      0 18px 42px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+    border-radius: 1rem;
+  }
+
+  .bar-track {
+    background: rgba(2, 6, 14, 0.66);
+    border: 1px solid rgba(128, 149, 177, 0.24);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.45);
   }
 }
 
-/* ─── Typography Defaults ─── */
+/* Typography defaults */
 :root {
   --font-sans: 'Outfit', sans-serif;
   --font-mono: 'Outfit', sans-serif;
 }
 
-/* ─── Design tokens ─── */
+/* Design tokens */
 :root {
   --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
   --cell-sm: calc((var(--cell) * 5 - var(--gap)) / 6);
@@ -42,9 +64,13 @@
   --coffee-icon-size: calc(var(--coffee-btn-size) * 0.5);
   --coffee-modal-w: 12rem;
   --coffee-modal-h: 8rem;
+  --bg-0: #06080f;
+  --bg-1: #0a1120;
+  --bg-2: #111b2d;
+  --text-muted: #8f9cb0;
 }
 
-/* ─── Reset & mobile lockdown ─── */
+/* Reset and mobile lockdown */
 html,
 body {
   width: 100%;
@@ -52,9 +78,11 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #09090b;
+  background-color: var(--bg-0);
+  color: #f6f8fc;
   position: fixed;
   font-family: var(--font-sans);
+  color-scheme: dark;
 }
 
 #root {
@@ -73,6 +101,10 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  background:
+    radial-gradient(130% 60% at 50% -10%, rgba(62, 110, 170, 0.22) 0%, rgba(62, 110, 170, 0) 58%),
+    radial-gradient(100% 70% at 20% 110%, rgba(154, 99, 43, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 38%, var(--bg-0) 100%);
 }
 
 input,
@@ -81,7 +113,18 @@ textarea {
   -webkit-user-select: text;
 }
 
-/* ─── Conjure Magic animations ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(90% 70% at 85% 5%, rgba(43, 96, 143, 0.14) 0%, transparent 62%),
+    linear-gradient(110deg, rgba(255, 255, 255, 0.015) 0%, rgba(255, 255, 255, 0) 60%);
+}
+
+/* Conjure magic animations */
 @keyframes conjure-color-pulse {
   0% {
     color: #ec4899;
@@ -109,7 +152,6 @@ textarea {
 }
 
 @keyframes conjure-sparkle {
-
   0%,
   100% {
     opacity: 0;
