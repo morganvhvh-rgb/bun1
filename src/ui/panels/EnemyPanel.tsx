@@ -61,9 +61,9 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             <div className="flex flex-col w-full mt-auto shrink-0 pb-1 pt-1 sm:pt-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 w-full px-1">
                     <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-none w-4 shrink-0 text-left">HP</span>
-                    <div className="flex-1 h-1.5 sm:h-2 bar-track overflow-hidden relative">
+                    <div className="flex-1 h-1.5 sm:h-2 bar-track rounded-full overflow-hidden relative">
                         <motion.div
-                            className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-[3px]"
+                            className="absolute left-0 top-0 bottom-0 bg-red-500 rounded-full"
                             initial={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
                             animate={{ width: `${Math.max(0, Math.min(100, (hp / maxHp) * 100))}%` }}
                             transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
@@ -127,7 +127,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                 onClick={onEngage}
                 disabled={(!canConjureMagic && isDisabled) || (isBattleRunning && !isPostBattleScreen) || isAnimating}
                 className={cn(
-                    "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 font-bold tracking-[0.1em] rounded-lg",
+                    "relative w-full h-[46px] sm:h-[50px] shrink-0 mt-auto overflow-hidden active:opacity-50 touch-manipulation z-20 font-bold tracking-[0.1em] rounded-2xl",
                     isPostBattleScreen ? "bg-slate-100 text-slate-900 shadow-none border border-transparent"
                         : showBattleState ? "bg-slate-900/40 text-slate-500 cursor-not-allowed border border-slate-500/20"
                             : canConjureMagic ? "bg-fuchsia-500/12 text-fuchsia-300 border border-fuchsia-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"

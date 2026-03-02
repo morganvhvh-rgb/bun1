@@ -133,11 +133,11 @@ export function GridBoard({
                                 animate="show"
                                 transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
                                 className={cn(
-                                    'flex items-center justify-center relative transition-colors duration-250 rounded-lg',
-                                    isNonTargetMatch ? 'bg-emerald-600/16 border border-emerald-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.55)]'
-                                        : isSelected ? 'bg-slate-700/45 border border-sky-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_0_1px_rgba(125,211,252,0.12)]'
-                                            : !symbol ? 'bg-slate-950/92 border border-slate-500/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.65)] hover:bg-slate-900/95 hover:border-slate-300/35'
-                                                : 'bg-slate-900/94 border border-slate-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.65)] hover:border-slate-200/35 hover:bg-slate-800/95'
+                                    'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
+                                    isNonTargetMatch ? 'bg-emerald-500/14 border border-emerald-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]'
+                                        : isSelected ? 'bg-slate-700/55 border border-sky-300/35 shadow-[0_0_0_1px_rgba(125,211,252,0.08)]'
+                                            : !symbol ? 'bg-slate-950/60 border border-slate-500/25 hover:bg-slate-900/70 hover:border-slate-300/30'
+                                                : 'bg-slate-900/62 border border-slate-400/20 hover:border-slate-200/30 hover:bg-slate-800/68'
                                 )}
                                 style={{
                                     width: 'var(--cell)',

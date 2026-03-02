@@ -50,7 +50,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
     }, [onReset, clearResetHold]);
 
     const btnStyle: React.CSSProperties = { width: 'var(--cell)', height: 'var(--cell)' };
-    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-slate-800/75 hover:border-slate-200/30 hover:translate-y-px active:translate-y-[2px] active:scale-[0.98] transition-all !rounded-lg';
+    const btnClass = 'relative surface-panel flex items-center justify-center focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed group overflow-hidden hover:bg-slate-800/70 hover:border-slate-200/25 active:scale-95 transition-all !rounded-2xl';
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
@@ -74,7 +74,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 type="button"
                 onClick={onCoffeeOpen}
                 disabled={isAnimating}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-slate-800/75 hover:border-slate-200/30 hover:translate-y-px active:translate-y-[2px] active:scale-[0.98] transition-all rounded-lg border-slate-300/26 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-slate-900/50"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel hover:bg-slate-800/70 hover:border-slate-200/25 active:scale-95 transition-all rounded-full border-slate-300/20 disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:bg-slate-900/50"
                 style={{
                     top: 'var(--coffee-btn-offset)',
                     width: 'var(--coffee-btn-size)',
@@ -94,7 +94,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-lg border-slate-300/26 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-slate-300/20 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
                 style={{
                     top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
                     width: 'var(--coffee-btn-size)',

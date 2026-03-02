@@ -73,7 +73,7 @@ export function GameShell() {
     return (
         <div className="w-full h-full flex flex-col tracking-wide text-slate-100 overflow-hidden font-sans">
             {/* ─── Header ─── */}
-            <header className="flex items-center border-b border-slate-500/25 bg-slate-950/88 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
+            <header className="flex items-center border-b border-slate-500/20 bg-slate-950/35 backdrop-blur-sm shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
                     <h1 className="text-sm font-bold tracking-widest uppercase leading-none text-slate-100">Daily Rogue</h1>
                     <time className="font-normal uppercase tracking-widest leading-none shrink-0 text-slate-400" style={{ fontSize: 'var(--text-xs)' }}>
