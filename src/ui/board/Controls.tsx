@@ -55,15 +55,15 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
             <motion.button onClick={onSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating} className={btnClass} style={btnStyle} title="Spin">
-                <i className="ra ra-cycle" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#f0e8d8' }} />
+                <i className="ra ra-cycle" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
             </motion.button>
 
             <motion.button onClick={onShuffle} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={btnStyle} title="Shuffle">
-                <i className="ra ra-perspective-dice-random" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#f0e8d8' }} />
+                <i className="ra ra-perspective-dice-random" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
             </motion.button>
 
             <motion.button type="button" onClick={onScrollsOpen} disabled={isAnimating} className={cn(btnClass)} style={btnStyle} title="Scrolls">
-                <Icon name="scroll-unfurled" scale={1.8} tintColor="#f0e8d8" />
+                <Icon name="scroll-unfurled" scale={1.8} tintColor="#e8d4b8" />
                 <div className="absolute inset-0 text-black font-bold font-mono flex items-center justify-center pointer-events-none" style={{ fontSize: 'var(--text-base)' }}>
                     {keptScrolls.length}
                 </div>
@@ -83,7 +83,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 title="Coffee"
                 aria-label="Open coffee popup"
             >
-                <i className="ra ra-coffee-mug" style={{ fontSize: 'var(--coffee-icon-size)', color: '#f0e8d8' }} />
+                <i className="ra ra-coffee-mug" style={{ fontSize: 'var(--coffee-icon-size)', color: '#e8d4b8' }} />
             </button>
 
             {/* Reset Button */}
@@ -107,7 +107,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                     className="absolute inset-x-0 bottom-0 bg-white origin-bottom z-0"
                     style={{ height: `${resetProgress * 100}%`, transition: resetProgress === 0 ? 'height 0.1s' : 'none' }}
                 />
-                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-[#f0e8d8]')}>
+                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-[#e8d4b8]')}>
                     Reset
                 </span>
             </button>

@@ -72,8 +72,8 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
             <div className="fixed inset-0 z-[70] flex items-center justify-center p-6 pointer-events-none">
                 <div className="bg-black border border-zinc-800 flex flex-col p-5 w-full max-w-sm pointer-events-auto">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-[#f0e8d8] font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
-                        <button onClick={onClose} className="text-[#f0e8d8] uppercase text-xs tracking-widest">Close</button>
+                        <h2 className="text-[#e8d4b8] font-bold uppercase tracking-widest leading-none text-sm">Conjure Magic</h2>
+                        <button onClick={onClose} className="text-[#e8d4b8] uppercase text-xs tracking-widest">Close</button>
                     </div>
 
                     <div className="border border-zinc-800 bg-black flex items-center justify-center relative overflow-hidden" style={{ height: 'min(160px, 22svh)' }}>
@@ -111,8 +111,8 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                         <AnimatePresence>
                             {phase === 'revealed' && (
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.3, duration: 0.4 }} className="flex flex-col gap-1">
-                                    <span className="text-[#f0e8d8] text-xs uppercase tracking-[0.2em] font-bold">{winnerName.replace(/-/g, ' ')}</span>
-                                    <span className="text-[#f0e8d8] text-[10px] uppercase tracking-widest">{EFFECT_LABELS[winnerName]}</span>
+                                    <span className="text-[#e8d4b8] text-xs uppercase tracking-[0.2em] font-bold">{winnerName.replace(/-/g, ' ')}</span>
+                                    <span className="text-[#e8d4b8] text-[10px] uppercase tracking-widest">{EFFECT_LABELS[winnerName]}</span>
                                 </motion.div>
                             )}
                         </AnimatePresence>

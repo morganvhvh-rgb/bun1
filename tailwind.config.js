@@ -5,10 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   safelist: [
+    'text-[#e8d4b8]',
     'text-cream',
-    'text-[#f0e8d8]',
     'hover:text-cream',
-    'hover:text-[#f0e8d8]',
+    'hover:text-[#e8d4b8]',
   ],
   theme: {
     fontFamily: {
@@ -19,7 +19,7 @@ export default {
       colors: {
         black: '#121214',
         white: '#efeff1',
-        cream: '#f0e8d8',
+        cream: '#e8d4b8',
       }
     },
   },

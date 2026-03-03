@@ -46,7 +46,7 @@ function formatStatText(text: string, symbolName: string) {
         } else if (lower.includes('exp')) {
             colorClass = "text-green-500";
         } else if (lower.includes('???') && symbolName === 'spades-card') {
-            colorClass = "text-[#f0e8d8]";
+            colorClass = "text-[#e8d4b8]";
         }
 
         return colorClass ? <span key={i} className={colorClass}>{part}</span> : <span key={i}>{part}</span>;
@@ -169,11 +169,11 @@ export function GridBoard({
             </motion.div>
 
             {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-[#f0e8d8]" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-[#e8d4b8]" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
                 {displaySymbol ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
-                            <span className="text-[#f0e8d8] drop-shadow-sm">{displaySymbol.name.replace(/_/g, ' ')}</span>
+                            <span className="text-[#e8d4b8] drop-shadow-sm">{displaySymbol.name.replace(/_/g, ' ')}</span>
                             <span className={cn(
                                 "text-[10px] sm:text-[11px] px-1.5 py-0.5 border rounded-md leading-none font-sans",
                                 categoryTheme?.className ?? 'text-zinc-200 border-zinc-300/35 bg-zinc-500/12'
