@@ -40,8 +40,8 @@ interface GameState {
     spinBoard: () => void;
     payForShuffle: () => boolean;
     applySwaps: (swaps: [number, number][]) => void;
-    slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => void;
-    equipSymbol: (symbol: GridSymbol, isBoosted?: boolean) => void;
+    slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => number | null;
+    equipSymbol: (symbol: GridSymbol, isBoosted?: boolean) => number | null;
     removeGridSymbol: (id: string) => void;
     addKeptScroll: (name: SymbolName) => void;
     spendGold: (amount: number) => void;
@@ -144,120 +144,133 @@ export const useGameStore = create<GameState>()(
                 }
             }),
 
-            slideRogue: (fromIndex, toIndex, isBoosted = false) => set((state) => {
-                const character = state.grid[fromIndex];
-                if (!character || character.name !== "hood") return;
+            slideRogue: (fromIndex, toIndex, isBoosted = false) => {
+                let spentGold: number | null = null;
 
-                if (state.gold < GAME_CONSTANTS.MOVE_COST) return;
-                state.gold -= GAME_CONSTANTS.MOVE_COST;
+                set((state) => {
+                    const character = state.grid[fromIndex];
+                    if (!character || character.name !== "hood") return;
 
-                const pCoords = getCoordinates(fromIndex);
-                const tCoords = getCoordinates(toIndex);
+                    if (state.gold < GAME_CONSTANTS.MOVE_COST) return;
+                    state.gold -= GAME_CONSTANTS.MOVE_COST;
+                    spentGold = GAME_CONSTANTS.MOVE_COST;
 
-                const targetSymbol = state.grid[toIndex];
-                const targetHasKey = targetSymbol?.name === 'key';
+                    const pCoords = getCoordinates(fromIndex);
+                    const tCoords = getCoordinates(toIndex);
 
-                if (targetSymbol) {
-                    const category = SYMBOL_CATEGORIES[targetSymbol.name];
-                    const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
-                    if (category === 'Treasure' || category === 'Nature') {
-                        switch (targetSymbol.name) {
-                            case 'clover': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); state.playerMagic += (isBoosted ? 4 : 2); break;
-                            case 'pine-tree': state.moves += ((isBoosted ? 8 : 4) * expMultiplier); break;
-                            case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
-                            case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
-                            case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
-                        }
-                    }
-                }
+                    const targetSymbol = state.grid[toIndex];
+                    const targetHasKey = targetSymbol?.name === 'key';
 
-                // Clear path logically
-                if (pCoords.row === tCoords.row) { // Horizontal
-                    const min = Math.min(pCoords.col, tCoords.col);
-                    const max = Math.max(pCoords.col, tCoords.col);
-                    for (let c = min; c <= max; c++) state.grid[getIndex(pCoords.row, c)] = null;
-                } else { // Vertical
-                    const min = Math.min(pCoords.row, tCoords.row);
-                    const max = Math.max(pCoords.row, tCoords.row);
-                    for (let r = min; r <= max; r++) state.grid[getIndex(r, pCoords.col)] = null;
-                }
-
-                state.grid[toIndex] = { ...character };
-
-
-                if (targetHasKey) {
-                    if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
-                    else if (!state.unlockedSlots[4]) state.unlockedSlots[4] = true;
-                    else if (!state.unlockedSlots[5]) state.unlockedSlots[5] = true;
-                    else if (state.keptScrolls.includes('special-scroll')) {
-                        state.gold += (isBoosted ? 32 : 16);
-                    }
-                }
-            }),
-
-            equipSymbol: (symbol, isBoosted = false) => set((state) => {
-                if (symbol.name === 'key') return;
-
-                const category = SYMBOL_CATEGORIES[symbol.name];
-                const keepCost = (category === 'Weapon' && state.keptScrolls.includes('weapon-scroll')) ? 0 : GAME_CONSTANTS.EQUIP_SYMBOL_COST;
-
-                if (state.gold < keepCost) return;
-                const sameCategoryCount = state.keptSymbols.filter(
-                    keptSymbol => keptSymbol && SYMBOL_CATEGORIES[keptSymbol.name] === category
-                ).length;
-
-                if (sameCategoryCount >= 2) return;
-
-                const availableSlots = [0, 1, 2];
-                if (state.unlockedSlots[3]) availableSlots.push(3);
-                if (state.unlockedSlots[4]) availableSlots.push(4);
-                if (state.unlockedSlots[5]) availableSlots.push(5);
-
-                const emptySlotIndex = availableSlots.find(slot => state.keptSymbols[slot] === null);
-                if (emptySlotIndex !== undefined) {
-                    state.gold -= keepCost;
-                    state.grid = state.grid.map(s => s?.id === symbol.id ? null : s);
-                    state.keptSymbols[emptySlotIndex] = { name: symbol.name, battleCount: 2, isBoosted };
-
-                    const foodMultiplier = state.keptScrolls.includes('food-scroll') && SYMBOL_CATEGORIES[symbol.name as SymbolName] === 'Food' ? 2 : 1;
-
-                    switch (symbol.name) {
-                        case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 20 : 10) * foodMultiplier); break;
-                        case 'crab-claw':
-                            state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
-                            state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
-                            break;
-                        case 'brandy-bottle':
-                            for (let i = 0; i < foodMultiplier; i++) {
-                                state.playerHp = Math.max(0, state.playerHp - (isBoosted ? 20 : 10));
-                                state.playerMaxHp += (isBoosted ? 10 : 5);
+                    if (targetSymbol) {
+                        const category = SYMBOL_CATEGORIES[targetSymbol.name];
+                        const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
+                        if (category === 'Treasure' || category === 'Nature') {
+                            switch (targetSymbol.name) {
+                                case 'clover': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); state.playerMagic += (isBoosted ? 4 : 2); break;
+                                case 'pine-tree': state.moves += ((isBoosted ? 8 : 4) * expMultiplier); break;
+                                case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
+                                case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
+                                case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
                             }
-                            break;
-                        case 'axe':
-                            state.playerBaseAtk += (isBoosted ? 6 : 3);
-                            state.playerGear += (isBoosted ? 4 : 2);
-                            break;
-                        case 'relic-blade':
-                        case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
-                        case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
-                        case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
-                        case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
-                        case 'crystal-wand':
-                            state.playerMagic += (isBoosted ? 10 : 5); break;
-                        case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
-                        case 'bell':
-                        case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
-                    }
-
-                    if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
-                        const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
-                        if (itemCategoryCount >= 2) {
-                            state.gold += 80;
-                            state.itemScrollClaimed = true;
                         }
                     }
-                }
-            }),
+
+                    // Clear path logically
+                    if (pCoords.row === tCoords.row) { // Horizontal
+                        const min = Math.min(pCoords.col, tCoords.col);
+                        const max = Math.max(pCoords.col, tCoords.col);
+                        for (let c = min; c <= max; c++) state.grid[getIndex(pCoords.row, c)] = null;
+                    } else { // Vertical
+                        const min = Math.min(pCoords.row, tCoords.row);
+                        const max = Math.max(pCoords.row, tCoords.row);
+                        for (let r = min; r <= max; r++) state.grid[getIndex(r, pCoords.col)] = null;
+                    }
+
+                    state.grid[toIndex] = { ...character };
+
+                    if (targetHasKey) {
+                        if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
+                        else if (!state.unlockedSlots[4]) state.unlockedSlots[4] = true;
+                        else if (!state.unlockedSlots[5]) state.unlockedSlots[5] = true;
+                        else if (state.keptScrolls.includes('special-scroll')) {
+                            state.gold += (isBoosted ? 32 : 16);
+                        }
+                    }
+                });
+
+                return spentGold;
+            },
+
+            equipSymbol: (symbol, isBoosted = false) => {
+                let spentGold: number | null = null;
+
+                set((state) => {
+                    if (symbol.name === 'key') return;
+
+                    const category = SYMBOL_CATEGORIES[symbol.name];
+                    const keepCost = (category === 'Weapon' && state.keptScrolls.includes('weapon-scroll')) ? 0 : GAME_CONSTANTS.EQUIP_SYMBOL_COST;
+
+                    if (state.gold < keepCost) return;
+                    const sameCategoryCount = state.keptSymbols.filter(
+                        keptSymbol => keptSymbol && SYMBOL_CATEGORIES[keptSymbol.name] === category
+                    ).length;
+
+                    if (sameCategoryCount >= 2) return;
+
+                    const availableSlots = [0, 1, 2];
+                    if (state.unlockedSlots[3]) availableSlots.push(3);
+                    if (state.unlockedSlots[4]) availableSlots.push(4);
+                    if (state.unlockedSlots[5]) availableSlots.push(5);
+
+                    const emptySlotIndex = availableSlots.find(slot => state.keptSymbols[slot] === null);
+                    if (emptySlotIndex !== undefined) {
+                        state.gold -= keepCost;
+                        spentGold = keepCost;
+                        state.grid = state.grid.map(s => s?.id === symbol.id ? null : s);
+                        state.keptSymbols[emptySlotIndex] = { name: symbol.name, battleCount: 2, isBoosted };
+
+                        const foodMultiplier = state.keptScrolls.includes('food-scroll') && SYMBOL_CATEGORIES[symbol.name as SymbolName] === 'Food' ? 2 : 1;
+
+                        switch (symbol.name) {
+                            case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 20 : 10) * foodMultiplier); break;
+                            case 'crab-claw':
+                                state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
+                                state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
+                                break;
+                            case 'brandy-bottle':
+                                for (let i = 0; i < foodMultiplier; i++) {
+                                    state.playerHp = Math.max(0, state.playerHp - (isBoosted ? 20 : 10));
+                                    state.playerMaxHp += (isBoosted ? 10 : 5);
+                                }
+                                break;
+                            case 'axe':
+                                state.playerBaseAtk += (isBoosted ? 6 : 3);
+                                state.playerGear += (isBoosted ? 4 : 2);
+                                break;
+                            case 'relic-blade':
+                            case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
+                            case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
+                            case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
+                            case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
+                            case 'crystal-wand':
+                                state.playerMagic += (isBoosted ? 10 : 5); break;
+                            case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
+                            case 'bell':
+                            case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
+                        }
+
+                        if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
+                            const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
+                            if (itemCategoryCount >= 2) {
+                                state.gold += 80;
+                                state.itemScrollClaimed = true;
+                            }
+                        }
+                    }
+                });
+
+                return spentGold;
+            },
 
             removeGridSymbol: (id) => set((state) => {
                 state.grid = state.grid.map(s => s?.id === id ? null : s);

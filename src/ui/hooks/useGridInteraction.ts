@@ -8,6 +8,12 @@ interface ScrollFlowCallbacks {
     openScrollModal: (scrolls: SymbolName[], target: SymbolName, symbolId: string) => void;
 }
 
+interface GoldCostPopup {
+    id: string;
+    index: number;
+    amount: number;
+}
+
 export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const {
         grid: gridSymbols,
@@ -32,14 +38,32 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activeRogueIndex, setActiveRogueIndex] = useState<number | null>(null);
     const [hasSlid, setHasSlid] = useState(false);
+    const [goldCostPopups, setGoldCostPopups] = useState<GoldCostPopup[]>([]);
 
     const matchingIndices = findMatchingIndices(gridSymbols);
+
+    const showGoldCostPopup = (index: number, amount: number) => {
+        const id = crypto.randomUUID();
+        setGoldCostPopups(prev => [...prev, { id, index, amount }]);
+        setTimeout(() => {
+            setGoldCostPopups(prev => prev.filter(popup => popup.id !== id));
+        }, 700);
+    };
 
     const resetSelection = () => {
         setSelectedIndex(null);
         setSelectedEquippedSymbol(null);
         setGlowingIndices([]);
         setActiveRogueIndex(null);
+    };
+
+    const resetInteractionState = () => {
+        resetSelection();
+        setHasSlid(false);
+        setIsAnimating(false);
+        setIsSpinning(false);
+        setIsShuffling(false);
+        setGoldCostPopups([]);
     };
 
     const handleSpin = () => {
@@ -116,7 +140,10 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         if (glowingIndices.includes(index) && activeRogueIndex !== null) {
             const character = gridSymbols[activeRogueIndex];
             if (character && character.name === 'hood') {
-                slideRogue(activeRogueIndex, index, isBoosted);
+                const spentGold = slideRogue(activeRogueIndex, index, isBoosted);
+                if (spentGold !== null && spentGold > 0) {
+                    showGoldCostPopup(index, spentGold);
+                }
                 resetSelection();
                 setHasSlid(true);
                 return;
@@ -161,7 +188,10 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
             const category = SYMBOL_CATEGORIES[symbol.name as SymbolName];
             if (category === 'Nature' || category === 'Treasure') { resetSelection(); return; }
 
-            equipSymbol(symbol, isBoosted);
+            const spentGold = equipSymbol(symbol, isBoosted);
+            if (spentGold !== null && spentGold > 0) {
+                showGoldCostPopup(index, spentGold);
+            }
             resetSelection();
         } else {
             setSelectedIndex(index);
@@ -183,8 +213,10 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         isSpinning,
         isShuffling,
         hasSlid,
+        goldCostPopups,
         shuffleCost,
         resetSelection,
+        resetInteractionState,
         handleSpin,
         handleShuffle,
         handleSymbolClick,

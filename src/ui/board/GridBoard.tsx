@@ -8,6 +8,7 @@ interface GridBoardProps {
     gridSymbols: (GridSymbol | null)[];
     spinKey: number;
     matchingIndices: Set<number>;
+    goldCostPopups: { id: string; index: number; amount: number }[];
     glowingIndices: number[];
     activeRogueIndex: number | null;
     selectedIndex: number | null;
@@ -62,7 +63,7 @@ function formatStatText(text: string, symbolName: string) {
 }
 
 export function GridBoard({
-    gridSymbols, spinKey, matchingIndices, glowingIndices, activeRogueIndex,
+    gridSymbols, spinKey, matchingIndices, goldCostPopups, glowingIndices, activeRogueIndex,
     selectedIndex, selectedEquippedSymbol, isSpinning, onSymbolClick, onEmptyGlowClick, levelUpPerks,
     hasSpecialScroll, areAllSlotsUnlocked,
 }: GridBoardProps) {
@@ -189,6 +190,28 @@ export function GridBoard({
                                 ) : (
                                     <div className="w-full h-full" />
                                 )}
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {goldCostPopups.map((popup) => {
+                        const { row, col } = getCoordinates(popup.index);
+                        return (
+                            <motion.div
+                                key={popup.id}
+                                initial={{ opacity: 0, y: 6, scale: 0.84 }}
+                                animate={{ opacity: [0, 1, 1, 0], y: [6, -8, -20, -30], scale: [0.84, 1.08, 1.03, 0.98] }}
+                                transition={{ duration: 0.7, ease: 'easeOut' }}
+                                className="absolute z-40 pointer-events-none select-none font-bold tracking-widest text-yellow-300 -translate-x-1/2"
+                                style={{
+                                    left: `calc((var(--cell) + var(--gap)) * ${col} + (var(--cell) / 2))`,
+                                    top: `calc((var(--cell) + var(--gap)) * ${row} - (var(--gap) * 0.6))`,
+                                    textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
+                                    fontSize: 'var(--text-base)',
+                                }}
+                            >
+                                -{popup.amount}
                             </motion.div>
                         );
                     })}

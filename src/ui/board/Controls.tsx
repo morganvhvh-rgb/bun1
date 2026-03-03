@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
@@ -23,6 +23,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resetStartRef = useRef<number>(0);
     const resetRafRef = useRef<number>(0);
+    const resetBlockedRef = useRef(isAnimating);
 
     const clearResetHold = useCallback(() => {
         if (resetTimerRef.current) { clearTimeout(resetTimerRef.current); resetTimerRef.current = null; }
@@ -30,11 +31,20 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
         setResetProgress(0);
     }, []);
 
+    useEffect(() => {
+        resetBlockedRef.current = isAnimating;
+    }, [isAnimating]);
+
     const startResetHold = useCallback(() => {
+        if (resetBlockedRef.current) return;
         resetStartRef.current = Date.now();
         setResetProgress(0);
 
         const tick = () => {
+            if (resetBlockedRef.current) {
+                clearResetHold();
+                return;
+            }
             const elapsed = Date.now() - resetStartRef.current;
             const pct = Math.min(elapsed / RESET_HOLD_MS, 1);
             setResetProgress(pct);
@@ -43,6 +53,10 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
         tick();
 
         resetTimerRef.current = setTimeout(() => {
+            if (resetBlockedRef.current) {
+                clearResetHold();
+                return;
+            }
             setResetProgress(1);
             onReset();
             clearResetHold();

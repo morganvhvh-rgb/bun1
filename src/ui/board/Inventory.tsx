@@ -63,8 +63,7 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                             ) : symbol ? (
                                 <KeptSymbolDisplay symbol={symbol} onClick={(e) => onKeptSymbolClick(e, symbol)} />
                             ) : (
-                                // empty unlocked slot — subtle dot
-                                <div className="w-1 h-1 rounded-full bg-white/10" />
+                                <div className="w-full h-full" />
                             )}
                         </div>
                     );

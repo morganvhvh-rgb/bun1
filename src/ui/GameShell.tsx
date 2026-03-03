@@ -51,9 +51,10 @@ export function GameShell() {
     });
 
     const handleReset = () => {
+        if (isBattleRunning) return;
         resetGame();
         resetBattleSequence();
-        grid.resetSelection();
+        grid.resetInteractionState();
         grid.setSpinKey(prev => prev + 1);
     };
 
@@ -114,6 +115,7 @@ export function GameShell() {
                                 gridSymbols={grid.gridSymbols}
                                 spinKey={grid.spinKey}
                                 matchingIndices={grid.matchingIndices}
+                                goldCostPopups={grid.goldCostPopups}
                                 glowingIndices={grid.glowingIndices}
                                 activeRogueIndex={grid.activeRogueIndex}
                                 selectedIndex={grid.selectedIndex}
