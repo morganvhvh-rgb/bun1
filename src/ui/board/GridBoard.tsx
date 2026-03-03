@@ -110,7 +110,6 @@ export function GridBoard({
                     {gridSymbols.map((symbol, index) => {
                         const isMatching = matchingIndices.has(index);
                         const isNonTargetMatch = isMatching && !glowingIndices.includes(index);
-                        const isSelected = selectedIndex === index && !glowingIndices.includes(index);
                         const isTarget = glowingIndices.includes(index) && activeRogueIndex !== null;
 
                         let arrowRotation = 0;
