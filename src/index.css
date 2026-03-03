@@ -140,18 +140,16 @@ body::before {
   inset: -10%;
   z-index: 0;
   background:
-    /* Amber bloom — bottom centre, dark and restrained */
-    radial-gradient(ellipse 90% 65% at 50% 102%, rgba(130, 58, 2, 0.72) 0%, transparent 62%),
-    /* Amber warmth — bottom-left */
-    radial-gradient(ellipse 62% 48% at 0% 100%, rgba(95, 38, 1, 0.52) 0%, transparent 58%),
-    /* Amber warmth — bottom-right */
-    radial-gradient(ellipse 58% 44% at 100% 98%, rgba(105, 44, 1, 0.44) 0%, transparent 56%),
+    /* Amber glow — right side, just below center, gentle */
+    radial-gradient(ellipse 55% 60% at 105% 62%, rgba(140, 62, 3, 0.38) 0%, transparent 60%),
+    /* Forest green glow — bottom-left, dark and very subtle */
+    radial-gradient(ellipse 70% 48% at 18% 112%, rgba(4, 22, 8, 0.90) 0%, transparent 60%),
     /* Dark vignette crush — bottom edge */
     radial-gradient(ellipse 100% 40% at 50% 115%, rgba(0, 0, 0, 0.85) 0%, transparent 65%),
     /* Black vignette — top, very heavy */
     radial-gradient(ellipse 120% 55% at 50% -5%, rgba(0, 0, 0, 0.95) 0%, transparent 68%),
-    /* Base: pure black top → very dark charcoal-amber bottom */
-    linear-gradient(180deg, #030303 0%, #050501 42%, #080601 72%, #0c0902 100%);
+    /* Base: pure black top → very dark charcoal bottom */
+    linear-gradient(180deg, #030303 0%, #040404 42%, #060604 72%, #080806 100%);
   background-size: 100% 100%;
   pointer-events: none;
 }
@@ -173,7 +171,7 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 90px 90px;
-  opacity: 0.26;
+  opacity: 0.18;
   mix-blend-mode: screen;
   pointer-events: none;
 }
