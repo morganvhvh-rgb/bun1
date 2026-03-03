@@ -35,7 +35,7 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto flex justify-center items-center">
                         <Icon name={name} scale={4.5} tintColor={SYMBOL_THEME[name]} />
                         {hasType && (
-                            <span className="absolute z-10 text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-widest leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,1)] pointer-events-none" style={{ textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,0.8)' }}>
+                            <span className="absolute z-10 text-[9px] sm:text-[11px] font-bold text-[#f0e8d8] uppercase tracking-widest leading-none text-center drop-shadow-[0_2px_4px_rgba(0,0,0,1)] pointer-events-none" style={{ textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,0.8)' }}>
                                 {type}
                             </span>
                         )}

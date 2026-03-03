@@ -15,7 +15,7 @@ function KeptSymbolDisplay({ symbol, onClick }: { symbol: KeptSymbol; onClick: (
                 <Icon name={symbol.name} scale={2.2} tintColor={SYMBOL_THEME[symbol.name]} />
             </div>
             <span
-                className="absolute bottom-0.5 right-1 z-20 text-white font-mono font-bold leading-none select-none"
+                className="absolute bottom-0.5 right-1 z-20 text-[#f0e8d8] font-mono font-bold leading-none select-none"
                 style={{ fontSize: '11px', textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}
             >
                 {symbol.battleCount}

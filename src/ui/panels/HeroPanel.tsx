@@ -28,7 +28,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
 
                 {/* Header: Name & Level */}
                 <div className="flex items-baseline justify-center gap-2 z-10 w-full shrink-0">
-                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-white drop-shadow-md">ROGUE</span>
+                    <span className="text-[13px] sm:text-[14px] font-bold uppercase tracking-widest leading-none text-[#f0e8d8] drop-shadow-md">ROGUE</span>
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest leading-none text-green-500 drop-shadow-md">LVL {playerLvl}</span>
                 </div>
 
@@ -45,7 +45,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                                         exit={{ opacity: 0, scale: 0 }}
                                         className="absolute -bottom-1 -right-1 z-30 flex items-center justify-center w-6 h-6 bg-red-500 rounded-full border-2 border-zinc-900 shadow-lg"
                                     >
-                                        <i className="ra ra-muscle-up text-white text-[12px] leading-none" />
+                                        <i className="ra ra-muscle-up text-[#f0e8d8] text-[12px] leading-none" />
                                     </motion.div>
                                 )}
                             </AnimatePresence>

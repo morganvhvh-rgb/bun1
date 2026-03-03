@@ -85,8 +85,8 @@ export function Modal({
                             {/* Header */}
                             {showHeader && (
                                 <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-white font-bold uppercase tracking-widest leading-none text-sm">{title}</h2>
-                                    <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Close</button>
+                                    <h2 className="text-[#f0e8d8] font-bold uppercase tracking-widest leading-none text-sm">{title}</h2>
+                                    <button onClick={onClose} className="text-zinc-500 hover:text-[#f0e8d8] transition-colors uppercase text-xs tracking-widest">Close</button>
                                 </div>
                             )}
 

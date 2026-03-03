@@ -13,7 +13,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Scroll Content" position="bottom">
-            <div className="border border-zinc-900 bg-black p-4 text-white text-sm space-y-2 overflow-y-auto touch-pan-y h-full">
+            <div className="border border-zinc-900 bg-black p-4 text-[#f0e8d8] text-sm space-y-2 overflow-y-auto touch-pan-y h-full">
                 {keptScrolls.length > 0 ? (
                     keptScrolls.map((scrollName, i) => (
                         <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-900 last:border-0 hover:bg-zinc-900 px-2 transition-colors">
@@ -21,7 +21,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
                                 <Icon name={scrollName} scale={2} tintColor={SYMBOL_THEME[scrollName]} />
                             </div>
                             <div className="flex flex-col">
-                                <div className="text-white font-bold uppercase text-xs tracking-wider">
+                                <div className="text-[#f0e8d8] font-bold uppercase text-xs tracking-wider">
                                     {scrollName.replace('-scroll', '')} Scroll
                                 </div>
                                 <div className="text-xs text-zinc-500 leading-tight mt-0.5">{SYMBOL_EXTRA_EFFECTS[scrollName] ?? '???'}</div>
@@ -29,7 +29,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
                         </div>
                     ))
                 ) : (
-                    <div className="opacity-50 text-center mt-4 pt-4 text-white">No scrolls collected</div>
+                    <div className="opacity-50 text-center mt-4 pt-4 text-[#f0e8d8]">No scrolls collected</div>
                 )}
             </div>
         </Modal>
