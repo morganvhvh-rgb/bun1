@@ -48,7 +48,8 @@ export function Icon({ name, className, scale = 4, onClick, tintColor, gradient,
                 style={{
                     fontSize: size,
                     color: tintColor || (gradient ? gradient[0] : undefined),
-                    ...gradient ? { color: gradient[0] } : undefined
+                    ...gradient ? { color: gradient[0] } : undefined,
+                    filter: 'drop-shadow(2px 4px 2px rgba(0,0,0,1))',
                 }}
             />
         </motion.div>
