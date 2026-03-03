@@ -20,6 +20,14 @@ interface GridBoardProps {
     areAllSlotsUnlocked: boolean;
 }
 
+const MATCH_SPARKLES = [
+    { top: '16%', left: '20%', size: 4, delay: 0, duration: 1.3 },
+    { top: '28%', left: '68%', size: 3, delay: 0.22, duration: 1.55 },
+    { top: '56%', left: '26%', size: 5, delay: 0.4, duration: 1.45 },
+    { top: '70%', left: '62%', size: 3, delay: 0.12, duration: 1.25 },
+    { top: '44%', left: '46%', size: 2, delay: 0.3, duration: 1.7 },
+];
+
 function formatStatText(text: string, symbolName: string) {
     if (symbolName === 'brandy-bottle') {
         return <span className="text-red-500">{text}</span>;
@@ -131,10 +139,7 @@ export function GridBoard({
                                 initial="hidden"
                                 animate="show"
                                 transition={{ layout: { type: 'tween', duration: 0.18, ease: 'easeInOut' } }}
-                                className={cn(
-                                    'flex items-center justify-center relative rounded-2xl',
-                                    isNonTargetMatch && 'ring-2 ring-teal-400',
-                                )}
+                                className="flex items-center justify-center relative rounded-2xl"
                                 style={{
                                     width: 'var(--cell)',
                                     height: 'var(--cell)',
@@ -142,6 +147,28 @@ export function GridBoard({
                                     zIndex: symbol?.name === 'hood' ? 20 : 'auto',
                                 }}
                             >
+                                {isNonTargetMatch && (
+                                    <div className="absolute inset-[10%] z-0 pointer-events-none">
+                                        {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
+                                            const phaseOffset = (index % 4) * 0.08 + Math.floor(index / 4) * 0.06;
+                                            return (
+                                                <span
+                                                    key={`sparkle-${sparkleIndex}`}
+                                                    className="absolute rounded-full"
+                                                    style={{
+                                                        top: sparkle.top,
+                                                        left: sparkle.left,
+                                                        width: sparkle.size,
+                                                        height: sparkle.size,
+                                                        backgroundColor: 'rgba(45, 212, 191, 0.95)',
+                                                        boxShadow: '0 0 8px rgba(45, 212, 191, 0.85)',
+                                                        animation: `conjure-sparkle ${sparkle.duration}s ease-in-out ${sparkle.delay + phaseOffset}s infinite`,
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                )}
                                 {isTarget && (
                                     <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>
                                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
