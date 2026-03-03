@@ -53,7 +53,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         // IsShaking was used for older animation logic
         setIsAnimating(true);
         setIsSpinning(true);
-        setTimeout(() => { setIsAnimating(false); setIsSpinning(false); }, 1600);
+        setTimeout(() => { setIsAnimating(false); setIsSpinning(false); }, 1200);
     };
 
     const handleShuffle = async () => {
@@ -95,7 +95,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         for (let g = 0; g < steps.length; g += groupSize) {
             const swaps = steps.slice(g, g + groupSize);
             applySwaps(swaps);
-            await new Promise(r => setTimeout(r, 220)); // snappy visual pause
+            await new Promise(r => setTimeout(r, 150)); // snappy visual pause
         }
 
         setIsShuffling(false);

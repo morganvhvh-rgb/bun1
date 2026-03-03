@@ -81,12 +81,12 @@ export function GridBoard({
             const col = index % 4;
             const row = Math.floor(index / 4);
             const order = (col * 3) + row;
-            const delay = order * 0.12;
+            const delay = order * 0.09;
             return {
                 opacity: 1,
                 scale: 1,
                 y: 0,
-                transition: { delay, type: 'spring' as const, stiffness: 450, damping: 25 }
+                transition: { delay, type: 'spring' as const, stiffness: 500, damping: 28 }
             };
         },
     };
