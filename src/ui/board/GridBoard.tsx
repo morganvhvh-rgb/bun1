@@ -131,7 +131,7 @@ export function GridBoard({
                                 variants={symbolVariants}
                                 initial="hidden"
                                 animate="show"
-                                transition={{ layout: { type: 'tween', duration: 0.2, ease: 'linear' } }}
+                                transition={{ layout: { type: 'tween', duration: 0.18, ease: 'easeInOut' } }}
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
                                     isNonTargetMatch ? 'bg-teal-900 border border-teal-500/40'
@@ -141,7 +141,9 @@ export function GridBoard({
                                 )}
                                 style={{
                                     width: 'var(--cell)',
-                                    height: 'var(--cell)'
+                                    height: 'var(--cell)',
+                                    // Hood always renders on top so it slides over adjacent cells, not under them
+                                    zIndex: symbol?.name === 'hood' ? 20 : 'auto',
                                 }}
                             >
                                 {isTarget && (
