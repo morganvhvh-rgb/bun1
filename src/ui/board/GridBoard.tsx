@@ -135,9 +135,9 @@ export function GridBoard({
                                 className={cn(
                                     'flex items-center justify-center relative transition-colors duration-300 rounded-2xl',
                                     isNonTargetMatch ? 'bg-teal-900 border border-teal-500/40'
-                                        : isSelected ? 'bg-zinc-700 border border-white/20'
-                                            : !symbol ? 'bg-zinc-900 border border-white/5 hover:bg-zinc-800 hover:border-white/10'
-                                                : 'bg-zinc-900 border border-white/5 hover:border-white/10 hover:bg-zinc-800'
+                                        : isSelected ? 'bg-zinc-800 border border-white/20'
+                                            : !symbol ? 'bg-zinc-950 border border-white/5 hover:bg-zinc-900 hover:border-white/10'
+                                                : 'bg-zinc-950 border border-white/5 hover:border-white/10 hover:bg-zinc-900'
                                 )}
                                 style={{
                                     width: 'var(--cell)',

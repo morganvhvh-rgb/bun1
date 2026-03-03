@@ -13,10 +13,10 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Scroll Content" position="bottom">
-            <div className="border border-zinc-800 bg-black p-4 text-white text-sm space-y-2 overflow-y-auto touch-pan-y h-full">
+            <div className="border border-zinc-900 bg-black p-4 text-white text-sm space-y-2 overflow-y-auto touch-pan-y h-full">
                 {keptScrolls.length > 0 ? (
                     keptScrolls.map((scrollName, i) => (
-                        <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-800 last:border-0 hover:bg-zinc-800 px-2 transition-colors">
+                        <div key={i} className="flex items-center gap-4 py-3 border-b border-zinc-900 last:border-0 hover:bg-zinc-900 px-2 transition-colors">
                             <div className="w-8 h-8 flex items-center justify-center shrink-0">
                                 <Icon name={scrollName} scale={2} tintColor={SYMBOL_THEME[scrollName]} />
                             </div>

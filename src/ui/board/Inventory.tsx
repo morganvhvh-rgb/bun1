@@ -36,7 +36,7 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                         return (
                             <div
                                 key={`slot-${slot}`}
-                                className="flex flex-col items-center justify-center surface-panel opacity-60 rounded-md"
+                                className="flex flex-col items-center justify-center surface-panel rounded-md"
                                 style={{ width: 'var(--cell-sm)', height: 'var(--cell-sm)' }}
                             >
                                 <Icon name="key" scale={1.2} tintColor="#71717a" />

@@ -94,7 +94,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 onPointerLeave={clearResetHold}
                 onPointerCancel={clearResetHold}
                 onContextMenu={(e) => e.preventDefault()}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 opacity-60 hover:opacity-100 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:opacity-40"
+                className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center focus:outline-none surface-panel touch-none select-none overflow-hidden rounded-full border-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{
                     top: 'calc(var(--coffee-btn-offset) + var(--coffee-btn-size) + var(--gap))',
                     width: 'var(--coffee-btn-size)',
@@ -107,7 +107,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                     className="absolute inset-x-0 bottom-0 bg-white origin-bottom z-0"
                     style={{ height: `${resetProgress * 100}%`, transition: resetProgress === 0 ? 'height 0.1s' : 'none' }}
                 />
-                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-zinc-500')}>
+                <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-white')}>
                     Reset
                 </span>
             </button>
