@@ -380,24 +380,24 @@ export const useGameStore = create<GameState>()(
                 state.conjureMagicUsed = false;
 
                 if (state.battleCount === 4) {
-                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: Math.max(1, 50 - state.globalEnemyHpDebuff), atk: 11, lvl: 2 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: Math.max(1, 50 - state.globalEnemyHpDebuff), atk: 11, lvl: 2 };
+                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: 50, atk: 11, lvl: 2 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: 50, atk: 11, lvl: 2 };
                 } else if (state.enemy1.name === 'wyvern') {
                     const isLvl2 = state.enemy1.lvl === 2;
                     const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].hp;
                     const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES.snail.hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'monster-skull') {
                     const isLvl2 = state.enemy1.lvl === 2;
                     const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES.hydra.hp;
                     const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'hydra') {
                     const isLvl2 = state.enemy1.lvl === 2;
                     const baseHp1 = isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
                     state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: isLvl2 ? 2 : 1 };
                 }
 

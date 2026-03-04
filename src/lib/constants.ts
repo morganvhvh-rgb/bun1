@@ -188,7 +188,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
     "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "???",
-    "nature-scroll": "???",
+    "nature-scroll": "if Rogue is >LVL 2, Rogue can slide twice per spin",
     "book": "Conjure Magic x2",
     "spades-card": "",
 
@@ -304,7 +304,7 @@ export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "book": "conjure magic effect applies twice",
     "crystal-wand": "increase attack by current magic / doesnt stack",
     "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
-    "bell": "every attack reduces all future enemies HP by 1 / doesnt stack",
+    "bell": "every attack also deals 1 damage to future enemies / doesnt stack",
     "ocarina": "attacks have a 15% chance to heal for same amount / doesnt stack",
     "armor-scroll": "+2 max HP for every 5 GEAR",
     "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",

@@ -18,6 +18,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const {
         grid: gridSymbols,
         keptScrolls,
+        levelUpPerks,
 
         spinBoard,
         payForShuffle,
@@ -37,7 +38,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [isShuffling, setIsShuffling] = useState(false);
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activeRogueIndex, setActiveRogueIndex] = useState<number | null>(null);
-    const [hasSlid, setHasSlid] = useState(false);
+    const [slidesCount, setSlidesCount] = useState(0);
     const [goldCostPopups, setGoldCostPopups] = useState<GoldCostPopup[]>([]);
 
     const matchingIndices = findMatchingIndices(gridSymbols);
@@ -59,7 +60,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
 
     const resetInteractionState = () => {
         resetSelection();
-        setHasSlid(false);
+        setSlidesCount(0);
         setIsAnimating(false);
         setIsSpinning(false);
         setIsShuffling(false);
@@ -73,7 +74,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         spinBoard();
         setSpinKey(prev => prev + 1);
         resetSelection();
-        setHasSlid(false);
+        setSlidesCount(0);
         // IsShaking was used for older animation logic
         setIsAnimating(true);
         setIsSpinning(true);
@@ -93,7 +94,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         if (!success) return;
 
         resetSelection();
-        setHasSlid(false);
+        setSlidesCount(0);
         setIsAnimating(true);
         setIsShuffling(true);
 
@@ -145,14 +146,17 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
                     showGoldCostPopup(index, spentGold);
                 }
                 resetSelection();
-                setHasSlid(true);
+                setSlidesCount(prev => prev + 1);
                 return;
             }
         }
 
         // Rogue selection
         if (symbol.name === 'hood') {
-            if (hasSlid) return;
+            const hasNatureScroll = keptScrolls.includes('nature-scroll');
+            const isLevel3 = levelUpPerks.length >= 2;
+            const maxSlides = (hasNatureScroll && isLevel3) ? 2 : 1;
+            if (slidesCount >= maxSlides) return;
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
             if (col > 0) targets.push(getIndex(row, col - 1));
@@ -212,7 +216,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         isAnimating,
         isSpinning,
         isShuffling,
-        hasSlid,
+        hasSlid: slidesCount > 0,
         goldCostPopups,
         shuffleCost,
         resetSelection,
