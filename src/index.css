@@ -134,17 +134,13 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Gradient layer — jet black with soft amber glows at corners */
+/* Gradient layer — jet black with edge vignettes; amber light comes only from the SVG streak */
 body::before {
   content: '';
   position: fixed;
   inset: -10%;
   z-index: 0;
   background:
-    /* Amber — very soft glow bleeding in from the bottom-right */
-    radial-gradient(ellipse 65% 55% at 105% 110%, rgba(180, 100, 10, 0.20) 0%, transparent 60%),
-    /* Amber — very soft glow bleeding in from the top-left */
-    radial-gradient(ellipse 60% 50% at -5% -10%, rgba(180, 100, 10, 0.16) 0%, transparent 58%),
     /* Black vignette — top */
     radial-gradient(ellipse 120% 45% at 50% -5%, rgba(0, 0, 0, 0.90) 0%, transparent 60%),
     /* Black vignette — bottom */
@@ -155,34 +151,34 @@ body::before {
   pointer-events: none;
 }
 
-/* Amber streak — a single dull vertical accent down the center, slightly curved */
+/* Amber streak — now drawn as an inline SVG curved path in GameShell */
 @keyframes streak-breathe {
-  0%   { transform: translateX(-50%) scaleX(1)    skewX(0deg); opacity: 1; }
-  33%  { transform: translateX(-48%) scaleX(1.08) skewX(-1.5deg); opacity: 0.85; }
-  66%  { transform: translateX(-52%) scaleX(0.94) skewX(1deg); opacity: 0.95; }
-  100% { transform: translateX(-50%) scaleX(1)    skewX(0deg); opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  40% {
+    opacity: 0.82;
+  }
+
+  70% {
+    opacity: 0.92;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 body .bg-amber-streak {
   position: fixed;
-  top: -10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 38%;
-  height: 120%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Tall narrow ellipse — amber core fades to nothing on both sides */
-  background: radial-gradient(
-    ellipse 100% 50% at 50% 48%,
-    rgba(200, 110, 10, 0.07) 0%,
-    rgba(180, 90, 5, 0.04)  25%,
-    transparent              70%
-  );
-  /* A slight skew bakes in the "curve" impression */
-  border-radius: 50% / 8%;
-  /* Slow organic breathe — 18 s so it's barely perceptible */
-  animation: streak-breathe 18s ease-in-out infinite;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: streak-breathe 20s ease-in-out infinite;
   mix-blend-mode: screen;
 }
 
