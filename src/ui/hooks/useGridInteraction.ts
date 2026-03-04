@@ -119,7 +119,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         for (let g = 0; g < steps.length; g += groupSize) {
             const swaps = steps.slice(g, g + groupSize);
             applySwaps(swaps);
-            await new Promise(r => setTimeout(r, 150)); // snappy visual pause
+            await new Promise(r => setTimeout(r, 160)); // Tuned visual baseline syncs better without interrupting framer's internal tween state
         }
 
         setIsShuffling(false);

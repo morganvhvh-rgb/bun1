@@ -139,13 +139,14 @@ export function GridBoard({
                                 variants={symbolVariants}
                                 initial="hidden"
                                 animate="show"
-                                transition={{ layout: { type: 'tween', duration: 0.18, ease: 'easeInOut' } }}
+                                transition={{ layout: { type: 'tween', duration: 0.14, ease: 'easeOut' } }}
                                 className="flex items-center justify-center relative rounded-2xl"
                                 style={{
                                     width: 'var(--cell)',
                                     height: 'var(--cell)',
                                     // Hood always renders on top so it slides over adjacent cells, not under them
                                     zIndex: symbol?.name === 'hood' ? 20 : 'auto',
+                                    willChange: 'transform',
                                 }}
                             >
                                 {isNonTargetMatch && (

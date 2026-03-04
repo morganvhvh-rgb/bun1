@@ -44,82 +44,6 @@
   --coffee-modal-h: 8rem;
 }
 
-/* ─── Noisy gradient background ─── */
-
-/* SVG noise filter defined once for reuse */
-@property --grad-angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 210deg;
-}
-
-@keyframes grain-drift {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  20% {
-    transform: translate(-2%, 1%);
-  }
-
-  40% {
-    transform: translate(1%, -2%);
-  }
-
-  60% {
-    transform: translate(-1%, 2%);
-  }
-
-  80% {
-    transform: translate(2%, -1%);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-/* Slow, continuous sway for the grain layer */
-@keyframes grain-sway {
-  0% {
-    transform: translate(0%, 0%) rotate(0deg);
-  }
-
-  20% {
-    transform: translate(-5%, 3%) rotate(0.4deg);
-  }
-
-  40% {
-    transform: translate(3%, -4%) rotate(-0.3deg);
-  }
-
-  60% {
-    transform: translate(-3%, 5%) rotate(0.5deg);
-  }
-
-  80% {
-    transform: translate(4%, -2%) rotate(-0.4deg);
-  }
-
-  100% {
-    transform: translate(0%, 0%) rotate(0deg);
-  }
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 /* ─── Reset & mobile lockdown ─── */
 html,
 body {
@@ -128,80 +52,10 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #080808;
+  background-color: #121212;
   color: #e8d4b8;
   position: fixed;
   font-family: var(--font-sans);
-}
-
-/* Gradient layer — jet black with edge vignettes; amber light comes only from the SVG streak */
-body::before {
-  content: '';
-  position: fixed;
-  inset: -10%;
-  z-index: 0;
-  background:
-    /* Black vignette — top */
-    radial-gradient(ellipse 120% 45% at 50% -5%, rgba(0, 0, 0, 0.90) 0%, transparent 60%),
-    /* Black vignette — bottom */
-    radial-gradient(ellipse 120% 45% at 50% 108%, rgba(0, 0, 0, 0.80) 0%, transparent 60%),
-    /* Base: flat jet black */
-    #080808;
-  background-size: 100% 100%;
-  pointer-events: none;
-}
-
-/* Amber streak — now drawn as an inline SVG curved path in GameShell */
-@keyframes streak-breathe {
-  0% {
-    opacity: 1;
-  }
-
-  40% {
-    opacity: 0.82;
-  }
-
-  70% {
-    opacity: 0.92;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-body .bg-amber-streak {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  animation: streak-breathe 20s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-.bg-noise-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  /*
-   * baseFrequency 0.72 — slightly coarser than before so each
-   * speckle reads as a distinct mark on small/mobile screens.
-   * numOctaves 4 keeps the layered micro-detail.
-   * Tile at 90px for a tight, dense grain texture.
-   * mix-blend-mode screen makes grain light up against pure black.
-   * opacity 0.15 — gives a hazy film-grain feel without dominating.
-   */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 90px 90px;
-  opacity: 0.15;
-  mix-blend-mode: screen;
-  pointer-events: none;
 }
 
 #root {

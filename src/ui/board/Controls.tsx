@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
@@ -30,6 +30,22 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
         if (resetRafRef.current) { cancelAnimationFrame(resetRafRef.current); resetRafRef.current = 0; }
         setResetProgress(0);
     }, []);
+
+    const [costPopups, setCostPopups] = useState<{ id: string, type: 'spin' | 'shuffle', amount: number }[]>([]);
+
+    const handleSpin = useCallback(() => {
+        const id = Math.random().toString();
+        setCostPopups(prev => [...prev, { id, type: 'spin', amount: GAME_CONSTANTS.SPIN_COST }]);
+        setTimeout(() => setCostPopups(prev => prev.filter(p => p.id !== id)), 1000);
+        onSpin();
+    }, [onSpin]);
+
+    const handleShuffle = useCallback(() => {
+        const id = Math.random().toString();
+        setCostPopups(prev => [...prev, { id, type: 'shuffle', amount: shuffleCost }]);
+        setTimeout(() => setCostPopups(prev => prev.filter(p => p.id !== id)), 1000);
+        onShuffle();
+    }, [shuffleCost, onShuffle]);
 
     useEffect(() => {
         resetBlockedRef.current = isAnimating;
@@ -68,49 +84,57 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
-            {/* ─── Ambient column glow perfectly aligned under controls ─── */}
-            <div
-                className="absolute left-1/2 -translate-x-1/2 pointer-events-none mix-blend-screen"
-                style={{
-                    top: '-50vh',
-                    bottom: '-50vh',
-                    width: '300px',
-                    animation: 'streak-breathe 20s ease-in-out infinite',
-                    zIndex: -1
-                }}
-            >
-                <svg
-                    width="100%"
-                    height="100%"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                >
-                    <defs>
-                        <filter id="ambient-glow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="32" />
-                        </filter>
-                    </defs>
-                    <ellipse
-                        cx="50%" cy="50%"
-                        rx="24" ry="100%"
-                        fill="rgba(200, 80, 0, 0.45)"
-                        filter="url(#ambient-glow)"
-                    />
-                    <ellipse
-                        cx="50%" cy="50%"
-                        rx="8" ry="100%"
-                        fill="rgba(240, 120, 0, 0.3)"
-                        filter="url(#ambient-glow)"
-                    />
-                </svg>
+            {/* Spin Button */}
+            <div className="relative" style={btnStyle}>
+                <motion.button onClick={handleSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating} className={btnClass} style={{ width: '100%', height: '100%' }} title="Spin">
+                    <i className="ra ra-cycle" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
+                </motion.button>
+                <AnimatePresence>
+                    {costPopups.filter(p => p.type === 'spin').map(popup => (
+                        <motion.div
+                            key={popup.id}
+                            initial={{ opacity: 0, y: 6, scale: 0.84 }}
+                            animate={{ opacity: [0, 1, 1, 0], y: [6, -8, -20, -30], scale: [0.84, 1.08, 1.03, 0.98] }}
+                            transition={{ duration: 0.7, ease: 'easeOut' }}
+                            className="absolute z-40 pointer-events-none select-none font-bold tracking-widest text-yellow-300"
+                            style={{
+                                right: 'calc(100% + 12px)',
+                                top: '25%',
+                                textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
+                                fontSize: 'var(--text-base)',
+                            }}
+                        >
+                            -{popup.amount}
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
-            <motion.button onClick={onSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating} className={btnClass} style={btnStyle} title="Spin">
-                <i className="ra ra-cycle" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
-            </motion.button>
 
-            <motion.button onClick={onShuffle} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={btnStyle} title="Shuffle">
-                <i className="ra ra-perspective-dice-random" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
-            </motion.button>
+            {/* Shuffle Button */}
+            <div className="relative" style={btnStyle}>
+                <motion.button onClick={handleShuffle} disabled={gold < shuffleCost || isAnimating} className={btnClass} style={{ width: '100%', height: '100%' }} title="Shuffle">
+                    <i className="ra ra-perspective-dice-random" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
+                </motion.button>
+                <AnimatePresence>
+                    {costPopups.filter(p => p.type === 'shuffle').map(popup => (
+                        <motion.div
+                            key={popup.id}
+                            initial={{ opacity: 0, y: 6, scale: 0.84 }}
+                            animate={{ opacity: [0, 1, 1, 0], y: [6, -8, -20, -30], scale: [0.84, 1.08, 1.03, 0.98] }}
+                            transition={{ duration: 0.7, ease: 'easeOut' }}
+                            className="absolute z-40 pointer-events-none select-none font-bold tracking-widest text-yellow-300"
+                            style={{
+                                right: 'calc(100% + 12px)',
+                                top: '25%',
+                                textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
+                                fontSize: 'var(--text-base)',
+                            }}
+                        >
+                            -{popup.amount}
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </div>
 
             <motion.button type="button" onClick={onScrollsOpen} disabled={isAnimating} className={cn(btnClass)} style={btnStyle} title="Scrolls">
                 <Icon name="scroll-unfurled" scale={1.8} tintColor="#e8d4b8" />
