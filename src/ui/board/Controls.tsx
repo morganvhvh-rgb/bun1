@@ -178,7 +178,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                 aria-label="Hold to reset game"
             >
                 <div
-                    className="absolute inset-x-0 bottom-0 bg-white origin-bottom z-0"
+                    className="absolute inset-x-0 bottom-0 bg-[#e8d4b8] origin-bottom z-0"
                     style={{ height: `${resetProgress * 100}%`, transition: resetProgress === 0 ? 'height 0.1s' : 'none' }}
                 />
                 <span className={cn("relative z-10 text-[9px] font-bold uppercase tracking-widest leading-none", resetProgress > 0.5 ? 'text-black' : 'text-[#e8d4b8]')}>

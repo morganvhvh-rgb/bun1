@@ -82,13 +82,14 @@ export const getStatText = (
         case 'relic-blade':
         case 'daggers': return "+2 ATK +2 Gear";
         case 'crossbow': return "+2 ATK +8 Gear";
-        case 'shield': return "+10 Gear";
+        case 'shield': return "+14 Gear";
         case 'knight-helmet': return "+4 Gear";
         case 'crystal-wand':
             return "+10 Magic";
         case 'fairy-wand': return "+6 Magic";
         case 'gold-bar': return "+32 gold";
         case 'gem-pendant': return "+16 Gold +4 Gear";
+        case 'bell': return "-4 ATK";
         case 'key':
             if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 gold';
             return SYMBOL_STATS[name] || "???";

@@ -170,7 +170,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "crossbow": "+1 ATK +4 Gear",
     "daggers": "+1 ATK +1 Gear",
 
-    "shield": "+5 Gear",
+    "shield": "+7 Gear",
     "knight-helmet": "+2 Gear",
 
     "crystal-wand": "+5 Magic",
@@ -192,7 +192,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "book": "Conjure Magic x2",
     "spades-card": "",
 
-    "bell": "-1 ATK",
+    "bell": "-2 ATK",
     "ocarina": "-1 ATK",
 };
 
@@ -299,12 +299,12 @@ export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
-    "spades-card": "[perspective-dice-random symbol] costs 1 if experience is <3",
+    "spades-card": "[perspective-dice-random symbol] costs 1 less / stacks",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
     "book": "conjure magic effect applies twice",
     "crystal-wand": "increase attack by current magic / doesnt stack",
     "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
-    "bell": "every attack reduces all future enemies HP by 1 / stacks",
+    "bell": "every attack reduces all future enemies HP by 1 / doesnt stack",
     "ocarina": "attacks have a 15% chance to heal for same amount / doesnt stack",
     "armor-scroll": "+2 max HP for every 5 GEAR",
     "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",

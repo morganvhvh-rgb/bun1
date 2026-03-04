@@ -118,7 +118,7 @@ export function GridBoard({
                 <AnimatePresence mode="popLayout">
                     {gridSymbols.map((symbol, index) => {
                         const isMatching = matchingIndices.has(index);
-                        const isNonTargetMatch = isMatching && !glowingIndices.includes(index);
+                        const isSparklingMatch = isMatching;
                         const isTarget = glowingIndices.includes(index) && activeRogueIndex !== null;
 
                         let arrowRotation = 0;
@@ -149,7 +149,7 @@ export function GridBoard({
                                     willChange: 'transform',
                                 }}
                             >
-                                {isNonTargetMatch && (
+                                {isSparklingMatch && (
                                     <div className="absolute inset-[10%] z-0 pointer-events-none">
                                         {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
                                             const phaseOffset = (index % 4) * 0.08 + Math.floor(index / 4) * 0.06;
@@ -242,7 +242,7 @@ export function GridBoard({
                             {SYMBOL_EXTRA_EFFECTS[displaySymbol.name] ? (
                                 SYMBOL_EXTRA_EFFECTS[displaySymbol.name]?.includes('[perspective-dice-random symbol]') ? (
                                     <span className="flex items-center justify-center gap-1 w-full min-w-0 whitespace-normal break-words">
-                                        <i className="ra ra-perspective-dice-random" style={{ fontSize: 12 }} /> costs 1 if experience is {'<'}3
+                                        <i className="ra ra-perspective-dice-random" style={{ fontSize: 12 }} /> {SYMBOL_EXTRA_EFFECTS[displaySymbol.name]!.replace('[perspective-dice-random symbol] ', '')}
                                     </span>
                                 ) : SYMBOL_EXTRA_EFFECTS[displaySymbol.name]
                             ) : ''}

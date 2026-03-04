@@ -125,8 +125,9 @@ export const useGameStore = create<GameState>()(
             payForShuffle: () => {
                 let success = false;
                 set((state) => {
-                    const hasSpadesCard = state.keptSymbols.some(symbol => symbol?.name === 'spades-card');
-                    const cost = (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+                    const spadesCards = state.keptSymbols.filter(symbol => symbol?.name === 'spades-card');
+                    const spadesDiscount = spadesCards.reduce((acc, symbol) => acc + (symbol?.isBoosted ? 2 : 1), 0);
+                    const cost = Math.max(0, GAME_CONSTANTS.SHUFFLE_COST - spadesDiscount);
 
                     if (state.gold >= cost) {
                         state.gold -= cost;
@@ -250,13 +251,13 @@ export const useGameStore = create<GameState>()(
                             case 'relic-blade':
                             case 'daggers': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 2 : 1); break;
                             case 'crossbow': state.playerBaseAtk += (isBoosted ? 2 : 1); state.playerGear += (isBoosted ? 8 : 4); break;
-                            case 'shield': state.playerGear += (isBoosted ? 10 : 5); break;
+                            case 'shield': state.playerGear += (isBoosted ? 14 : 7); break;
                             case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
                             case 'crystal-wand':
                                 state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
-                            case 'bell':
                             case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
+                            case 'bell': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - (isBoosted ? 4 : 2)); break;
                         }
 
                         if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
@@ -497,8 +498,9 @@ export const selectCrossbowCount = (state: GameState) =>
     state.keptSymbols.filter(symbol => symbol?.name === 'crossbow').length;
 
 export const selectShuffleCost = (state: GameState) => {
-    const hasSpadesCard = state.keptSymbols.some(symbol => symbol?.name === 'spades-card');
-    return (hasSpadesCard && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+    const spadesCards = state.keptSymbols.filter(symbol => symbol?.name === 'spades-card');
+    const spadesDiscount = spadesCards.reduce((acc, symbol) => acc + (symbol?.isBoosted ? 2 : 1), 0);
+    return Math.max(0, GAME_CONSTANTS.SHUFFLE_COST - spadesDiscount);
 };
 
 export const selectHasTwoFairyWands = (state: GameState) =>
@@ -511,8 +513,11 @@ export const selectAxeActive = (state: GameState) => {
     return !hasOtherWeapon;
 };
 
-export const selectBellCount = (state: GameState) =>
-    state.keptSymbols.filter(symbol => symbol?.name === 'bell').length;
+export const selectBellCount = (state: GameState) => {
+    const bells = state.keptSymbols.filter(symbol => symbol?.name === 'bell');
+    if (bells.length === 0) return 0;
+    return bells.some(b => b?.isBoosted) ? 2 : 1;
+};
 
 export const selectHasOcarina = (state: GameState) =>
     state.keptSymbols.some(symbol => symbol?.name === 'ocarina');
