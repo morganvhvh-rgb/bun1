@@ -73,48 +73,50 @@ export function GameShell() {
 
     return (
         <div className="w-full h-full flex flex-col tracking-wide text-[#e8d4b8] overflow-hidden font-sans">
-            {/* ─── Amber streak background accent ─── */}
-            <svg
-                className="bg-amber-streak"
-                viewBox="0 0 100 180"
-                preserveAspectRatio="xMidYMid slice"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
+            {/* ─── Amber streak background accent slicing through Controls ─── */}
+            <div
+                className="fixed inset-y-0 pointer-events-none mix-blend-screen z-0"
+                style={{
+                    width: '300px',
+                    left: 'calc(50% + 2.5 * var(--cell) + 2.5 * var(--gap))',
+                    transform: 'translateX(-50%)',
+                    animation: 'streak-breathe 20s ease-in-out infinite'
+                }}
             >
-                <defs>
-                    {/* Powerful diffuse glow. filterUnits="userSpaceOnUse" prevents the vertical line from causing a zero-width bounding box clipping issue! */}
-                    <filter id="streak-halo" filterUnits="userSpaceOnUse" x="-100" y="-50" width="300" height="300">
-                        <feGaussianBlur stdDeviation="8 0" />
-                    </filter>
-                    {/* Piercing hot core */}
-                    <filter id="streak-core" filterUnits="userSpaceOnUse" x="-50" y="-50" width="200" height="300">
-                        <feGaussianBlur stdDeviation="2 0" />
-                    </filter>
-                </defs>
+                <svg
+                    width="100%"
+                    height="100%"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <defs>
+                        <filter id="streak-halo" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="12" />
+                        </filter>
+                        <filter id="streak-core" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="2" />
+                        </filter>
+                    </defs>
 
-                {/*
-                  * Single vertical streak path running top → bottom.
-                  * Represents a powerful dividing beam of light from the heavens.
-                  */}
+                    {/* Outer halo — intense, glowing amber */}
+                    <line
+                        x1="50%" y1="-10%"
+                        x2="50%" y2="110%"
+                        stroke="rgba(180, 70, 0, 0.4)"
+                        strokeWidth="12"
+                        filter="url(#streak-halo)"
+                    />
 
-                {/* Outer halo — intense, glowing amber spreading across the center */}
-                <path
-                    d="M 50,-10 L 50,190"
-                    stroke="rgba(180, 70, 0, 0.4)"
-                    strokeWidth="12"
-                    fill="none"
-                    filter="url(#streak-halo)"
-                />
-
-                {/* Inner core — thin, blindingly bright hot light */}
-                <path
-                    d="M 50,-10 L 50,190"
-                    stroke="rgba(220, 100, 0, 0.5)"
-                    strokeWidth="2"
-                    fill="none"
-                    filter="url(#streak-core)"
-                />
-            </svg>
+                    {/* Inner core — thin, blindingly hot light */}
+                    <line
+                        x1="50%" y1="-10%"
+                        x2="50%" y2="110%"
+                        stroke="rgba(220, 100, 0, 0.5)"
+                        strokeWidth="2"
+                        filter="url(#streak-core)"
+                    />
+                </svg>
+            </div>
             <div className="bg-noise-layer" />
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-white/5 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
