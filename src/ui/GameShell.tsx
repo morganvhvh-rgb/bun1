@@ -73,6 +73,8 @@ export function GameShell() {
 
     return (
         <div className="w-full h-full flex flex-col tracking-wide text-[#e8d4b8] overflow-hidden font-sans">
+            {/* ─── Amber streak background accent ─── */}
+            <div className="bg-amber-streak" aria-hidden="true" />
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-white/5 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>

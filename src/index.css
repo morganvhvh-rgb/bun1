@@ -155,6 +155,37 @@ body::before {
   pointer-events: none;
 }
 
+/* Amber streak — a single dull vertical accent down the center, slightly curved */
+@keyframes streak-breathe {
+  0%   { transform: translateX(-50%) scaleX(1)    skewX(0deg); opacity: 1; }
+  33%  { transform: translateX(-48%) scaleX(1.08) skewX(-1.5deg); opacity: 0.85; }
+  66%  { transform: translateX(-52%) scaleX(0.94) skewX(1deg); opacity: 0.95; }
+  100% { transform: translateX(-50%) scaleX(1)    skewX(0deg); opacity: 1; }
+}
+
+body .bg-amber-streak {
+  position: fixed;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38%;
+  height: 120%;
+  z-index: 0;
+  pointer-events: none;
+  /* Tall narrow ellipse — amber core fades to nothing on both sides */
+  background: radial-gradient(
+    ellipse 100% 50% at 50% 48%,
+    rgba(200, 110, 10, 0.07) 0%,
+    rgba(180, 90, 5, 0.04)  25%,
+    transparent              70%
+  );
+  /* A slight skew bakes in the "curve" impression */
+  border-radius: 50% / 8%;
+  /* Slow organic breathe — 18 s so it's barely perceptible */
+  animation: streak-breathe 18s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
 /* Grain/noise layer — very fine, static film-grain speckles */
 body::after {
   content: '';
