@@ -82,44 +82,40 @@ export function GameShell() {
                 aria-hidden="true"
             >
                 <defs>
-                    {/* Wide blur for the outer halo */}
-                    <filter id="streak-halo" x="-500%" y="-5%" width="1100%" height="110%">
-                        <feGaussianBlur stdDeviation="11 0" />
+                    {/* Powerful diffuse glow. filterUnits="userSpaceOnUse" prevents the vertical line from causing a zero-width bounding box clipping issue! */}
+                    <filter id="streak-halo" filterUnits="userSpaceOnUse" x="-100" y="-50" width="300" height="300">
+                        <feGaussianBlur stdDeviation="8 0" />
                     </filter>
-                    {/* Softer blur for the core — still concentrated but not razor-thin */}
-                    <filter id="streak-core" x="-200%" y="-2%" width="500%" height="104%">
-                        <feGaussianBlur stdDeviation="3.5 0" />
+                    {/* Piercing hot core */}
+                    <filter id="streak-core" filterUnits="userSpaceOnUse" x="-50" y="-50" width="200" height="300">
+                        <feGaussianBlur stdDeviation="2 0" />
                     </filter>
                 </defs>
 
                 {/*
-                  * S-curve path running top → bottom.
-                  * Starts at ~x=48 (just left of center),
-                  * bows right to ~x=57 at quarter-height,
-                  * crosses back through center at half,
-                  * bows left to ~x=43 at three-quarters,
-                  * ends at ~x=52 at the bottom.
-                  * This reads as a single graceful curve, not a zigzag.
+                  * Single vertical streak path running top → bottom.
+                  * Represents a powerful dividing beam of light from the heavens.
                   */}
 
-                {/* Outer diffuse halo — wide stroke, heavy blur, low opacity */}
+                {/* Outer halo — intense, glowing amber spreading across the center */}
                 <path
-                    d="M 48,-5 C 57,35 57,80 50,90 C 43,100 43,140 52,185"
-                    stroke="rgba(170,70,5,0.22)"
-                    strokeWidth="14"
+                    d="M 50,-10 L 50,190"
+                    stroke="rgba(255, 140, 0, 0.85)"
+                    strokeWidth="12"
                     fill="none"
                     filter="url(#streak-halo)"
                 />
 
-                {/* Inner core — visible but softened, deep burnt amber */}
+                {/* Inner core — thin, blindingly bright hot light */}
                 <path
-                    d="M 48,-5 C 57,35 57,80 50,90 C 43,100 43,140 52,185"
-                    stroke="rgba(195,90,8,0.50)"
-                    strokeWidth="3"
+                    d="M 50,-10 L 50,190"
+                    stroke="rgba(255, 225, 150, 1)"
+                    strokeWidth="2"
                     fill="none"
                     filter="url(#streak-core)"
                 />
             </svg>
+            <div className="bg-noise-layer" />
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-white/5 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>
                 <div className="w-full flex items-center justify-between" style={{ gap: 'var(--header-meta-gap)' }}>
