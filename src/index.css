@@ -182,7 +182,7 @@ body .bg-amber-streak {
   mix-blend-mode: screen;
 }
 
-/* Grain/noise layer — very fine, static film-grain speckles */
+/* Grain/noise layer — strong film-grain haze, visible on mobile */
 body::after {
   content: '';
   position: fixed;
@@ -191,16 +191,19 @@ body::after {
   width: 100%;
   height: 100%;
   /*
-   * baseFrequency 0.82 = very fine speckles (finer than before at 0.68).
-   * numOctaves 4 adds layered micro-detail so speckles aren't uniform blobs.
-   * Tile at 90px for tighter, denser grain texture.
-   * No animation — background is fully static.
+   * baseFrequency 0.72 — slightly coarser than before (was 0.82) so each
+   * speckle reads as a distinct mark on small/mobile screens.
+   * numOctaves 4 keeps the layered micro-detail.
+   * Tile at 90px for a tight, dense grain texture.
+   * mix-blend-mode overlay makes grain visible against pure black
+   * (screen was near-invisible on dark areas).
+   * opacity 0.22 — noticeably grainy/hazy without being distracting.
    */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 90px 90px;
-  opacity: 0.09;
-  mix-blend-mode: screen;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
   pointer-events: none;
 }
 
