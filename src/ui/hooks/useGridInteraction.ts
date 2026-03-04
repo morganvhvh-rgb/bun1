@@ -87,7 +87,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         const gold = state.gold;
 
         // Prevent action if not enough gold (pre-check via cost logic)
-        const cost = (state.keptSymbols.some(symbol => symbol?.name === 'spades-card') && state.moves < 3) ? 1 : GAME_CONSTANTS.SHUFFLE_COST;
+        const cost = selectShuffleCost(state);
         if (gold < cost) return;
 
         const success = payForShuffle();
