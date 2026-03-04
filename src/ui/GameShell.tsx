@@ -73,50 +73,6 @@ export function GameShell() {
 
     return (
         <div className="w-full h-full flex flex-col tracking-wide text-[#e8d4b8] overflow-hidden font-sans">
-            {/* ─── Amber streak background accent slicing through Controls ─── */}
-            <div
-                className="fixed inset-y-0 pointer-events-none mix-blend-screen z-0"
-                style={{
-                    width: '300px',
-                    left: 'calc(50% + 2.5 * var(--cell) + 2.5 * var(--gap))',
-                    transform: 'translateX(-50%)',
-                    animation: 'streak-breathe 20s ease-in-out infinite'
-                }}
-            >
-                <svg
-                    width="100%"
-                    height="100%"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                >
-                    <defs>
-                        <filter id="streak-halo" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="12" />
-                        </filter>
-                        <filter id="streak-core" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="2" />
-                        </filter>
-                    </defs>
-
-                    {/* Outer halo — intense, glowing amber */}
-                    <line
-                        x1="50%" y1="-10%"
-                        x2="50%" y2="110%"
-                        stroke="rgba(180, 70, 0, 0.4)"
-                        strokeWidth="12"
-                        filter="url(#streak-halo)"
-                    />
-
-                    {/* Inner core — thin, blindingly hot light */}
-                    <line
-                        x1="50%" y1="-10%"
-                        x2="50%" y2="110%"
-                        stroke="rgba(220, 100, 0, 0.5)"
-                        strokeWidth="2"
-                        filter="url(#streak-core)"
-                    />
-                </svg>
-            </div>
             <div className="bg-noise-layer" />
             {/* ─── Header ─── */}
             <header className="flex items-center border-b border-white/5 shrink-0 whitespace-nowrap z-20" style={{ height: 'var(--header-h-compact)', padding: '0 var(--header-pad-x)' }}>

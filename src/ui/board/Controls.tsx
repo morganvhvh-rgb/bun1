@@ -68,6 +68,42 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
 
     return (
         <div className="relative flex flex-col" style={{ gap: 'var(--gap)' }}>
+            {/* ─── Ambient column glow perfectly aligned under controls ─── */}
+            <div
+                className="absolute left-1/2 -translate-x-1/2 pointer-events-none mix-blend-screen"
+                style={{
+                    top: '-50vh',
+                    bottom: '-50vh',
+                    width: '300px',
+                    animation: 'streak-breathe 20s ease-in-out infinite',
+                    zIndex: -1
+                }}
+            >
+                <svg
+                    width="100%"
+                    height="100%"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <defs>
+                        <filter id="ambient-glow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="32" />
+                        </filter>
+                    </defs>
+                    <ellipse
+                        cx="50%" cy="50%"
+                        rx="24" ry="100%"
+                        fill="rgba(200, 80, 0, 0.45)"
+                        filter="url(#ambient-glow)"
+                    />
+                    <ellipse
+                        cx="50%" cy="50%"
+                        rx="8" ry="100%"
+                        fill="rgba(240, 120, 0, 0.3)"
+                        filter="url(#ambient-glow)"
+                    />
+                </svg>
+            </div>
             <motion.button onClick={onSpin} disabled={gold < GAME_CONSTANTS.SPIN_COST || isAnimating} className={btnClass} style={btnStyle} title="Spin">
                 <i className="ra ra-cycle" style={{ fontSize: 'calc(var(--cell) * 0.55)', color: '#e8d4b8' }} />
             </motion.button>
