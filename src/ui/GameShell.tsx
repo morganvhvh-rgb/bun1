@@ -100,7 +100,7 @@ export function GameShell() {
                 {/* Outer halo — intense, glowing amber spreading across the center */}
                 <path
                     d="M 50,-10 L 50,190"
-                    stroke="rgba(255, 140, 0, 0.85)"
+                    stroke="rgba(180, 70, 0, 0.4)"
                     strokeWidth="12"
                     fill="none"
                     filter="url(#streak-halo)"
@@ -109,7 +109,7 @@ export function GameShell() {
                 {/* Inner core — thin, blindingly bright hot light */}
                 <path
                     d="M 50,-10 L 50,190"
-                    stroke="rgba(255, 225, 150, 1)"
+                    stroke="rgba(220, 100, 0, 0.5)"
                     strokeWidth="2"
                     fill="none"
                     filter="url(#streak-core)"
