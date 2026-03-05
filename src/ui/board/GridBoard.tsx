@@ -219,7 +219,7 @@ export function GridBoard({
                                     left: `calc((var(--cell) + var(--gap)) * ${col} + (var(--cell) / 2))`,
                                     top: `calc((var(--cell) + var(--gap)) * ${row} - (var(--gap) * 0.6))`,
                                     textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
-                                    fontSize: 'var(--text-base)',
+                                    fontSize: 22,
                                 }}
                             >
                                 -{popup.amount}
@@ -232,8 +232,8 @@ export function GridBoard({
                         const { row, col } = getCoordinates(popup.index);
                         const colors = EFFECT_COLOR[popup.stat] ?? EFFECT_COLOR.Gold;
                         const label = popup.stat === 'Slot'
-                            ? '🔓 SLOT'
-                            : `${popup.amount > 0 ? '+' : ''}${popup.amount} ${popup.stat}`;
+                            ? '🔓'
+                            : `${popup.amount > 0 ? '+' : ''}${popup.amount}`;
                         return (
                             <motion.div
                                 key={popup.id}
@@ -245,7 +245,7 @@ export function GridBoard({
                                     left: `calc((var(--cell) + var(--gap)) * ${col} + (var(--cell) / 2))`,
                                     top: `calc((var(--cell) + var(--gap)) * ${row} + (var(--cell) * 0.35))`,
                                     textShadow: `0 1px 0 #000, 0 0 8px ${colors.shadow}`,
-                                    fontSize: 'var(--text-sm)',
+                                    fontSize: 22,
                                 }}
                             >
                                 {label}

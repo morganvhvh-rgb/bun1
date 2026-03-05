@@ -67,8 +67,8 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
                 setEffectPopups(prev => [...prev, { id, index, stat: effect.stat, amount: effect.amount }]);
                 setTimeout(() => {
                     setEffectPopups(prev => prev.filter(p => p.id !== id));
-                }, 850);
-            }, 120 * i);
+                }, 1000);
+            }, 300 + 350 * i);
         });
     };
 
@@ -96,7 +96,6 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setSpinKey(prev => prev + 1);
         resetSelection();
         setSlidesCount(0);
-        // IsShaking was used for older animation logic
         setIsAnimating(true);
         setIsSpinning(true);
         setTimeout(() => { setIsAnimating(false); setIsSpinning(false); }, 1200);

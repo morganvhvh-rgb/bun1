@@ -101,7 +101,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                                 right: 'calc(100% + 12px)',
                                 top: '25%',
                                 textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
-                                fontSize: 'var(--text-base)',
+                                fontSize: 22,
                             }}
                         >
                             -{popup.amount}
@@ -127,7 +127,7 @@ export function Controls({ shuffleCost, isAnimating, onSpin, onShuffle, onScroll
                                 right: 'calc(100% + 12px)',
                                 top: '25%',
                                 textShadow: '0 1px 0 #000, 0 0 8px rgba(234, 179, 8, 0.45)',
-                                fontSize: 'var(--text-base)',
+                                fontSize: 22,
                             }}
                         >
                             -{popup.amount}
