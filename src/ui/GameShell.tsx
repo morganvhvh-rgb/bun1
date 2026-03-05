@@ -13,15 +13,17 @@ import { ScrollBuyModal } from './modals/ScrollBuyModal';
 import { ConjureModal } from './modals/ConjureModal';
 import { CoffeeModal } from './modals/CoffeeModal';
 import { TutorialModal } from './modals/TutorialModal';
+import { VictoryModal } from './modals/VictoryModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridSymbol } from '@/types/game';
 
 export function GameShell() {
-    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial } = useGameStore();
+    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
+    const isVictory = battleCount > GAME_CONSTANTS.MAX_BATTLES && playerHp > 0;
 
     const {
         playerAnim,
@@ -166,6 +168,7 @@ export function GameShell() {
             <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
             <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
             <TutorialModal isOpen={!hasSeenTutorial} onClose={() => setHasSeenTutorial(true)} />
+            <VictoryModal isOpen={isVictory} onReset={handleReset} />
         </div >
     );
 }

@@ -14,6 +14,7 @@ interface GameState {
 
     // Progression
     levelUpPerks: string[];
+    rejectedLevelUpPerk: string | null;
     hasSeenTutorial: boolean;
 
     // Stats & Resources
@@ -50,6 +51,7 @@ interface GameState {
     resetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
     setHasSeenTutorial: (value: boolean) => void;
+    setRejectedLevelUpPerk: (perk: string | null) => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
@@ -95,6 +97,7 @@ export const useGameStore = create<GameState>()(
             keptScrolls: [],
             unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
+            rejectedLevelUpPerk: null,
             hasSeenTutorial: false,
 
             gold: GAME_CONSTANTS.INITIAL_GOLD,
@@ -380,24 +383,24 @@ export const useGameStore = create<GameState>()(
                 state.conjureMagicUsed = false;
 
                 if (state.battleCount === 4) {
-                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: 50, atk: 11, lvl: 2 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 50 - state.globalEnemyHpDebuff), maxHp: 50, atk: 11, lvl: 2 };
+                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 60 - state.globalEnemyHpDebuff), maxHp: 60, atk: 13, lvl: 2 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 60 - state.globalEnemyHpDebuff), maxHp: 60, atk: 13, lvl: 2 };
                 } else if (state.enemy1.name === 'wyvern') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES['monster-skull'].hp;
-                    const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES.snail.hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 11 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 11 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 60 : INITIAL_ENEMIES['monster-skull'].hp;
+                    const baseHp2 = isLvl2 ? 60 : INITIAL_ENEMIES.snail.hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 13 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 13 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'monster-skull') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 50 : INITIAL_ENEMIES.hydra.hp;
-                    const baseHp2 = isLvl2 ? 50 : INITIAL_ENEMIES['spider-face'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 11 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 11 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 60 : INITIAL_ENEMIES.hydra.hp;
+                    const baseHp2 = isLvl2 ? 60 : INITIAL_ENEMIES['spider-face'].hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 13 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
+                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 13 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
                 } else if (state.enemy1.name === 'hydra') {
                     const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 150 : INITIAL_ENEMIES['eye-monster'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 33 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
+                    const baseHp1 = isLvl2 ? 160 : INITIAL_ENEMIES['eye-monster'].hp;
+                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 35 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
                     state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: isLvl2 ? 2 : 1 };
                 }
 
@@ -410,6 +413,7 @@ export const useGameStore = create<GameState>()(
                 state.keptScrolls = [];
                 state.unlockedSlots = { 3: false, 4: false, 5: false };
                 state.levelUpPerks = [];
+                state.rejectedLevelUpPerk = null;
                 state.hasSeenTutorial = false;
                 state.gold = GAME_CONSTANTS.INITIAL_GOLD;
                 state.moves = GAME_CONSTANTS.INITIAL_MOVES;
@@ -462,18 +466,33 @@ export const useGameStore = create<GameState>()(
                 state.hasSeenTutorial = value;
             }),
 
+            setRejectedLevelUpPerk: (perk) => set((state) => {
+                state.rejectedLevelUpPerk = perk;
+            }),
+
         })),
         {
             name: 'daily-rogue-storage',
-            version: 2,
+            version: 3,
             migrate: (persistedState: unknown, version) => {
-                if (version >= 2 || !persistedState || typeof persistedState !== 'object') {
+                if (!persistedState || typeof persistedState !== 'object') {
                     return persistedState as GameState;
                 }
 
                 const state = persistedState as Record<string, unknown>;
-                if (!state.keptSymbols && Array.isArray(state.keptIcons)) {
-                    state.keptSymbols = state.keptIcons;
+
+                // v1 → v2: rename keptIcons to keptSymbols
+                if (version < 2) {
+                    if (!state.keptSymbols && Array.isArray(state.keptIcons)) {
+                        state.keptSymbols = state.keptIcons;
+                    }
+                }
+
+                // v2 → v3: add rejectedLevelUpPerk
+                if (version < 3) {
+                    if (!('rejectedLevelUpPerk' in state)) {
+                        state.rejectedLevelUpPerk = null;
+                    }
                 }
 
                 return state as unknown as GameState;

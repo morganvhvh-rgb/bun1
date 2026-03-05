@@ -338,11 +338,11 @@ export const ALL_SCROLL_COLORS: SymbolName[] = [
 ];
 
 export const INITIAL_ENEMIES = {
-    wyvern: { name: 'wyvern' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'flying' },
-    octopus: { name: 'octopus' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'monster-skull': { name: 'monster-skull' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: 'evil' },
-    snail: { name: 'snail' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    hydra: { name: 'hydra' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'spider-face': { name: 'spider-face' as SymbolName, hp: 35, maxHp: 35, atk: 7, isVisible: true, lvl: 1, type: '---' },
-    'eye-monster': { name: 'eye-monster' as SymbolName, hp: 100, maxHp: 100, atk: 18, isVisible: true, lvl: 1, type: 'flying / boss' },
+    wyvern: { name: 'wyvern' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: 'flying' },
+    octopus: { name: 'octopus' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
+    'monster-skull': { name: 'monster-skull' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: 'evil' },
+    snail: { name: 'snail' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
+    hydra: { name: 'hydra' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
+    'spider-face': { name: 'spider-face' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
+    'eye-monster': { name: 'eye-monster' as SymbolName, hp: 105, maxHp: 105, atk: 19, isVisible: true, lvl: 1, type: 'flying / boss' },
 };
