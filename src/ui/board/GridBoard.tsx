@@ -219,8 +219,8 @@ export function GridBoard({
                 </AnimatePresence>
             </motion.div>
 
-            {/* Info Text */}
-            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-[#e8d4b8]" style={{ minHeight: 'calc(var(--cell) * 1.5)' }}>
+            {/* Info Text */}\r
+            <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-[#e8d4b8] overflow-hidden" style={{ height: 'calc(var(--cell) * 1.5)' }}>
                 {displaySymbol ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">
                         <div className="font-bold tracking-widest uppercase w-full min-w-0 break-words flex items-center justify-center gap-2 font-mono" style={{ fontSize: 'var(--text-base)' }}>
@@ -249,7 +249,7 @@ export function GridBoard({
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-widest" style={{ fontSize: 'var(--text-sm)', minHeight: '3rem' }}>
+                    <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-widest" style={{ fontSize: 'var(--text-sm)' }}>
                         Select a symbol
                     </div>
                 )}

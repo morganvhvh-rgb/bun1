@@ -53,7 +53,7 @@ export function Inventory({ onKeptSymbolClick }: InventoryProps) {
                     return (
                         <div
                             key={`slot-${slot}`}
-                            className="flex-1 flex items-center justify-center relative min-w-0"
+                            className="flex-1 flex items-center justify-center relative min-w-0 overflow-hidden"
                             style={{
                                 borderRight: isLast ? 'none' : '1px solid rgba(255,255,255,0.07)',
                             }}

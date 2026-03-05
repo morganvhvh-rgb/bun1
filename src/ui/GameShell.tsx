@@ -112,7 +112,7 @@ export function GameShell() {
                     <Inventory onKeptSymbolClick={(e, symbol) => { if (!isBattleRunning) grid.handleKeptSymbolClick(e, symbol); }} />
 
                     <div className="flex items-start justify-center flex-1 min-h-0 w-full" style={{ gap: 'var(--gap)', padding: '0 var(--gap)' }}>
-                        <div className="min-w-0">
+                        <div className="min-w-0 shrink-0">
                             <GridBoard
                                 gridSymbols={grid.gridSymbols}
                                 spinKey={grid.spinKey}
