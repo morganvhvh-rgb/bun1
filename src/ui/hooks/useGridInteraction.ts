@@ -35,7 +35,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [selectedEquippedSymbol, setSelectedEquippedSymbol] = useState<GridSymbol | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isSpinning, setIsSpinning] = useState(false);
-    const [isShuffling, setIsShuffling] = useState(false);
+
     const [glowingIndices, setGlowingIndices] = useState<number[]>([]);
     const [activeRogueIndex, setActiveRogueIndex] = useState<number | null>(null);
     const [slidesCount, setSlidesCount] = useState(0);
@@ -63,7 +63,6 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setSlidesCount(0);
         setIsAnimating(false);
         setIsSpinning(false);
-        setIsShuffling(false);
         setGoldCostPopups([]);
     };
 
@@ -96,7 +95,6 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         resetSelection();
         setSlidesCount(0);
         setIsAnimating(true);
-        setIsShuffling(true);
 
         const currentGrid = useGameStore.getState().grid;
         // Only shuffle indices that currently contain a symbol
@@ -123,7 +121,6 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
             await new Promise(r => setTimeout(r, 160)); // Tuned visual baseline syncs better without interrupting framer's internal tween state
         }
 
-        setIsShuffling(false);
         setIsAnimating(false);
     };
 
@@ -215,8 +212,6 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         selectedEquippedSymbol,
         isAnimating,
         isSpinning,
-        isShuffling,
-        hasSlid: slidesCount > 0,
         goldCostPopups,
         shuffleCost,
         resetSelection,

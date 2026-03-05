@@ -15,7 +15,7 @@ interface HeroPanelProps {
 
 export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: HeroPanelProps) {
     const { playerHp, playerMagic, playerGear, gold, moves, levelUpPerks } = useGameStore();
-    const playerBaseAtk = useGameStore(selectTotalAttack);
+    const playerTotalAtk = useGameStore(selectTotalAttack);
     const playerTotalMaxHp = useGameStore(selectTotalMaxHp);
 
     const playerLvl = 1 + levelUpPerks.length;
@@ -60,14 +60,14 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     <div className="flex items-center justify-between w-full px-2 sm:px-4">
                         <div className="flex items-center gap-1.5 sm:gap-2">
                             <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
-                            <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider">{playerBaseAtk}</span>
+                            <span className="text-[13px] sm:text-[15px] font-bold text-orange-400 leading-none font-mono tracking-wider">{playerTotalAtk}</span>
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">MGC</span>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">Magic</span>
                             <span className="text-[13px] sm:text-[15px] font-bold text-pink-400 leading-none font-mono tracking-wider">{playerMagic}</span>
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">GER</span>
+                            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase leading-none">Gear</span>
                             <span className="text-[13px] sm:text-[15px] font-bold text-blue-400 leading-none font-mono tracking-wider">{playerGear}</span>
                         </div>
                     </div>

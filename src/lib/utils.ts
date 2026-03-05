@@ -91,7 +91,7 @@ export const getStatText = (
         case 'gem-pendant': return "+16 Gold +4 Gear";
         case 'bell': return "-4 ATK";
         case 'key':
-            if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 gold';
+            if (hasSpecialScroll && areAllSlotsUnlocked) return '+32 Gold';
             return SYMBOL_STATS[name] || "???";
         default: return SYMBOL_STATS[name] || "???";
     }

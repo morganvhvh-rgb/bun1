@@ -14,20 +14,4 @@ export interface KeptSymbol {
     isBoosted?: boolean;
 }
 
-export interface CharacterStats {
-    hp: number;
-    maxHp: number;
-    atk: number;
-    magic: number;
-    gear: number;
-}
 
-export interface EnemyStats {
-    id: string;
-    name: SymbolName;
-    hp: number;
-    maxHp: number;
-    atk: number;
-    lvl: number;
-    isVisible: boolean;
-}
