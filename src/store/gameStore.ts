@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
-import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, INITIAL_ENEMIES } from '@/lib/constants';
+import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS } from '@/lib/constants';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
@@ -89,6 +89,17 @@ const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: SymbolNa
     return state.playerMaxHp + bonus;
 };
 
+// Builds a full enemy state object from a BATTLE_ROUNDS entry.
+const makeEnemy = (e: { name: SymbolName; hp: number; atk: number; lvl: number; type: string }, debuff = 0) => ({
+    name: e.name,
+    hp: Math.max(1, e.hp - debuff),
+    maxHp: e.hp,
+    atk: e.atk,
+    lvl: e.lvl,
+    type: e.type,
+    isVisible: true as const,
+});
+
 export const useGameStore = create<GameState>()(
     persist(
         immer((set) => ({
@@ -116,8 +127,8 @@ export const useGameStore = create<GameState>()(
             battleCount: 1,
             globalEnemyHpDebuff: 0,
 
-            enemy1: { ...INITIAL_ENEMIES.wyvern },
-            enemy2: { ...INITIAL_ENEMIES.octopus },
+            enemy1: makeEnemy(BATTLE_ROUNDS[0].e1),
+            enemy2: makeEnemy(BATTLE_ROUNDS[0].e2!),
 
             spinBoard: () => set((state) => {
                 if (state.gold < GAME_CONSTANTS.SPIN_COST) return;
@@ -382,26 +393,15 @@ export const useGameStore = create<GameState>()(
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
 
-                if (state.battleCount === 4) {
-                    state.enemy1 = { ...INITIAL_ENEMIES.wyvern, hp: Math.max(1, 60 - state.globalEnemyHpDebuff), maxHp: 60, atk: 13, lvl: 2 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: Math.max(1, 60 - state.globalEnemyHpDebuff), maxHp: 60, atk: 13, lvl: 2 };
-                } else if (state.enemy1.name === 'wyvern') {
-                    const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 60 : INITIAL_ENEMIES['monster-skull'].hp;
-                    const baseHp2 = isLvl2 ? 60 : INITIAL_ENEMIES.snail.hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['monster-skull'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 13 : INITIAL_ENEMIES['monster-skull'].atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.snail, hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 13 : INITIAL_ENEMIES.snail.atk, lvl: isLvl2 ? 2 : 1 };
-                } else if (state.enemy1.name === 'monster-skull') {
-                    const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 60 : INITIAL_ENEMIES.hydra.hp;
-                    const baseHp2 = isLvl2 ? 60 : INITIAL_ENEMIES['spider-face'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES.hydra, hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 13 : INITIAL_ENEMIES.hydra.atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES['spider-face'], hp: Math.max(1, baseHp2 - state.globalEnemyHpDebuff), maxHp: baseHp2, atk: isLvl2 ? 13 : INITIAL_ENEMIES['spider-face'].atk, lvl: isLvl2 ? 2 : 1 };
-                } else if (state.enemy1.name === 'hydra') {
-                    const isLvl2 = state.enemy1.lvl === 2;
-                    const baseHp1 = isLvl2 ? 160 : INITIAL_ENEMIES['eye-monster'].hp;
-                    state.enemy1 = { ...INITIAL_ENEMIES['eye-monster'], hp: Math.max(1, baseHp1 - state.globalEnemyHpDebuff), maxHp: baseHp1, atk: isLvl2 ? 35 : INITIAL_ENEMIES['eye-monster'].atk, lvl: isLvl2 ? 2 : 1 };
-                    state.enemy2 = { ...INITIAL_ENEMIES.octopus, hp: 0, maxHp: 0, atk: 0, isVisible: false, lvl: isLvl2 ? 2 : 1 };
+                // battleCount is 1-indexed; use it directly as the 0-indexed table offset
+                // (after battle 1 battleCount=1 → BATTLE_ROUNDS[1] = round 2, etc.)
+                const round = BATTLE_ROUNDS[state.battleCount];
+                if (round) {
+                    const d = state.globalEnemyHpDebuff;
+                    state.enemy1 = makeEnemy(round.e1, d);
+                    state.enemy2 = round.e2
+                        ? makeEnemy(round.e2, d)
+                        : { name: 'octopus', hp: 0, maxHp: 0, atk: 0, lvl: round.e1.lvl, type: '---', isVisible: false };
                 }
 
                 state.battleCount += 1;
@@ -428,8 +428,8 @@ export const useGameStore = create<GameState>()(
                 state.magicScrollUsed = false;
                 state.battleCount = 1;
                 state.globalEnemyHpDebuff = 0;
-                state.enemy1 = { ...INITIAL_ENEMIES.wyvern };
-                state.enemy2 = { ...INITIAL_ENEMIES.octopus };
+                state.enemy1 = makeEnemy(BATTLE_ROUNDS[0].e1);
+                state.enemy2 = makeEnemy(BATTLE_ROUNDS[0].e2!);
             }),
 
             applyConjureMagic: (result) => set((state) => {

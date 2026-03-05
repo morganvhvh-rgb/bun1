@@ -44,7 +44,17 @@ Follow this workflow in order for all feature work and refactors.
   - `SYMBOL_EXTRA_EFFECTS`
 - Ensure related gameplay logic in `gameStore` matches the constant updates.
 
-## 5) UI and mobile constraints
+## 5) Keep enemy progression consistent
+
+- All 8 battle rounds live in `BATTLE_ROUNDS` in `src/lib/constants.ts`.
+- Each entry is `{ e1, e2 }` with explicit `name`, `hp`, `atk`, `lvl`, `type` per enemy.
+- `e2: null` = solo boss battle (second enemy hidden).
+- To tune stats: edit the row in `BATTLE_ROUNDS`. No store changes needed.
+- To add a round: append a new entry. Update `GAME_CONSTANTS.MAX_BATTLES` to match.
+- To add a special ability (e.g. self-heal, double-attack): set `special: 'self-heal'` on the entry, then handle it in `src/ui/hooks/useBattleSequence.ts`.
+- The `makeEnemy` helper in `gameStore.ts` converts a `BattleRoundEntry` into a full store enemy object — do not duplicate this logic.
+
+## 6) UI and mobile constraints
 
 - Keep `GameShell` as an orchestrator, not a logic dump.
 - Prefer direct `useGameStore(...)` selectors in components over prop drilling.
@@ -56,17 +66,17 @@ Follow this workflow in order for all feature work and refactors.
   - `min-h-0`, `overflow-hidden`, and `shrink-0` boundaries to prevent row overflow.
 - Keep bottom-fixed controls anchored with `mt-auto` and `shrink-0` when needed.
 
-## 6) Animation split
+## 7) Animation split
 
 - Use Framer Motion for high-level UI transitions (modals, panel transitions, reveals).
 - Use GSAP/CSS for high-frequency effects or rapid sequence animation where React re-renders would be expensive.
 
-## 7) Code hygiene
+## 8) Code hygiene
 
 - Remove dead code and stale fields when features are dropped.
 - If a feature is discarded, clean its types, constants, store logic, and UI.
 
-## 8) Validate before handoff
+## 9) Validate before handoff
 
 - Run:
   - `bun run lint`

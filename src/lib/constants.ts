@@ -338,12 +338,60 @@ export const ALL_SCROLL_COLORS: SymbolName[] = [
     "weapon-scroll", "music-scroll", "special-scroll", "nature-scroll"
 ];
 
-export const INITIAL_ENEMIES = {
-    wyvern: { name: 'wyvern' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: 'flying' },
-    octopus: { name: 'octopus' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
-    'monster-skull': { name: 'monster-skull' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: 'evil' },
-    snail: { name: 'snail' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
-    hydra: { name: 'hydra' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
-    'spider-face': { name: 'spider-face' as SymbolName, hp: 40, maxHp: 40, atk: 8, isVisible: true, lvl: 1, type: '---' },
-    'eye-monster': { name: 'eye-monster' as SymbolName, hp: 105, maxHp: 105, atk: 19, isVisible: true, lvl: 1, type: 'flying / boss' },
-};
+export interface BattleRoundEntry {
+    name: SymbolName;
+    hp: number;
+    atk: number;
+    lvl: number;
+    type: string;
+    special?: string; // reserved: e.g. 'self-heal', 'double-attack'
+}
+
+export interface BattleRound {
+    e1: BattleRoundEntry;
+    e2: BattleRoundEntry | null; // null = solo battle (second enemy hidden)
+}
+
+// Ordered by battle index (0 = battle 1). Tune HP/ATK here; add specials via the special field.
+export const BATTLE_ROUNDS: BattleRound[] = [
+    // ── Battle 1 ────────────────────────────────────────────────────────────
+    {
+        e1: { name: 'wyvern', hp: 40, atk: 8, lvl: 1, type: 'flying' },
+        e2: { name: 'octopus', hp: 40, atk: 8, lvl: 1, type: '---' }
+    },
+    // ── Battle 2 ────────────────────────────────────────────────────────────
+    {
+        e1: { name: 'monster-skull', hp: 40, atk: 8, lvl: 1, type: 'evil' },
+        e2: { name: 'snail', hp: 40, atk: 8, lvl: 1, type: '---' }
+    },
+    // ── Battle 3 ────────────────────────────────────────────────────────────
+    {
+        e1: { name: 'hydra', hp: 40, atk: 8, lvl: 1, type: '---' },
+        e2: { name: 'spider-face', hp: 40, atk: 8, lvl: 1, type: '---' }
+    },
+    // ── Battle 4: Boss (solo) ────────────────────────────────────────────────
+    {
+        e1: { name: 'eye-monster', hp: 105, atk: 19, lvl: 1, type: 'flying / boss' },
+        e2: null
+    },
+    // ── Battle 5 (LVL 2) ────────────────────────────────────────────────────
+    {
+        e1: { name: 'wyvern', hp: 60, atk: 13, lvl: 2, type: 'flying' },
+        e2: { name: 'octopus', hp: 60, atk: 13, lvl: 2, type: '---' }
+    },
+    // ── Battle 6 (LVL 2) ────────────────────────────────────────────────────
+    {
+        e1: { name: 'monster-skull', hp: 60, atk: 13, lvl: 2, type: 'evil' },
+        e2: { name: 'snail', hp: 60, atk: 13, lvl: 2, type: '---' }
+    },
+    // ── Battle 7 (LVL 2) ────────────────────────────────────────────────────
+    {
+        e1: { name: 'hydra', hp: 60, atk: 13, lvl: 2, type: '---' },
+        e2: { name: 'spider-face', hp: 60, atk: 13, lvl: 2, type: '---' }
+    },
+    // ── Battle 8: Boss LVL 2 (solo) ─────────────────────────────────────────
+    {
+        e1: { name: 'eye-monster', hp: 160, atk: 35, lvl: 2, type: 'flying / boss' },
+        e2: null
+    },
+];
