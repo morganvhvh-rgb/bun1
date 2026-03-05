@@ -188,7 +188,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
     "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "???",
-    "nature-scroll": "if Rogue is >LVL 2, Rogue can slide twice per spin",
+    "nature-scroll": "if Rogue is LVL 3+, Rogue can slide twice per spin",
     "book": "Conjure Magic x2",
     "spades-card": "",
 
@@ -313,6 +313,7 @@ export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
     "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "if all inventory slots are unlocked, keys are now as valuable as gold bars",
+    "nature-scroll": "if Rogue is LVL 3+, Rogue can slide twice per spin",
 };
 
 export const GAME_CONSTANTS = {
