@@ -219,7 +219,7 @@ export function GridBoard({
                 </AnimatePresence>
             </motion.div>
 
-            {/* Info Text */}\r
+            {/* Info Text */}
             <div className="w-full min-w-0 flex items-start justify-center text-center p-2 relative text-[#e8d4b8] overflow-hidden" style={{ height: 'calc(var(--cell) * 1.5)' }}>
                 {displaySymbol ? (
                     <div className="flex flex-col items-center justify-start w-full min-w-0 gap-1 relative z-10">

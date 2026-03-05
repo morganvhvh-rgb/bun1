@@ -25,12 +25,13 @@
 
 /* ─── Design tokens ─── */
 :root {
-  --cell: min(calc((100vw - 2rem) / 5), 11svh, 72px);
+  --_w: min(100vw, 430px);
+  --cell: min(calc((var(--_w) - 2rem) / 5), 11svh, 72px);
   --cell-sm: calc((var(--cell) * 5 - var(--gap)) / 6);
-  --gap: min(1.5vw, 10px);
-  --text-xs: clamp(10px, 2.6vw, 13px);
-  --text-sm: clamp(13px, 3.5vw, 16px);
-  --text-base: clamp(14px, 3.8vw, 17px);
+  --gap: min(calc(var(--_w) * 0.015), 10px);
+  --text-xs: clamp(10px, calc(var(--_w) * 0.026), 13px);
+  --text-sm: clamp(13px, calc(var(--_w) * 0.035), 16px);
+  --text-base: clamp(14px, calc(var(--_w) * 0.038), 17px);
   --header-h: clamp(2.25rem, 6svh, 3rem);
   --header-h-compact: calc(var(--header-h) * 0.8);
   --header-pad-x: calc(var(--gap) * 1.6);
@@ -61,6 +62,8 @@ body {
 #root {
   width: 100%;
   height: 100%;
+  max-width: 430px;
+  margin: 0 auto;
   overflow: hidden;
   display: flex;
   flex-direction: column;
