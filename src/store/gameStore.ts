@@ -41,7 +41,7 @@ interface GameState {
     spinBoard: () => void;
     payForShuffle: () => boolean;
     applySwaps: (swaps: [number, number][]) => void;
-    slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => number | null;
+    slideRogue: (fromIndex: number, toIndex: number, isBoosted?: boolean) => SlideResult | null;
     equipSymbol: (symbol: GridSymbol, isBoosted?: boolean) => number | null;
     removeGridSymbol: (id: string) => void;
     addKeptScroll: (name: SymbolName) => void;
@@ -59,6 +59,16 @@ interface GameState {
     applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
     applyConjureMagic: (result: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
     healPlayer: (amount: number) => void;
+}
+
+export interface SlideEffect {
+    stat: 'Gold' | 'EXP' | 'Magic' | 'Gear' | 'Slot';
+    amount: number;
+}
+
+export interface SlideResult {
+    goldCost: number;
+    effects: SlideEffect[];
 }
 
 const generateRandomSymbols = (): GridSymbol[] => {
@@ -160,7 +170,7 @@ export const useGameStore = create<GameState>()(
             }),
 
             slideRogue: (fromIndex, toIndex, isBoosted = false) => {
-                let spentGold: number | null = null;
+                let result: SlideResult | null = null;
 
                 set((state) => {
                     const character = state.grid[fromIndex];
@@ -168,7 +178,8 @@ export const useGameStore = create<GameState>()(
 
                     if (state.gold < GAME_CONSTANTS.MOVE_COST) return;
                     state.gold -= GAME_CONSTANTS.MOVE_COST;
-                    spentGold = GAME_CONSTANTS.MOVE_COST;
+
+                    const effects: SlideEffect[] = [];
 
                     const pCoords = getCoordinates(fromIndex);
                     const tCoords = getCoordinates(toIndex);
@@ -181,11 +192,39 @@ export const useGameStore = create<GameState>()(
                         const expMultiplier = state.levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
                         if (category === 'Treasure' || category === 'Nature') {
                             switch (targetSymbol.name) {
-                                case 'clover': state.moves += ((isBoosted ? 4 : 2) * expMultiplier); state.playerMagic += (isBoosted ? 4 : 2); break;
-                                case 'pine-tree': state.moves += ((isBoosted ? 8 : 4) * expMultiplier); break;
-                                case 'dead-tree': state.moves += (-3 * expMultiplier); state.playerMagic += (isBoosted ? 10 : 5); break;
-                                case 'gold-bar': state.gold += (isBoosted ? 32 : 16); break;
-                                case 'gem-pendant': state.gold += (isBoosted ? 16 : 8); state.playerGear += (isBoosted ? 4 : 2); break;
+                                case 'clover': {
+                                    const exp = (isBoosted ? 4 : 2) * expMultiplier;
+                                    const magic = isBoosted ? 4 : 2;
+                                    state.moves += exp; state.playerMagic += magic;
+                                    effects.push({ stat: 'EXP', amount: exp }, { stat: 'Magic', amount: magic });
+                                    break;
+                                }
+                                case 'pine-tree': {
+                                    const exp = (isBoosted ? 8 : 4) * expMultiplier;
+                                    state.moves += exp;
+                                    effects.push({ stat: 'EXP', amount: exp });
+                                    break;
+                                }
+                                case 'dead-tree': {
+                                    const exp = -3 * expMultiplier;
+                                    const magic = isBoosted ? 10 : 5;
+                                    state.moves += exp; state.playerMagic += magic;
+                                    effects.push({ stat: 'EXP', amount: exp }, { stat: 'Magic', amount: magic });
+                                    break;
+                                }
+                                case 'gold-bar': {
+                                    const gold = isBoosted ? 32 : 16;
+                                    state.gold += gold;
+                                    effects.push({ stat: 'Gold', amount: gold });
+                                    break;
+                                }
+                                case 'gem-pendant': {
+                                    const gold = isBoosted ? 16 : 8;
+                                    const gear = isBoosted ? 4 : 2;
+                                    state.gold += gold; state.playerGear += gear;
+                                    effects.push({ stat: 'Gold', amount: gold }, { stat: 'Gear', amount: gear });
+                                    break;
+                                }
                             }
                         }
                     }
@@ -204,16 +243,20 @@ export const useGameStore = create<GameState>()(
                     state.grid[toIndex] = { ...character };
 
                     if (targetHasKey) {
-                        if (!state.unlockedSlots[3]) state.unlockedSlots[3] = true;
-                        else if (!state.unlockedSlots[4]) state.unlockedSlots[4] = true;
-                        else if (!state.unlockedSlots[5]) state.unlockedSlots[5] = true;
+                        if (!state.unlockedSlots[3]) { state.unlockedSlots[3] = true; effects.push({ stat: 'Slot', amount: 1 }); }
+                        else if (!state.unlockedSlots[4]) { state.unlockedSlots[4] = true; effects.push({ stat: 'Slot', amount: 1 }); }
+                        else if (!state.unlockedSlots[5]) { state.unlockedSlots[5] = true; effects.push({ stat: 'Slot', amount: 1 }); }
                         else if (state.keptScrolls.includes('special-scroll')) {
-                            state.gold += (isBoosted ? 32 : 16);
+                            const gold = isBoosted ? 32 : 16;
+                            state.gold += gold;
+                            effects.push({ stat: 'Gold', amount: gold });
                         }
                     }
+
+                    result = { goldCost: GAME_CONSTANTS.MOVE_COST, effects };
                 });
 
-                return spentGold;
+                return result;
             },
 
             equipSymbol: (symbol, isBoosted = false) => {

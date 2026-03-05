@@ -3,12 +3,14 @@ import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
 import { SYMBOL_THEME, SYMBOL_CATEGORIES, SYMBOL_EXTRA_EFFECTS, CATEGORY_BADGE_THEME } from '@/lib/constants';
 import type { GridSymbol } from '@/types/game';
+import type { EffectPopup } from '../hooks/useGridInteraction';
 
 interface GridBoardProps {
     gridSymbols: (GridSymbol | null)[];
     spinKey: number;
     matchingIndices: Set<number>;
     goldCostPopups: { id: string; index: number; amount: number }[];
+    effectPopups: EffectPopup[];
     glowingIndices: number[];
     activeRogueIndex: number | null;
     selectedIndex: number | null;
@@ -28,6 +30,14 @@ const MATCH_SPARKLES = [
     { top: '70%', left: '62%', size: 3, delay: 0.12, duration: 1.25 },
     { top: '44%', left: '46%', size: 2, delay: 0.3, duration: 1.7 },
 ];
+
+const EFFECT_COLOR: Record<string, { text: string; shadow: string }> = {
+    Gold: { text: 'text-yellow-300', shadow: 'rgba(234, 179, 8, 0.45)' },
+    EXP: { text: 'text-green-400', shadow: 'rgba(74, 222, 128, 0.45)' },
+    Magic: { text: 'text-pink-400', shadow: 'rgba(244, 114, 182, 0.45)' },
+    Gear: { text: 'text-blue-400', shadow: 'rgba(96, 165, 250, 0.45)' },
+    Slot: { text: 'text-amber-300', shadow: 'rgba(252, 211, 77, 0.45)' },
+};
 
 function formatStatText(text: string, symbolName: string) {
     if (symbolName === 'brandy-bottle') {
@@ -63,7 +73,7 @@ function formatStatText(text: string, symbolName: string) {
 }
 
 export function GridBoard({
-    gridSymbols, spinKey, matchingIndices, goldCostPopups, glowingIndices, activeRogueIndex,
+    gridSymbols, spinKey, matchingIndices, goldCostPopups, effectPopups, glowingIndices, activeRogueIndex,
     selectedIndex, selectedEquippedSymbol, isSpinning, onSymbolClick, onEmptyGlowClick, levelUpPerks,
     hasSpecialScroll, areAllSlotsUnlocked,
 }: GridBoardProps) {
@@ -213,6 +223,32 @@ export function GridBoard({
                                 }}
                             >
                                 -{popup.amount}
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {effectPopups.map((popup) => {
+                        const { row, col } = getCoordinates(popup.index);
+                        const colors = EFFECT_COLOR[popup.stat] ?? EFFECT_COLOR.Gold;
+                        const label = popup.stat === 'Slot'
+                            ? '🔓 SLOT'
+                            : `${popup.amount > 0 ? '+' : ''}${popup.amount} ${popup.stat}`;
+                        return (
+                            <motion.div
+                                key={popup.id}
+                                initial={{ opacity: 0, y: 0, scale: 0.84 }}
+                                animate={{ opacity: [0, 1, 1, 0], y: [0, -18, -34, -46], scale: [0.84, 1.08, 1.03, 0.98] }}
+                                transition={{ duration: 0.85, ease: 'easeOut' }}
+                                className={`absolute z-40 pointer-events-none select-none font-bold tracking-widest -translate-x-1/2 ${colors.text}`}
+                                style={{
+                                    left: `calc((var(--cell) + var(--gap)) * ${col} + (var(--cell) / 2))`,
+                                    top: `calc((var(--cell) + var(--gap)) * ${row} + (var(--cell) * 0.35))`,
+                                    textShadow: `0 1px 0 #000, 0 0 8px ${colors.shadow}`,
+                                    fontSize: 'var(--text-sm)',
+                                }}
+                            >
+                                {label}
                             </motion.div>
                         );
                     })}

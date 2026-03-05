@@ -118,6 +118,7 @@ export function GameShell() {
                                 spinKey={grid.spinKey}
                                 matchingIndices={grid.matchingIndices}
                                 goldCostPopups={grid.goldCostPopups}
+                                effectPopups={grid.effectPopups}
                                 glowingIndices={grid.glowingIndices}
                                 activeRogueIndex={grid.activeRogueIndex}
                                 selectedIndex={grid.selectedIndex}

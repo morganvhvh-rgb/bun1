@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGameStore, selectShuffleCost } from '@/store/gameStore';
+import type { SlideEffect } from '@/store/gameStore';
 import { findMatchingIndices, getCoordinates, getIndex } from '@/lib/utils';
 import { GAME_CONSTANTS, ALL_SCROLL_COLORS, SYMBOL_CATEGORIES } from '@/lib/constants';
 import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
@@ -11,6 +12,13 @@ interface ScrollFlowCallbacks {
 interface GoldCostPopup {
     id: string;
     index: number;
+    amount: number;
+}
+
+export interface EffectPopup {
+    id: string;
+    index: number;
+    stat: SlideEffect['stat'];
     amount: number;
 }
 
@@ -40,6 +48,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
     const [activeRogueIndex, setActiveRogueIndex] = useState<number | null>(null);
     const [slidesCount, setSlidesCount] = useState(0);
     const [goldCostPopups, setGoldCostPopups] = useState<GoldCostPopup[]>([]);
+    const [effectPopups, setEffectPopups] = useState<EffectPopup[]>([]);
 
     const matchingIndices = findMatchingIndices(gridSymbols);
 
@@ -49,6 +58,18 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setTimeout(() => {
             setGoldCostPopups(prev => prev.filter(popup => popup.id !== id));
         }, 700);
+    };
+
+    const showEffectPopups = (index: number, effects: SlideEffect[]) => {
+        effects.forEach((effect, i) => {
+            const id = crypto.randomUUID();
+            setTimeout(() => {
+                setEffectPopups(prev => [...prev, { id, index, stat: effect.stat, amount: effect.amount }]);
+                setTimeout(() => {
+                    setEffectPopups(prev => prev.filter(p => p.id !== id));
+                }, 850);
+            }, 120 * i);
+        });
     };
 
     const resetSelection = () => {
@@ -64,6 +85,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         setIsAnimating(false);
         setIsSpinning(false);
         setGoldCostPopups([]);
+        setEffectPopups([]);
     };
 
     const handleSpin = () => {
@@ -138,9 +160,10 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         if (glowingIndices.includes(index) && activeRogueIndex !== null) {
             const character = gridSymbols[activeRogueIndex];
             if (character && character.name === 'hood') {
-                const spentGold = slideRogue(activeRogueIndex, index, isBoosted);
-                if (spentGold !== null && spentGold > 0) {
-                    showGoldCostPopup(index, spentGold);
+                const result = slideRogue(activeRogueIndex, index, isBoosted);
+                if (result !== null) {
+                    if (result.goldCost > 0) showGoldCostPopup(index, result.goldCost);
+                    if (result.effects.length > 0) showEffectPopups(index, result.effects);
                 }
                 resetSelection();
                 setSlidesCount(prev => prev + 1);
@@ -213,6 +236,7 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
         isAnimating,
         isSpinning,
         goldCostPopups,
+        effectPopups,
         shuffleCost,
         resetSelection,
         resetInteractionState,
