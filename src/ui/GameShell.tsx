@@ -14,6 +14,7 @@ import { ConjureModal } from './modals/ConjureModal';
 import { CoffeeModal } from './modals/CoffeeModal';
 import { TutorialModal } from './modals/TutorialModal';
 import { VictoryModal } from './modals/VictoryModal';
+import { GameOverModal } from './modals/GameOverModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
@@ -24,6 +25,7 @@ export function GameShell() {
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
     const isVictory = battleCount > GAME_CONSTANTS.MAX_BATTLES && playerHp > 0;
+    const isGameOver = playerHp === 0;
 
     const {
         playerAnim,
@@ -170,6 +172,7 @@ export function GameShell() {
             <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
             <TutorialModal isOpen={!hasSeenTutorial} onClose={() => setHasSeenTutorial(true)} />
             <VictoryModal isOpen={isVictory} onReset={handleReset} />
+            <GameOverModal isOpen={isGameOver} onReset={handleReset} />
         </div >
     );
 }

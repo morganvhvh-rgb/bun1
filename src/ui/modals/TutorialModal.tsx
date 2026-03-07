@@ -23,9 +23,6 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                         <div className="space-y-0.5">
                             <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500">How to Play</p>
                             <h2 className="text-xl font-semibold tracking-[0.2em] text-[#e8d4b8] sm:text-2xl">DAILY ROGUE</h2>
-                            <p className="text-sm text-zinc-400">
-                                Build your loadout below, then survive the battle above.
-                            </p>
                         </div>
 
                         <button
@@ -37,28 +34,13 @@ export function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                         </button>
                     </div>
 
-                    <div className="grid gap-2.5 sm:grid-cols-2">
-                        <div className="rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm">
-                            <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-[#e8d4b8]/70">Top Half</p>
-                            <p className="text-sm text-zinc-200">Turn-based auto-battler.</p>
-                            <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                                Beat each wave. Tap your Rogue to view level-up perks.
-                            </p>
-                        </div>
-
-                        <div className="rounded-xl border border-white/10 bg-white/5 p-3.5 shadow-sm">
-                            <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-[#e8d4b8]/70">Bottom Half</p>
-                            <p className="text-sm text-zinc-200">Symbol grid and movement.</p>
-                            <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                                Tap to equip. Slide over other symbols to trigger them. You get one slide per spin.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="grid gap-x-4 gap-y-1 text-sm leading-relaxed text-zinc-400 sm:grid-cols-2">
-                        <p>Spin, shuffle, slide, and equip cost <strong className="font-medium text-yellow-400">gold</strong>.</p>
-                        <p>Equip up to <strong className="font-medium text-[#e8d4b8]">two symbols per category</strong>.</p>
-                        <p className="sm:col-span-2">Equipped symbols last <strong className="font-medium text-[#e8d4b8]">two battles</strong>.</p>
+                    <div className="flex flex-col gap-4 mt-2 text-sm leading-relaxed text-zinc-300">
+                        <p>
+                            Daily Rogue has 2 sections: The top is an auto-battler where you defeat waves of enemies to win the daily run. The bottom is a symbol grid, where you can <em className="text-[#e8d4b8] not-italic font-medium">Spin</em> for new symbols, <em className="text-[#e8d4b8] not-italic font-medium">Shuffle</em> current symbols or <em className="text-[#e8d4b8] not-italic font-medium">Slide</em> your Rogue over certain symbol types.
+                        </p>
+                        <p>
+                            You can <em className="text-[#e8d4b8] not-italic font-medium">Equip</em> symbols to boost your stats and take advantage of their special effects. All these actions cost gold.
+                        </p>
                     </div>
                 </div>
             </div>
