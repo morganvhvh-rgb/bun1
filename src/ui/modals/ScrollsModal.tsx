@@ -21,7 +21,7 @@ export function ScrollsModal({ isOpen, onClose }: ScrollsModalProps) {
                                 <Icon name={scrollName} scale={2} tintColor={SYMBOL_THEME[scrollName]} />
                             </div>
                             <div className="flex flex-col">
-                                <div className="text-[#e8d4b8] font-bold uppercase text-xs tracking-wider">
+                                <div className="font-bold uppercase text-xs tracking-wider" style={{ color: SYMBOL_THEME[scrollName] }}>
                                     {scrollName.replace('-scroll', '')} Scroll
                                 </div>
                                 <div className="text-xs text-zinc-500 leading-tight mt-0.5">{SYMBOL_EXTRA_EFFECTS[scrollName] ?? '???'}</div>

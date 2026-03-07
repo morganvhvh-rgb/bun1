@@ -99,6 +99,7 @@ export function ScrollBuyModal({
                                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                                                 transition={{ duration: 0.6, ease: 'easeOut' }}
                                                 className="text-sm text-[#e8d4b8] font-black uppercase tracking-[0.2em] leading-none text-center"
+                                                style={{ color: SYMBOL_THEME[revealedScrollColor] }}
                                             >
                                                 {revealedScrollColor.replace('-scroll', '')} SCROLL
                                             </motion.div>

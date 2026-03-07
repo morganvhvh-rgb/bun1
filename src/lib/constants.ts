@@ -57,6 +57,30 @@ export const SYMBOL_MAP = {
 
 type SymbolName = keyof typeof SYMBOL_MAP;
 
+export const CATEGORY_ACCENT_HEX: Record<string, string> = {
+    Hero: "#7e22ce",
+    Enemy: "#e11d48",
+    Food: "#ef4444",
+    Nature: "#22c55e",
+    Weapon: "#f97316",
+    Armor: "#3b82f6",
+    Magic: "#ec4899",
+    Treasure: "#eab308",
+    Special: "#d97706",
+};
+
+export const CATEGORY_TEXT_THEME: Record<string, string> = {
+    Hero: "text-violet-500",
+    Enemy: "text-rose-500",
+    Food: "text-red-500",
+    Nature: "text-green-500",
+    Weapon: "text-orange-500",
+    Armor: "text-blue-500",
+    Magic: "text-pink-500",
+    Treasure: "text-yellow-500",
+    Special: "text-amber-500",
+};
+
 export const SYMBOL_KEYS: SymbolName[] = [
     // Food
     "apple", "crab-claw", "brandy-bottle",
@@ -75,7 +99,7 @@ export const SYMBOL_KEYS: SymbolName[] = [
 ];
 
 export const SYMBOL_THEME: Record<SymbolName, string> = {
-    "hood": "#7e22ce",   // Darker Purple (Hero)
+    "hood": CATEGORY_ACCENT_HEX.Hero,
     "wyvern": "#15803d",   // Dark Green (Enemy)
     "octopus": "#f9a8d4", // Light Pink (Enemy)
     "monster-skull": "#ef4444", // Red (Enemy)
@@ -85,48 +109,48 @@ export const SYMBOL_THEME: Record<SymbolName, string> = {
     "eye-monster": "#84cc16", // Lime Green (Enemy)
 
     // Food (Red)
-    "apple": "#ef4444",
-    "crab-claw": "#ef4444",
-    "brandy-bottle": "#ef4444",
+    "apple": CATEGORY_ACCENT_HEX.Food,
+    "crab-claw": CATEGORY_ACCENT_HEX.Food,
+    "brandy-bottle": CATEGORY_ACCENT_HEX.Food,
 
     // Nature (Green)
-    "clover": "#22c55e",
-    "pine-tree": "#22c55e",
-    "dead-tree": "#22c55e",
+    "clover": CATEGORY_ACCENT_HEX.Nature,
+    "pine-tree": CATEGORY_ACCENT_HEX.Nature,
+    "dead-tree": CATEGORY_ACCENT_HEX.Nature,
 
-    // Weapon (Gray)
-    "axe": "#94a3b8",
-    "relic-blade": "#94a3b8",
-    "crossbow": "#94a3b8",
-    "daggers": "#94a3b8",
-    "bell": "#94a3b8",
+    // Weapon (Orange)
+    "axe": CATEGORY_ACCENT_HEX.Weapon,
+    "relic-blade": CATEGORY_ACCENT_HEX.Weapon,
+    "crossbow": CATEGORY_ACCENT_HEX.Weapon,
+    "daggers": CATEGORY_ACCENT_HEX.Weapon,
+    "bell": CATEGORY_ACCENT_HEX.Weapon,
 
     // Armor (Blue)
-    "shield": "#3b82f6",
-    "knight-helmet": "#3b82f6",
+    "shield": CATEGORY_ACCENT_HEX.Armor,
+    "knight-helmet": CATEGORY_ACCENT_HEX.Armor,
 
     // Magic (Pink)
-    "crystal-wand": "#ec4899",
-    "fairy-wand": "#ec4899",
+    "crystal-wand": CATEGORY_ACCENT_HEX.Magic,
+    "fairy-wand": CATEGORY_ACCENT_HEX.Magic,
 
     // Treasure (Yellow)
-    "gold-bar": "#eab308",
-    "gem-pendant": "#eab308",
+    "gold-bar": CATEGORY_ACCENT_HEX.Treasure,
+    "gem-pendant": CATEGORY_ACCENT_HEX.Treasure,
 
-    // Special (Brown)
-    "key": "#a16207",
-    "scroll-unfurled": "#a16207",
-    "food-scroll": "#b91c1c", // red-700
-    "armor-scroll": "#1d4ed8", // blue-700
-    "magic-scroll": "#be185d", // pink-700
-    "weapon-scroll": "#475569", // slate-600
-    "special-scroll": "#713f12", // yellow-900 (dark brown)
-    "nature-scroll": "#15803d", // green-700
+    // Special and Scrolls
+    "key": CATEGORY_ACCENT_HEX.Special,
+    "scroll-unfurled": CATEGORY_ACCENT_HEX.Special,
+    "food-scroll": CATEGORY_ACCENT_HEX.Food,
+    "armor-scroll": CATEGORY_ACCENT_HEX.Armor,
+    "magic-scroll": CATEGORY_ACCENT_HEX.Magic,
+    "weapon-scroll": CATEGORY_ACCENT_HEX.Weapon,
+    "special-scroll": CATEGORY_ACCENT_HEX.Special,
+    "nature-scroll": CATEGORY_ACCENT_HEX.Nature,
 
     // Conjure Magic
-    "two-hearts": "#ec4899",
-    "sapphire": "#3b82f6",
-    "lightning-trio": "#eab308",
+    "two-hearts": CATEGORY_ACCENT_HEX.Magic,
+    "sapphire": CATEGORY_ACCENT_HEX.Armor,
+    "lightning-trio": CATEGORY_ACCENT_HEX.Treasure,
 };
 
 export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
@@ -228,31 +252,31 @@ type CategoryBadgeTheme = {
 export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
     Hero: {
         label: "ROGUE",
-        className: "text-violet-200 border-violet-300/35 bg-violet-500/15",
+        className: "text-violet-500 border-violet-500/40 bg-violet-500/15",
     },
     Enemy: {
-        className: "text-rose-200 border-rose-300/35 bg-rose-500/12",
+        className: "text-rose-500 border-rose-500/40 bg-rose-500/15",
     },
     Food: {
-        className: "text-red-200 border-red-300/35 bg-red-500/12",
+        className: "text-red-500 border-red-500/40 bg-red-500/15",
     },
     Nature: {
-        className: "text-emerald-200 border-emerald-300/35 bg-emerald-500/12",
+        className: "text-green-500 border-green-500/40 bg-green-500/15",
     },
     Weapon: {
-        className: "text-slate-200 border-slate-300/35 bg-slate-500/15",
+        className: "text-orange-500 border-orange-500/40 bg-orange-500/15",
     },
     Armor: {
-        className: "text-sky-200 border-sky-300/35 bg-sky-500/12",
+        className: "text-blue-500 border-blue-500/40 bg-blue-500/15",
     },
     Magic: {
-        className: "text-fuchsia-200 border-fuchsia-300/35 bg-fuchsia-500/12",
+        className: "text-pink-500 border-pink-500/40 bg-pink-500/15",
     },
     Treasure: {
-        className: "text-amber-200 border-amber-300/35 bg-amber-500/12",
+        className: "text-yellow-500 border-yellow-500/40 bg-yellow-500/15",
     },
     Special: {
-        className: "text-yellow-100 border-yellow-300/35 bg-yellow-700/15",
+        className: "text-amber-500 border-amber-500/40 bg-amber-600/15",
     },
 };
 

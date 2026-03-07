@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectTotalAttack, selectTotalMaxHp } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { SYMBOL_THEME, GAME_CONSTANTS } from '@/lib/constants';
+import { SYMBOL_THEME, GAME_CONSTANTS, CATEGORY_TEXT_THEME } from '@/lib/constants';
 import { hpVariants, playerIconVariants } from '../animations';
 
 interface HeroPanelProps {
@@ -60,15 +60,15 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                     <div className="flex items-center justify-between w-full px-2">
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
-                            <span className="text-[13px] font-bold text-orange-400 leading-none font-mono tracking-wider" style={{ fontVariantNumeric: 'tabular-nums' }}>{playerTotalAtk}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerTotalAtk}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">Magic</span>
-                            <span className="text-[13px] font-bold text-pink-400 leading-none font-mono tracking-wider" style={{ fontVariantNumeric: 'tabular-nums' }}>{playerMagic}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Magic)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerMagic}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">Gear</span>
-                            <span className="text-[13px] font-bold text-blue-400 leading-none font-mono tracking-wider" style={{ fontVariantNumeric: 'tabular-nums' }}>{playerGear}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Armor)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerGear}</span>
                         </div>
                     </div>
 
@@ -99,7 +99,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                                 transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
                             />
                         </div>
-                        <span className="text-[12px] font-bold text-green-500 leading-none font-mono tracking-wider shrink-0 w-8">
+                        <span className={cn("text-[12px] font-bold leading-none font-mono tracking-wider shrink-0 w-8", CATEGORY_TEXT_THEME.Nature)}>
                             {moves}<span className="text-[10px] text-green-500/60">/{GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED}</span>
                         </span>
                     </div>
@@ -111,7 +111,7 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
             <div className="flex items-center justify-center w-full h-[46px] px-2 py-1 surface-panel shrink-0 relative overflow-hidden group mt-auto !rounded-2xl">
                 <div className="flex items-center gap-2.5 z-10 font-mono">
                     <span className="text-[13px] font-bold tracking-widest text-zinc-400 uppercase mt-0.5 font-sans">GOLD</span>
-                    <span className="text-xl font-bold text-yellow-400 tracking-wider">
+                    <span className={cn("text-xl font-bold tracking-wider", CATEGORY_TEXT_THEME.Treasure)}>
                         {gold}
                     </span>
                 </div>

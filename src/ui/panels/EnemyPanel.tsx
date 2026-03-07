@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useGameStore, selectHasTwoFairyWands } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
-import { SYMBOL_THEME, GAME_CONSTANTS } from '@/lib/constants';
+import { SYMBOL_THEME, GAME_CONSTANTS, CATEGORY_TEXT_THEME } from '@/lib/constants';
 import { enemyIconVariants, hpVariants } from '../animations';
 import type { SymbolName } from '@/types/game';
 
@@ -47,12 +47,12 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     {/* ATK Row */}
                     <div className="flex items-center gap-1 w-full">
                         <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">ATK</span>
-                        <span className="text-[13px] font-bold text-orange-400 leading-none font-mono tracking-wider truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>{atk}</span>
+                        <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider truncate", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{atk}</span>
                     </div>
                     {/* LVL Row */}
                     <div className="flex items-center gap-1 w-full">
                         <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">LVL</span>
-                        <span className="text-[13px] font-bold text-green-500 leading-none font-mono tracking-wider truncate" style={{ fontVariantNumeric: 'tabular-nums' }}>{lvl}</span>
+                        <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider truncate", CATEGORY_TEXT_THEME.Nature)} style={{ fontVariantNumeric: 'tabular-nums' }}>{lvl}</span>
                     </div>
                 </div>
             </div>

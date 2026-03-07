@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
-import { SYMBOL_THEME, SYMBOL_CATEGORIES, SYMBOL_EXTRA_EFFECTS, CATEGORY_BADGE_THEME } from '@/lib/constants';
+import { SYMBOL_THEME, SYMBOL_CATEGORIES, SYMBOL_EXTRA_EFFECTS, CATEGORY_BADGE_THEME, CATEGORY_TEXT_THEME } from '@/lib/constants';
 import type { GridSymbol } from '@/types/game';
 import type { EffectPopup } from '../hooks/useGridInteraction';
 
@@ -32,11 +32,11 @@ const MATCH_SPARKLES = [
 ];
 
 const EFFECT_COLOR: Record<string, { text: string; shadow: string }> = {
-    Gold: { text: 'text-yellow-300', shadow: 'rgba(234, 179, 8, 0.45)' },
-    EXP: { text: 'text-green-400', shadow: 'rgba(74, 222, 128, 0.45)' },
-    Magic: { text: 'text-pink-400', shadow: 'rgba(244, 114, 182, 0.45)' },
-    Gear: { text: 'text-blue-400', shadow: 'rgba(96, 165, 250, 0.45)' },
-    Slot: { text: 'text-amber-300', shadow: 'rgba(252, 211, 77, 0.45)' },
+    Gold: { text: CATEGORY_TEXT_THEME.Treasure, shadow: 'rgba(234, 179, 8, 0.45)' },
+    EXP: { text: CATEGORY_TEXT_THEME.Nature, shadow: 'rgba(34, 197, 94, 0.45)' },
+    Magic: { text: CATEGORY_TEXT_THEME.Magic, shadow: 'rgba(236, 72, 153, 0.45)' },
+    Gear: { text: CATEGORY_TEXT_THEME.Armor, shadow: 'rgba(59, 130, 246, 0.45)' },
+    Slot: { text: CATEGORY_TEXT_THEME.Special, shadow: 'rgba(217, 119, 6, 0.45)' },
 };
 
 function formatStatText(text: string, symbolName: string) {
@@ -53,17 +53,17 @@ function formatStatText(text: string, symbolName: string) {
         let colorClass = "";
 
         if (lower.includes('gold')) {
-            colorClass = "text-yellow-400";
+            colorClass = CATEGORY_TEXT_THEME.Treasure;
         } else if (lower.includes('gear')) {
-            colorClass = "text-blue-400";
+            colorClass = CATEGORY_TEXT_THEME.Armor;
         } else if (lower.includes('atk')) {
-            colorClass = "text-orange-400";
+            colorClass = CATEGORY_TEXT_THEME.Weapon;
         } else if (lower.includes('magic')) {
-            colorClass = "text-pink-400";
+            colorClass = CATEGORY_TEXT_THEME.Magic;
         } else if (lower.includes('hp')) {
-            colorClass = "text-red-500";
+            colorClass = CATEGORY_TEXT_THEME.Food;
         } else if (lower.includes('exp')) {
-            colorClass = "text-green-500";
+            colorClass = CATEGORY_TEXT_THEME.Nature;
         }
 
         return colorClass ? <span key={i} className={colorClass}>{part}</span> : <span key={i}>{part}</span>;
@@ -112,6 +112,7 @@ export function GridBoard({
     const isDisplaySymbolBoosted = selectedIndex !== null ? matchingIndices.has(selectedIndex) : !!selectedEquippedSymbol?.isBoosted;
     const displayCategory = displaySymbol ? SYMBOL_CATEGORIES[displaySymbol.name] : null;
     const categoryTheme = displayCategory ? CATEGORY_BADGE_THEME[displayCategory] : null;
+    const statTheme = displayCategory ? CATEGORY_TEXT_THEME[displayCategory] : null;
 
     return (
         <div className="flex flex-col items-center shrink-0" style={{ gap: 'var(--gap)', width: 'calc(var(--cell) * 4 + var(--gap) * 3)' }}>
@@ -268,7 +269,7 @@ export function GridBoard({
                         </div>
                         <div className={cn(
                             "font-bold tracking-widest uppercase w-full min-w-0 break-words",
-                            SYMBOL_CATEGORIES[displaySymbol.name] === 'Special' ? 'text-[#a16207]' : 'text-teal-400'
+                            statTheme ?? CATEGORY_TEXT_THEME.Special
                         )} style={{ fontSize: 'var(--text-sm)' }}>
                             {formatStatText(getStatText(displaySymbol.name, isDisplaySymbolBoosted, levelUpPerks, hasSpecialScroll, areAllSlotsUnlocked), displaySymbol.name)}
                         </div>
