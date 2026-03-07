@@ -78,9 +78,10 @@ Follow this workflow in order for all feature work and refactors.
 
 ## 9) Validate before handoff
 
-- Run:
+- For larger, more complex, or higher-risk changes, run:
   - `bun run lint`
   - `bun run build`
+- For small, low-risk changes (for example minor copy edits or narrowly scoped tweaks), this validation step can be skipped.
 - In handoff, summarize:
   - files changed
   - gameplay behavior changes
