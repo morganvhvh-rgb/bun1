@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import type { GridSymbol, SymbolName } from '@/types/game';
+import type { LevelUpPerk } from '@/types/levelUp';
 import { SYMBOL_STATS } from '@/lib/constants';
 
 /**
@@ -55,7 +56,7 @@ export const findMatchingIndices = (gridSymbols: (GridSymbol | null)[], columns:
 export const getStatText = (
     name: SymbolName,
     isBoosted: boolean,
-    levelUpPerks: string[],
+    levelUpPerks: LevelUpPerk[],
     hasSpecialScroll: boolean = false,
     areAllSlotsUnlocked: boolean = false
 ): string => {

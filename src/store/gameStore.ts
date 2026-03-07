@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
-import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS } from '@/lib/constants';
+import type { LevelUpPerk } from '@/types/levelUp';
+import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS, ALL_LEVEL_UP_PERKS } from '@/lib/constants';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
@@ -13,8 +14,7 @@ interface GameState {
     unlockedSlots: { 3: boolean; 4: boolean; 5: boolean };
 
     // Progression
-    levelUpPerks: string[];
-    rejectedLevelUpPerk: string | null;
+    levelUpPerks: LevelUpPerk[];
     hasSeenTutorial: boolean;
 
     // Stats & Resources
@@ -49,12 +49,11 @@ interface GameState {
     resetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
     setHasSeenTutorial: (value: boolean) => void;
-    setRejectedLevelUpPerk: (perk: string | null) => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
     setEnemyVisibility: (target: 'enemy1' | 'enemy2', isVisible: boolean) => void;
-    applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
+    applyLevelUp: (perk: LevelUpPerk) => void;
     applyConjureMagic: (result: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
 }
 
@@ -78,6 +77,9 @@ const getRandomBoardSymbol = (): SymbolName => {
 
 const isSymbolName = (value: unknown): value is SymbolName =>
     typeof value === 'string' && value in SYMBOL_CATEGORIES;
+
+const isLevelUpPerk = (value: unknown): value is LevelUpPerk =>
+    typeof value === 'string' && ALL_LEVEL_UP_PERKS.includes(value as LevelUpPerk);
 
 const sanitizePersistedGrid = (value: unknown) => {
     if (!Array.isArray(value) || value.length !== 12) {
@@ -200,6 +202,13 @@ const calculateTotalMaxHp = (state: { playerMaxHp: number; keptScrolls: SymbolNa
     return state.playerMaxHp + bonus;
 };
 
+const clampExperience = (value: number) =>
+    Math.max(0, Math.min(GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED, value));
+
+const addExperience = (state: { moves: number }, amount: number) => {
+    state.moves = clampExperience(state.moves + amount);
+};
+
 // Builds a full enemy state object from a BATTLE_ROUNDS entry.
 const makeEnemy = (e: { name: SymbolName; hp: number; atk: number; lvl: number; type: string }, debuff = 0) => ({
     name: e.name,
@@ -219,7 +228,6 @@ export const useGameStore = create<GameState>()(
             keptScrolls: [],
             unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
-            rejectedLevelUpPerk: null,
             hasSeenTutorial: false,
 
             gold: GAME_CONSTANTS.INITIAL_GOLD,
@@ -291,20 +299,22 @@ export const useGameStore = create<GameState>()(
                                 case 'clover': {
                                     const exp = (isBoosted ? 4 : 2) * expMultiplier;
                                     const magic = isBoosted ? 4 : 2;
-                                    state.moves += exp; state.playerMagic += magic;
+                                    addExperience(state, exp);
+                                    state.playerMagic += magic;
                                     effects.push({ stat: 'EXP', amount: exp }, { stat: 'Magic', amount: magic });
                                     break;
                                 }
                                 case 'pine-tree': {
                                     const exp = (isBoosted ? 8 : 4) * expMultiplier;
-                                    state.moves += exp;
+                                    addExperience(state, exp);
                                     effects.push({ stat: 'EXP', amount: exp });
                                     break;
                                 }
                                 case 'dead-tree': {
                                     const exp = -3 * expMultiplier;
                                     const magic = isBoosted ? 10 : 5;
-                                    state.moves += exp; state.playerMagic += magic;
+                                    addExperience(state, exp);
+                                    state.playerMagic += magic;
                                     effects.push({ stat: 'EXP', amount: exp }, { stat: 'Magic', amount: magic });
                                     break;
                                 }
@@ -389,7 +399,7 @@ export const useGameStore = create<GameState>()(
                             case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 30 : 15) * foodMultiplier); break;
                             case 'crab-claw':
                                 state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
-                                state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
+                                addExperience(state, (isBoosted ? 2 : 1) * foodMultiplier);
                                 break;
                             case 'brandy-bottle':
                                 for (let i = 0; i < foodMultiplier; i++) {
@@ -473,13 +483,18 @@ export const useGameStore = create<GameState>()(
 
             applyLevelUp: (perk) => set((state) => {
                 if (state.moves < GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED) return;
-                state.moves -= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED;
+                if (perk !== 'full_heal' && state.levelUpPerks.includes(perk)) return;
+
+                state.moves = GAME_CONSTANTS.INITIAL_MOVES;
 
                 if (perk === "full_heal_max_hp") {
-                    state.playerMaxHp += 10;
+                    state.playerMaxHp += GAME_CONSTANTS.LEVEL_UP_MAX_HP_BONUS;
                     state.playerHp = calculateTotalMaxHp(state);
                     state.levelUpPerks.push(perk);
                 } else if (perk === "nature_2x_exp") {
+                    state.levelUpPerks.push(perk);
+                } else if (perk === "gain_40_gold") {
+                    state.gold += GAME_CONSTANTS.LEVEL_UP_GOLD_REWARD;
                     state.levelUpPerks.push(perk);
                 } else if (perk === "full_heal") {
                     state.playerHp = calculateTotalMaxHp(state);
@@ -530,7 +545,6 @@ export const useGameStore = create<GameState>()(
                 state.keptScrolls = [];
                 state.unlockedSlots = { 3: false, 4: false, 5: false };
                 state.levelUpPerks = [];
-                state.rejectedLevelUpPerk = null;
                 state.hasSeenTutorial = false;
                 state.gold = GAME_CONSTANTS.INITIAL_GOLD;
                 state.moves = GAME_CONSTANTS.INITIAL_MOVES;
@@ -576,14 +590,10 @@ export const useGameStore = create<GameState>()(
                 state.hasSeenTutorial = value;
             }),
 
-            setRejectedLevelUpPerk: (perk) => set((state) => {
-                state.rejectedLevelUpPerk = perk;
-            }),
-
         })),
         {
             name: 'daily-rogue-storage',
-            version: 4,
+            version: 5,
             migrate: (persistedState: unknown, version) => {
                 if (!persistedState || typeof persistedState !== 'object') {
                     return persistedState as GameState;
@@ -595,13 +605,6 @@ export const useGameStore = create<GameState>()(
                 if (version < 2) {
                     if (!state.keptSymbols && Array.isArray(state.keptIcons)) {
                         state.keptSymbols = state.keptIcons;
-                    }
-                }
-
-                // v2 → v3: add rejectedLevelUpPerk
-                if (version < 3) {
-                    if (!('rejectedLevelUpPerk' in state)) {
-                        state.rejectedLevelUpPerk = null;
                     }
                 }
 
@@ -649,6 +652,16 @@ export const useGameStore = create<GameState>()(
                             })
                         );
                     }
+                }
+
+                if (version < 5) {
+                    state.moves = typeof state.moves === 'number'
+                        ? clampExperience(state.moves)
+                        : GAME_CONSTANTS.INITIAL_MOVES;
+
+                    state.levelUpPerks = Array.isArray(state.levelUpPerks)
+                        ? state.levelUpPerks.filter(isLevelUpPerk)
+                        : [];
                 }
 
                 return state as unknown as GameState;

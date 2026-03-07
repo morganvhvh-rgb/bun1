@@ -1,5 +1,7 @@
 import { useGameStore } from '@/store/gameStore';
-import { GAME_CONSTANTS } from '@/lib/constants';
+import { cn } from '@/lib/utils';
+import { GAME_CONSTANTS, LEVEL_UP_PERK_META, ONE_TIME_LEVEL_UP_PERKS } from '@/lib/constants';
+import type { LevelUpPerk } from '@/types/levelUp';
 import { Modal } from '../shared/Modal';
 
 interface CharacterModalProps {
@@ -7,44 +9,17 @@ interface CharacterModalProps {
     onClose: () => void;
 }
 
-const PERK_LABELS: Record<string, string> = {
-    full_heal_max_hp: 'Full heal and +10 Max HP',
-    nature_2x_exp: 'All Nature symbols give 2x EXP',
-    full_heal: 'Full Heal',
-};
-
-const ALL_FIRST_PERKS = ['full_heal_max_hp', 'nature_2x_exp'] as const;
-
 export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
-    const { moves, levelUpPerks, rejectedLevelUpPerk, applyLevelUp, setRejectedLevelUpPerk } = useGameStore();
+    const { moves, levelUpPerks, applyLevelUp } = useGameStore();
 
     const canLevelUp = moves >= GAME_CONSTANTS.LEVEL_UP_MOVES_REQUIRED;
-
-    /** The two choices shown at first level-up (level 1 → 2) */
     const isFirstLevelUp = levelUpPerks.length === 0;
+    const availableOneTimePerks = ONE_TIME_LEVEL_UP_PERKS.filter(perk => !levelUpPerks.includes(perk));
+    const availableChoices: LevelUpPerk[] = isFirstLevelUp
+        ? availableOneTimePerks
+        : [...availableOneTimePerks, 'full_heal'];
 
-    /**
-     * At subsequent level-ups, offer:
-     *   - The perk the player *didn't* pick last time (if any)
-     *   - Full Heal
-     */
-    const subsequentChoices: string[] = [];
-    if (!isFirstLevelUp) {
-        if (rejectedLevelUpPerk) subsequentChoices.push(rejectedLevelUpPerk);
-        subsequentChoices.push('full_heal');
-    }
-
-    const handlePick = (perk: 'full_heal_max_hp' | 'nature_2x_exp' | 'full_heal') => {
-        if (isFirstLevelUp) {
-            // Track which of the two was NOT picked
-            const rejected = ALL_FIRST_PERKS.find(p => p !== perk) ?? null;
-            setRejectedLevelUpPerk(rejected);
-        } else {
-            // Once the rejected perk is finally used at a later level-up, clear it
-            if (perk === rejectedLevelUpPerk) {
-                setRejectedLevelUpPerk(null);
-            }
-        }
+    const handlePick = (perk: LevelUpPerk) => {
         applyLevelUp(perk);
     };
 
@@ -54,26 +29,29 @@ export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
                 {canLevelUp && (
                     <div className="flex flex-col gap-3 w-full">
                         <h3 className="text-[#e8d4b8] font-bold uppercase tracking-widest text-center mb-2">LEVEL UP! Make a choice:</h3>
-                        {isFirstLevelUp ? (
-                            <>
-                                <button onClick={() => handlePick('full_heal_max_hp')} className="bg-black text-[#e8d4b8] p-3 font-bold uppercase tracking-wider text-xs border border-zinc-800">
-                                    Full heal and +10 Max HP
-                                </button>
-                                <button onClick={() => handlePick('nature_2x_exp')} className="bg-black text-[#e8d4b8] p-3 font-bold uppercase tracking-wider text-xs border border-zinc-800">
-                                    All Nature symbols give 2x EXP
-                                </button>
-                            </>
-                        ) : (
-                            subsequentChoices.map(perk => (
+                        {availableChoices.map(perk => {
+                            const perkMeta = LEVEL_UP_PERK_META[perk];
+
+                            return (
                                 <button
                                     key={perk}
-                                    onClick={() => handlePick(perk as 'full_heal_max_hp' | 'nature_2x_exp' | 'full_heal')}
-                                    className="bg-black text-[#e8d4b8] p-3 font-bold uppercase tracking-wider text-xs border border-zinc-800"
+                                    onClick={() => handlePick(perk)}
+                                    className={cn(
+                                        'w-full p-3 font-bold uppercase tracking-wider text-xs border text-left transition-colors focus-visible:outline-none focus-visible:ring-2',
+                                        perkMeta.buttonClassName,
+                                    )}
                                 >
-                                    {PERK_LABELS[perk] ?? perk}
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span>{perkMeta.label}</span>
+                                        {perkMeta.isOneTime && (
+                                            <span className="shrink-0 text-[9px] tracking-[0.25em] opacity-70">
+                                                ONE TIME
+                                            </span>
+                                        )}
+                                    </div>
                                 </button>
-                            ))
-                        )}
+                            );
+                        })}
                     </div>
                 )}
 
@@ -83,7 +61,7 @@ export function CharacterModal({ isOpen, onClose }: CharacterModalProps) {
                         <div className="flex flex-col gap-1">
                             {levelUpPerks.map((perk, i) => (
                                 <div key={i} className="text-xs text-[#e8d4b8]">
-                                    - {PERK_LABELS[perk] ?? perk}
+                                    - {LEVEL_UP_PERK_META[perk]?.label ?? perk}
                                 </div>
                             ))}
                         </div>

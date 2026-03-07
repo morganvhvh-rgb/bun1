@@ -1,3 +1,5 @@
+import type { LevelUpPerk } from '@/types/levelUp';
+
 export const SYMBOL_MAP = {
     // Character
     "hood": "hood",
@@ -314,6 +316,44 @@ export const GAME_CONSTANTS = {
     MAX_KEPT_SCROLLS: 6,
     MAX_BATTLES: 8,
     LEVEL_UP_MOVES_REQUIRED: 10,
+    LEVEL_UP_MAX_HP_BONUS: 10,
+    LEVEL_UP_GOLD_REWARD: 40,
+};
+
+export const ALL_LEVEL_UP_PERKS: LevelUpPerk[] = [
+    'full_heal_max_hp',
+    'nature_2x_exp',
+    'gain_40_gold',
+    'full_heal',
+];
+
+export const ONE_TIME_LEVEL_UP_PERKS: Exclude<LevelUpPerk, 'full_heal'>[] = [
+    'full_heal_max_hp',
+    'nature_2x_exp',
+    'gain_40_gold',
+];
+
+export const LEVEL_UP_PERK_META: Record<LevelUpPerk, { label: string; isOneTime: boolean; buttonClassName: string }> = {
+    full_heal_max_hp: {
+        label: `Full heal and +${GAME_CONSTANTS.LEVEL_UP_MAX_HP_BONUS} Max HP`,
+        isOneTime: true,
+        buttonClassName: 'border-red-500/40 bg-red-500/10 text-red-100 hover:bg-red-500/20 focus-visible:ring-red-500/40',
+    },
+    nature_2x_exp: {
+        label: 'All Nature symbols give 2x EXP',
+        isOneTime: true,
+        buttonClassName: 'border-green-500/40 bg-green-500/10 text-green-100 hover:bg-green-500/20 focus-visible:ring-green-500/40',
+    },
+    gain_40_gold: {
+        label: `Gain ${GAME_CONSTANTS.LEVEL_UP_GOLD_REWARD} Gold`,
+        isOneTime: true,
+        buttonClassName: 'border-yellow-500/40 bg-yellow-500/10 text-yellow-100 hover:bg-yellow-500/20 focus-visible:ring-yellow-500/40',
+    },
+    full_heal: {
+        label: 'Full Heal',
+        isOneTime: false,
+        buttonClassName: 'border-red-500/40 bg-red-500/10 text-red-100 hover:bg-red-500/20 focus-visible:ring-red-500/40',
+    },
 };
 
 export const ALL_SCROLL_COLORS: SymbolName[] = [

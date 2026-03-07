@@ -3,6 +3,7 @@ import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
 import { SYMBOL_THEME, SYMBOL_CATEGORIES, SYMBOL_EXTRA_EFFECTS, CATEGORY_BADGE_THEME, CATEGORY_TEXT_THEME } from '@/lib/constants';
 import type { GridSymbol } from '@/types/game';
+import type { LevelUpPerk } from '@/types/levelUp';
 import type { EffectPopup } from '../hooks/useGridInteraction';
 
 interface GridBoardProps {
@@ -18,7 +19,7 @@ interface GridBoardProps {
     isSpinning: boolean;
     onSymbolClick: (symbol: GridSymbol, index: number) => void;
     onEmptyGlowClick: (index: number) => void;
-    levelUpPerks: string[];
+    levelUpPerks: LevelUpPerk[];
     hasSpecialScroll: boolean;
     areAllSlotsUnlocked: boolean;
 }
