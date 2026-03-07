@@ -159,7 +159,7 @@ export function GridBoard({
                                 }}
                             >
                                 {isSparklingMatch && (
-                                    <div className="absolute inset-[10%] z-0 pointer-events-none">
+                                    <div className="absolute inset-[10%] z-20 pointer-events-none">
                                         {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
                                             const phaseOffset = (index % 4) * 0.08 + Math.floor(index / 4) * 0.06;
                                             return (
@@ -171,8 +171,8 @@ export function GridBoard({
                                                         left: sparkle.left,
                                                         width: sparkle.size,
                                                         height: sparkle.size,
-                                                        backgroundColor: 'rgba(45, 212, 191, 0.95)',
-                                                        boxShadow: '0 0 8px rgba(45, 212, 191, 0.85)',
+                                                        backgroundColor: 'rgba(254, 249, 195, 0.98)',
+                                                        boxShadow: '0 0 10px rgba(253, 224, 71, 0.95)',
                                                         animation: `conjure-sparkle ${sparkle.duration}s ease-in-out ${sparkle.delay + phaseOffset}s infinite`,
                                                     }}
                                                 />
@@ -181,7 +181,7 @@ export function GridBoard({
                                     </div>
                                 )}
                                 {isTarget && (
-                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>
+                                    <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>
                                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M12 19V5" /><path d="M5 12l7-7 7 7" />
                                         </svg>

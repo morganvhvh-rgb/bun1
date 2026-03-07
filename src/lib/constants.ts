@@ -66,7 +66,7 @@ export const CATEGORY_ACCENT_HEX: Record<string, string> = {
     Armor: "#3b82f6",
     Magic: "#ec4899",
     Treasure: "#eab308",
-    Special: "#d97706",
+    Special: "#92400e",
 };
 
 export const CATEGORY_TEXT_THEME: Record<string, string> = {
@@ -78,7 +78,7 @@ export const CATEGORY_TEXT_THEME: Record<string, string> = {
     Armor: "text-blue-500",
     Magic: "text-pink-500",
     Treasure: "text-yellow-500",
-    Special: "text-amber-500",
+    Special: "text-[#92400e]",
 };
 
 export const SYMBOL_KEYS: SymbolName[] = [
@@ -276,7 +276,7 @@ export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
         className: "text-yellow-500 border-yellow-500/40 bg-yellow-500/15",
     },
     Special: {
-        className: "text-amber-500 border-amber-500/40 bg-amber-600/15",
+        className: "text-[#92400e] border-[#92400e]/40 bg-[#92400e]/15",
     },
 };
 
