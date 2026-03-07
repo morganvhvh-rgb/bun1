@@ -11,9 +11,7 @@ interface ConjureModalProps {
 
 const CONJURE_SYMBOLS: SymbolName[] = ['two-hearts', 'sapphire', 'lightning-trio'];
 const REVEAL_DELAY = 2500;
-const FADE_DURATION = 400;
 const SPARKLE_COUNT = 40;
-const COLOR_CYCLE_SPEED = 2.0;
 
 const EFFECT_LABELS: Record<string, string> = {
     'two-hearts': 'Apply current magic to HP',
@@ -33,38 +31,61 @@ function generateSparkles(count: number) {
 }
 
 export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
-    const [phase, setPhase] = useState<'waiting' | 'fading' | 'revealed'>('waiting');
+    const [phase, setPhase] = useState<'waiting' | 'revealed'>('waiting');
     const [winnerIndex, setWinnerIndex] = useState<number>(0);
+    const [displayIndex, setDisplayIndex] = useState<number>(0);
     const [sessionKey, setSessionKey] = useState(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const sparkles = useMemo(() => generateSparkles(SPARKLE_COUNT), [sessionKey]);
 
     const prevOpenRef = useRef(false);
     if (isOpen && !prevOpenRef.current) {
-        // Reset session on open (synchronous, avoids setState-in-effect)
+        // Reset session on open
         setPhase('waiting');
-        setWinnerIndex(Math.floor(Math.random() * CONJURE_SYMBOLS.length));
+        const winner = Math.floor(Math.random() * CONJURE_SYMBOLS.length);
+        setWinnerIndex(winner);
+        setDisplayIndex(Math.floor(Math.random() * CONJURE_SYMBOLS.length));
         setSessionKey(prev => prev + 1);
     }
     prevOpenRef.current = isOpen;
 
     useEffect(() => {
         if (!isOpen || phase !== 'waiting') return;
-        const timer = setTimeout(() => setPhase('fading'), REVEAL_DELAY);
-        return () => clearTimeout(timer);
-    }, [isOpen, phase, sessionKey]);
 
-    useEffect(() => {
-        if (!isOpen || phase !== 'fading') return;
-        const timer = setTimeout(() => {
-            setPhase('revealed');
-            onResult(CONJURE_SYMBOLS[winnerIndex] as 'two-hearts' | 'sapphire' | 'lightning-trio');
-        }, FADE_DURATION);
-        return () => clearTimeout(timer);
-    }, [isOpen, phase, winnerIndex, onResult]);
+        let timeoutId: ReturnType<typeof setTimeout>;
+        let speed = 50; 
+        let totalElapsed = 0;
+
+        const tick = () => {
+            totalElapsed += speed;
+            
+            if (totalElapsed >= REVEAL_DELAY) {
+                setDisplayIndex(winnerIndex);
+                setPhase('revealed');
+                onResult(CONJURE_SYMBOLS[winnerIndex] as 'two-hearts' | 'sapphire' | 'lightning-trio');
+            } else {
+                setDisplayIndex(prev => {
+                    let next;
+                    do {
+                        next = Math.floor(Math.random() * CONJURE_SYMBOLS.length);
+                    } while (next === prev);
+                    return next;
+                });
+                
+                // exponential slowdown
+                const progress = totalElapsed / REVEAL_DELAY;
+                speed = 50 + Math.pow(progress, 3) * 400;
+                timeoutId = setTimeout(tick, speed);
+            }
+        };
+
+        timeoutId = setTimeout(tick, speed);
+        return () => clearTimeout(timeoutId);
+    }, [isOpen, phase, winnerIndex, onResult, sessionKey]);
 
     if (!isOpen) return null;
     const winnerName = CONJURE_SYMBOLS[winnerIndex];
+    const displayName = CONJURE_SYMBOLS[displayIndex];
 
     return (
         <>
@@ -85,22 +106,20 @@ export function ConjureModal({ isOpen, onClose, onResult }: ConjureModalProps) {
                         ))}
 
                         <AnimatePresence mode="wait">
-                            {(phase === 'waiting' || phase === 'fading') && (
-                                <motion.div key="symbols-row" className="flex items-center gap-8"
-                                    initial={{ opacity: 1 }} animate={{ opacity: phase === 'fading' ? 0 : 1 }} exit={{ opacity: 0 }}
-                                    transition={{ duration: FADE_DURATION / 1000, ease: 'easeOut' }}
+                            {phase === 'waiting' && (
+                                <motion.div 
+                                    key={displayName + sessionKey} // force re-render for hard cut/simple cycling
+                                    initial={{ scale: 0.8, opacity: 0.5 }}
+                                    animate={{ scale: 1.5, opacity: 1 }}
+                                    exit={{ scale: 1.2, opacity: 0 }}
+                                    transition={{ duration: 0.1 }}
+                                    className="flex items-center justify-center absolute"
                                 >
-                                    {CONJURE_SYMBOLS.map((symbolName, i) => (
-                                        <div key={symbolName} className="flex items-center justify-center" style={{
-                                            animation: phase === 'waiting' ? `conjure-color-pulse ${COLOR_CYCLE_SPEED}s linear infinite ${i * 0.1}s` : undefined,
-                                        }}>
-                                            <Icon name={symbolName} scale={4} />
-                                        </div>
-                                    ))}
+                                    <Icon name={displayName} scale={3} />
                                 </motion.div>
                             )}
                             {phase === 'revealed' && (
-                                <motion.div key="winner" className="flex items-center justify-center" initial={{ opacity: 0, scale: 1.5 }} animate={{ opacity: 1, scale: 2.5 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
+                                <motion.div key="winner" className="flex items-center justify-center z-10" initial={{ opacity: 0, scale: 1.5 }} animate={{ opacity: 1, scale: 2.5 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
                                     <Icon name={winnerName} scale={2} tintColor="#ec4899" />
                                 </motion.div>
                             )}

@@ -28,10 +28,18 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
         >
-            {/* Top row: Avatar + Stats */}
-            <div className="flex-1 flex items-center min-h-0 min-w-0 w-full px-1 gap-2">
-                {/* Left: Avatar */}
-                <div className="shrink-0 flex items-center justify-center scale-[0.9] origin-center pl-1 w-[4rem]">
+            {/* Top row: Stats + Avatar + Stats */}
+            <div className="flex-1 flex items-center justify-between min-h-0 min-w-0 w-full px-1 gap-2">
+                {/* Left: ATK Stat */}
+                <div className="flex-1 flex flex-col justify-center gap-1.5 min-w-0 py-1 items-start">
+                    <div className="flex flex-col items-center gap-1">
+                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
+                        <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider truncate", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{atk}</span>
+                    </div>
+                </div>
+
+                {/* Center: Avatar */}
+                <div className="shrink-0 flex items-center justify-center scale-[0.9] origin-center w-[4rem]">
                     <motion.div animate={animStatus} variants={enemyIconVariants} initial="idle" className="relative drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] pointer-events-auto flex justify-center items-center">
                         <Icon name={name} scale={4.5} tintColor={SYMBOL_THEME[name]} />
                         {hasType && (
@@ -42,16 +50,10 @@ function EnemyCard({ name, hp, maxHp, atk, lvl, type, isVisible, animStatus }: E
                     </motion.div>
                 </div>
 
-                {/* Right: Vertical Stats (3 Rows) */}
-                <div className="flex-1 flex flex-col justify-center gap-1.5 min-w-0 py-1">
-                    {/* ATK Row */}
-                    <div className="flex items-center gap-1 w-full">
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">ATK</span>
-                        <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider truncate", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{atk}</span>
-                    </div>
-                    {/* LVL Row */}
-                    <div className="flex items-center gap-1 w-full">
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none w-8 shrink-0">LVL</span>
+                {/* Right: LVL Stat */}
+                <div className="flex-1 flex flex-col justify-center gap-1.5 min-w-0 py-1 items-end">
+                    <div className="flex flex-col items-center gap-1">
+                        <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">LVL</span>
                         <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider truncate", CATEGORY_TEXT_THEME.Nature)} style={{ fontVariantNumeric: 'tabular-nums' }}>{lvl}</span>
                     </div>
                 </div>

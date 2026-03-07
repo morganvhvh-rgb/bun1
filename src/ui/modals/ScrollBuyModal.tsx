@@ -66,8 +66,7 @@ export function ScrollBuyModal({
                                         let yPos = 10 + archY;
 
                                         if (isRevealed && (scrollStage === 'lifting' || scrollStage === 'faded')) {
-                                            xPos = 0;
-                                            yPos = -25;
+                                            yPos -= 25;
                                         }
 
                                         const opacity = (!isRevealed && scrollStage === 'faded') ? 0 : 1;
