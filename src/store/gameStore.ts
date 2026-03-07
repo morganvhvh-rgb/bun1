@@ -386,7 +386,7 @@ export const useGameStore = create<GameState>()(
                         const foodMultiplier = state.keptScrolls.includes('food-scroll') && SYMBOL_CATEGORIES[symbol.name as SymbolName] === 'Food' ? 2 : 1;
 
                         switch (symbol.name) {
-                            case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 20 : 10) * foodMultiplier); break;
+                            case 'apple': state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (isBoosted ? 30 : 15) * foodMultiplier); break;
                             case 'crab-claw':
                                 state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
                                 state.moves += (isBoosted ? 2 : 1) * foodMultiplier;
@@ -407,8 +407,8 @@ export const useGameStore = create<GameState>()(
                             case 'shield': state.playerGear += (isBoosted ? 14 : 7); break;
                             case 'knight-helmet': state.playerGear += (isBoosted ? 4 : 2); break;
                             case 'crystal-wand':
-                                state.playerMagic += (isBoosted ? 10 : 5); break;
-                            case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
+                                state.playerMagic += (isBoosted ? 6 : 3); break;
+                            case 'fairy-wand': state.playerMagic += (isBoosted ? 12 : 6); break;
                             case 'bell': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - (isBoosted ? 4 : 2)); break;
                         }
                     }
@@ -501,7 +501,7 @@ export const useGameStore = create<GameState>()(
                         if (keptSymbol.battleCount <= 0) {
                             if (keptSymbol.name === 'apple') {
                                 const foodMultiplier = state.keptScrolls.includes('food-scroll') ? 2 : 1;
-                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (keptSymbol.isBoosted ? 20 : 10) * foodMultiplier);
+                                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + (keptSymbol.isBoosted ? 30 : 15) * foodMultiplier);
                             }
                             state.keptSymbols[i] = null;
                         }

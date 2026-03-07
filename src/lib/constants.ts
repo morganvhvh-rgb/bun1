@@ -163,7 +163,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "spider-face": "Enemy",
     "eye-monster": "Enemy",
 
-    "apple": "Heal 10 HP",
+    "apple": "Heal 15 HP",
     "crab-claw": "+3 Max HP +1 EXP",
     "brandy-bottle": "-10 HP & +5 Max HP",
 
@@ -180,8 +180,8 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "shield": "+7 Gear",
     "knight-helmet": "+2 Gear",
 
-    "crystal-wand": "+5 Magic",
-    "fairy-wand": "+3 Magic",
+    "crystal-wand": "+3 Magic",
+    "fairy-wand": "+6 Magic",
 
     "gold-bar": "+16 Gold",
     "gem-pendant": "+8 Gold +2 Gear",
