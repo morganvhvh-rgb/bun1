@@ -178,10 +178,20 @@ export function useGridInteraction(scrollFlow: ScrollFlowCallbacks) {
             if (slidesCount >= maxSlides) return;
             const { row, col } = getCoordinates(index);
             const targets: number[] = [];
-            if (col > 0) targets.push(getIndex(row, col - 1));
-            if (col < 3) targets.push(getIndex(row, col + 1));
-            if (row > 0) targets.push(getIndex(row - 1, col));
-            if (row < 2) targets.push(getIndex(row + 1, col));
+
+            const checkTarget = (idx: number) => {
+                const targetSymbol = gridSymbols[idx];
+                if (!targetSymbol) return false;
+                if (targetSymbol.name === 'key') return true;
+                const category = SYMBOL_CATEGORIES[targetSymbol.name as SymbolName];
+                return category === 'Nature' || category === 'Treasure';
+            };
+
+            if (col > 0 && checkTarget(getIndex(row, col - 1))) targets.push(getIndex(row, col - 1));
+            if (col < 3 && checkTarget(getIndex(row, col + 1))) targets.push(getIndex(row, col + 1));
+            if (row > 0 && checkTarget(getIndex(row - 1, col))) targets.push(getIndex(row - 1, col));
+            if (row < 2 && checkTarget(getIndex(row + 1, col))) targets.push(getIndex(row + 1, col));
+
             setGlowingIndices(targets);
             setActiveRogueIndex(index);
             setSelectedIndex(index);

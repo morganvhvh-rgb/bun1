@@ -57,18 +57,18 @@ export function HeroPanel({ playerAnim, isBattleRunning, onCharacterClick }: Her
                 {/* Bottom: Stats, HP, and EXP Rows */}
                 <div className="flex flex-col gap-2.5 w-full mt-auto z-10 shrink-0">
                     {/* Stats Row */}
-                    <div className="flex items-center justify-between w-full px-2">
+                    <div className="flex items-center justify-between w-full pl-1 pr-2">
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">ATK</span>
-                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerTotalAtk}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider min-w-[2ch]", CATEGORY_TEXT_THEME.Weapon)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerTotalAtk}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">Magic</span>
-                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Magic)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerMagic}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider min-w-[2ch]", CATEGORY_TEXT_THEME.Magic)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerMagic}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <span className="text-[9px] font-bold text-zinc-500 uppercase leading-none">Gear</span>
-                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider", CATEGORY_TEXT_THEME.Armor)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerGear}</span>
+                            <span className={cn("text-[13px] font-bold leading-none font-mono tracking-wider min-w-[2ch]", CATEGORY_TEXT_THEME.Armor)} style={{ fontVariantNumeric: 'tabular-nums' }}>{playerGear}</span>
                         </div>
                     </div>
 
