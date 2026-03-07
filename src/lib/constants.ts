@@ -25,6 +25,7 @@ export const SYMBOL_MAP = {
     "relic-blade": "relic-blade",
     "crossbow": "crossbow",
     "daggers": "daggers",
+    "bell": "bell",
 
     // Armor
     "shield": "shield",
@@ -38,23 +39,15 @@ export const SYMBOL_MAP = {
     "gold-bar": "gold-bar",
     "gem-pendant": "gem-pendant",
 
-    // Item
+    // Special
     "key": "key",
     "scroll-unfurled": "scroll-unfurled",
-    "item-scroll": "scroll-unfurled",
     "food-scroll": "scroll-unfurled",
     "armor-scroll": "scroll-unfurled",
     "magic-scroll": "scroll-unfurled",
     "weapon-scroll": "scroll-unfurled",
-    "music-scroll": "scroll-unfurled",
     "special-scroll": "scroll-unfurled",
     "nature-scroll": "scroll-unfurled",
-    "book": "book",
-    "spades-card": "spades-card",
-
-    // Music
-    "bell": "bell",
-    "ocarina": "ocarina",
 
     // Conjure Magic
     "two-hearts": "two-hearts",
@@ -70,7 +63,7 @@ export const SYMBOL_KEYS: SymbolName[] = [
     // Nature
     "clover", "pine-tree", "dead-tree",
     // Weapon
-    "axe", "relic-blade", "crossbow", "daggers",
+    "axe", "relic-blade", "crossbow", "daggers", "bell",
     // Armor
     "shield", "knight-helmet",
     // Magic
@@ -78,9 +71,7 @@ export const SYMBOL_KEYS: SymbolName[] = [
     // Treasure
     "gold-bar", "gem-pendant",
     // Special
-    "key", "scroll-unfurled", "book", "spades-card",
-    // Music
-    "bell", "ocarina",
+    "key", "scroll-unfurled",
 ];
 
 export const SYMBOL_THEME: Record<SymbolName, string> = {
@@ -108,6 +99,7 @@ export const SYMBOL_THEME: Record<SymbolName, string> = {
     "relic-blade": "#94a3b8",
     "crossbow": "#94a3b8",
     "daggers": "#94a3b8",
+    "bell": "#94a3b8",
 
     // Armor (Blue)
     "shield": "#3b82f6",
@@ -124,22 +116,12 @@ export const SYMBOL_THEME: Record<SymbolName, string> = {
     // Special (Brown)
     "key": "#a16207",
     "scroll-unfurled": "#a16207",
-    "item-scroll": "#d4d4d8", // zinc-300
     "food-scroll": "#b91c1c", // red-700
     "armor-scroll": "#1d4ed8", // blue-700
     "magic-scroll": "#be185d", // pink-700
     "weapon-scroll": "#475569", // slate-600
-    "music-scroll": "#c2410c", // orange-700
     "special-scroll": "#713f12", // yellow-900 (dark brown)
     "nature-scroll": "#15803d", // green-700
-
-    // Item (White)
-    "book": "#ffffff",
-    "spades-card": "#ffffff",
-
-    // Music (Orange)
-    "bell": "#f97316",
-    "ocarina": "#f97316",
 
     // Conjure Magic
     "two-hearts": "#ec4899",
@@ -169,6 +151,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "relic-blade": "+1 ATK +1 Gear",
     "crossbow": "+1 ATK +4 Gear",
     "daggers": "+1 ATK +1 Gear",
+    "bell": "-2 ATK",
 
     "shield": "+7 Gear",
     "knight-helmet": "+2 Gear",
@@ -181,19 +164,13 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
 
     "key": "unlock symbol inventory",
     "scroll-unfurled": "???",
-    "item-scroll": "if 2 item symbols are equipped, gain 80 Gold (one-time)",
     "food-scroll": "all food effects happen twice",
     "armor-scroll": "+2 Max HP for every 5 Gear",
     "magic-scroll": "next fatal strike will miss, damage added to Magic (one-time)",
     "weapon-scroll": "equipping weapon symbols costs 0 Gold",
-    "music-scroll": "if 2 music symbols are equipped, earn 1 Gold per attack",
     "special-scroll": "if all inventory slots are unlocked, keys are as valuable as Gold bars",
     "nature-scroll": "if Rogue is LVL 3+, Rogue can slide twice per spin",
-    "book": "Conjure Magic x2",
-    "spades-card": "",
 
-    "bell": "-2 ATK",
-    "ocarina": "-1 ATK",
 };
 
 export const SYMBOL_CATEGORIES: Record<SymbolName, string> = {
@@ -218,6 +195,7 @@ export const SYMBOL_CATEGORIES: Record<SymbolName, string> = {
     "relic-blade": "Weapon",
     "crossbow": "Weapon",
     "daggers": "Weapon",
+    "bell": "Weapon",
 
     "shield": "Armor",
     "knight-helmet": "Armor",
@@ -230,20 +208,12 @@ export const SYMBOL_CATEGORIES: Record<SymbolName, string> = {
 
     "key": "Special",
     "scroll-unfurled": "Special",
-    "item-scroll": "Special",
     "food-scroll": "Special",
     "armor-scroll": "Special",
     "magic-scroll": "Special",
     "weapon-scroll": "Special",
-    "music-scroll": "Special",
     "special-scroll": "Special",
     "nature-scroll": "Special",
-    "book": "Item",
-    "spades-card": "Item",
-
-    "bell": "Music",
-    "ocarina": "Music",
-
     // Conjure Magic
     "two-hearts": "Magic",
     "sapphire": "Magic",
@@ -284,12 +254,6 @@ export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
     Special: {
         className: "text-yellow-100 border-yellow-300/35 bg-yellow-700/15",
     },
-    Item: {
-        className: "text-zinc-200 border-zinc-300/35 bg-zinc-500/12",
-    },
-    Music: {
-        className: "text-orange-200 border-orange-300/35 bg-orange-500/12",
-    },
 };
 
 export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
@@ -299,19 +263,14 @@ export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
-    "spades-card": "[perspective-dice-random symbol] costs 1 less / stacks",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
-    "book": "conjure magic effect applies twice",
     "crystal-wand": "increase attack by current magic / doesnt stack",
     "axe": "attack twice per turn if no other weapon symbols equipped / doesnt stack",
     "bell": "every attack also deals 1 damage to future enemies / doesnt stack",
-    "ocarina": "attacks have a 15% chance to heal for same amount / doesnt stack",
     "armor-scroll": "+2 max HP for every 5 GEAR",
-    "item-scroll": "if 2 item symbols are equipped, gain 80 gold (one-time)",
     "food-scroll": "all food effects happen twice",
     "magic-scroll": "next fatal strike will miss, damage added to magic (one-time)",
     "weapon-scroll": "equipping weapon symbols costs 0 gold",
-    "music-scroll": "if 2 music symbols are equipped, earn 1 gold per attack",
     "special-scroll": "if all inventory slots are unlocked, keys are now as valuable as gold bars",
     "nature-scroll": "if Rogue is LVL 3+, Rogue can slide twice per spin",
 };
@@ -334,8 +293,8 @@ export const GAME_CONSTANTS = {
 };
 
 export const ALL_SCROLL_COLORS: SymbolName[] = [
-    "item-scroll", "food-scroll", "armor-scroll", "magic-scroll",
-    "weapon-scroll", "music-scroll", "special-scroll", "nature-scroll"
+    "food-scroll", "armor-scroll", "magic-scroll",
+    "weapon-scroll", "special-scroll", "nature-scroll"
 ];
 
 export interface BattleRoundEntry {

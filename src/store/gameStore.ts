@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
-import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS } from '@/lib/constants';
+import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS } from '@/lib/constants';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
@@ -29,7 +29,6 @@ interface GameState {
     playerGear: number;
     isFirstEnemyAttack: boolean;
     conjureMagicUsed: boolean;
-    itemScrollClaimed: boolean;
     magicScrollUsed: boolean;
     battleCount: number;
     globalEnemyHpDebuff: number;
@@ -46,7 +45,6 @@ interface GameState {
     removeGridSymbol: (id: string) => void;
     addKeptScroll: (name: SymbolName) => void;
     spendGold: (amount: number) => void;
-    addGold: (amount: number) => void;
     resetBattleTarget: () => void;
     resetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
@@ -58,7 +56,6 @@ interface GameState {
     setEnemyVisibility: (target: 'enemy1' | 'enemy2', isVisible: boolean) => void;
     applyLevelUp: (perk: "full_heal_max_hp" | "nature_2x_exp" | "full_heal") => void;
     applyConjureMagic: (result: 'two-hearts' | 'sapphire' | 'lightning-trio') => void;
-    healPlayer: (amount: number) => void;
 }
 
 export interface SlideEffect {
@@ -71,6 +68,112 @@ export interface SlideResult {
     effects: SlideEffect[];
 }
 
+const VALID_SCROLL_NAMES = new Set<string>(ALL_SCROLL_COLORS);
+const INITIAL_KEPT_SYMBOLS: (KeptSymbol | null)[] = [null, null, null, null, null, null];
+
+const getRandomBoardSymbol = (): SymbolName => {
+    const randomIndex = Math.floor(Math.random() * SYMBOL_KEYS.length);
+    return SYMBOL_KEYS[randomIndex];
+};
+
+const isSymbolName = (value: unknown): value is SymbolName =>
+    typeof value === 'string' && value in SYMBOL_CATEGORIES;
+
+const sanitizePersistedGrid = (value: unknown) => {
+    if (!Array.isArray(value) || value.length !== 12) {
+        return { grid: generateRandomSymbols(), hadInvalidContent: true };
+    }
+
+    let hasHood = false;
+    let hadInvalidContent = false;
+
+    const grid = value.map((entry) => {
+        if (entry === null) return null;
+        if (!entry || typeof entry !== 'object') {
+            hadInvalidContent = true;
+            return { id: crypto.randomUUID(), name: getRandomBoardSymbol() };
+        }
+
+        const symbol = entry as Record<string, unknown>;
+        const rawName = symbol.name;
+        const id = typeof symbol.id === 'string' ? symbol.id : crypto.randomUUID();
+        const isBoosted = symbol.isBoosted === true ? true : undefined;
+
+        if (rawName === 'hood') {
+            hasHood = true;
+            return { id, name: 'hood' as SymbolName, isBoosted };
+        }
+
+        if (!isSymbolName(rawName)) {
+            hadInvalidContent = true;
+            return { id, name: getRandomBoardSymbol(), isBoosted };
+        }
+
+        return { id, name: rawName as SymbolName, isBoosted };
+    });
+
+    if (!hasHood) {
+        return { grid: generateRandomSymbols(), hadInvalidContent: true };
+    }
+
+    return { grid, hadInvalidContent };
+};
+
+const sanitizePersistedKeptSymbols = (value: unknown) => {
+    if (!Array.isArray(value)) {
+        return { keptSymbols: [...INITIAL_KEPT_SYMBOLS], hadInvalidContent: true };
+    }
+
+    let hadInvalidContent = false;
+    const keptSymbols = INITIAL_KEPT_SYMBOLS.map((_, index) => {
+        const entry = value[index];
+        if (entry === null || entry === undefined) return null;
+        if (!entry || typeof entry !== 'object') {
+            hadInvalidContent = true;
+            return null;
+        }
+
+        const keptSymbol = entry as Record<string, unknown>;
+        const rawName = keptSymbol.name;
+
+        if (!isSymbolName(rawName)) {
+            hadInvalidContent = true;
+            return null;
+        }
+
+        const battleCount = typeof keptSymbol.battleCount === 'number'
+            ? Math.max(1, Math.floor(keptSymbol.battleCount))
+            : 2;
+
+        return {
+            name: rawName,
+            battleCount,
+            isBoosted: keptSymbol.isBoosted === true ? true : undefined,
+        };
+    });
+
+    return { keptSymbols, hadInvalidContent };
+};
+
+const sanitizePersistedKeptScrolls = (value: unknown) => {
+    if (!Array.isArray(value)) {
+        return { keptScrolls: [] as SymbolName[], hadInvalidContent: true };
+    }
+
+    let hadInvalidContent = false;
+    const keptScrolls = Array.from(new Set(
+        value.flatMap((entry): SymbolName[] => {
+            if (!isSymbolName(entry) || !VALID_SCROLL_NAMES.has(entry)) {
+                hadInvalidContent = true;
+                return [];
+            }
+            return [entry];
+        })
+    )).slice(0, GAME_CONSTANTS.MAX_KEPT_SCROLLS);
+
+    return { keptScrolls, hadInvalidContent };
+};
+
 const generateRandomSymbols = (): GridSymbol[] => {
     const totalSlots = 12;
     const characterIndex = Math.floor(Math.random() * totalSlots);
@@ -82,11 +185,9 @@ const generateRandomSymbols = (): GridSymbol[] => {
                 name: "hood" as SymbolName
             };
         }
-        const randomIndex = Math.floor(Math.random() * SYMBOL_KEYS.length);
-        const name = SYMBOL_KEYS[randomIndex];
         return {
             id: crypto.randomUUID(),
-            name: name
+            name: getRandomBoardSymbol()
         };
     });
 };
@@ -132,7 +233,6 @@ export const useGameStore = create<GameState>()(
             playerGear: GAME_CONSTANTS.INITIAL_PLAYER_GEAR,
             isFirstEnemyAttack: true,
             conjureMagicUsed: false,
-            itemScrollClaimed: false,
             magicScrollUsed: false,
             battleCount: 1,
             globalEnemyHpDebuff: 0,
@@ -149,12 +249,8 @@ export const useGameStore = create<GameState>()(
             payForShuffle: () => {
                 let success = false;
                 set((state) => {
-                    const spadesCards = state.keptSymbols.filter(symbol => symbol?.name === 'spades-card');
-                    const spadesDiscount = spadesCards.reduce((acc, symbol) => acc + (symbol?.isBoosted ? 2 : 1), 0);
-                    const cost = Math.max(0, GAME_CONSTANTS.SHUFFLE_COST - spadesDiscount);
-
-                    if (state.gold >= cost) {
-                        state.gold -= cost;
+                    if (state.gold >= GAME_CONSTANTS.SHUFFLE_COST) {
+                        state.gold -= GAME_CONSTANTS.SHUFFLE_COST;
                         success = true;
                     }
                 });
@@ -313,16 +409,7 @@ export const useGameStore = create<GameState>()(
                             case 'crystal-wand':
                                 state.playerMagic += (isBoosted ? 10 : 5); break;
                             case 'fairy-wand': state.playerMagic += (isBoosted ? 6 : 3); break;
-                            case 'ocarina': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - 1); break;
                             case 'bell': state.playerBaseAtk = Math.max(0, state.playerBaseAtk - (isBoosted ? 4 : 2)); break;
-                        }
-
-                        if (state.keptScrolls.includes('item-scroll') && !state.itemScrollClaimed) {
-                            const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
-                            if (itemCategoryCount >= 2) {
-                                state.gold += 80;
-                                state.itemScrollClaimed = true;
-                            }
                         }
                     }
                 });
@@ -337,23 +424,11 @@ export const useGameStore = create<GameState>()(
             addKeptScroll: (name) => set((state) => {
                 if (state.keptScrolls.length < GAME_CONSTANTS.MAX_KEPT_SCROLLS) {
                     state.keptScrolls.push(name);
-
-                    if (name === 'item-scroll' && !state.itemScrollClaimed) {
-                        const itemCategoryCount = state.keptSymbols.filter(symbolSlot => symbolSlot && SYMBOL_CATEGORIES[symbolSlot.name] === 'Item').length;
-                        if (itemCategoryCount >= 2) {
-                            state.gold += 80;
-                            state.itemScrollClaimed = true;
-                        }
-                    }
                 }
             }),
 
             spendGold: (amount) => set((state) => {
                 state.gold = Math.max(0, state.gold - amount);
-            }),
-
-            addGold: (amount) => set((state) => {
-                state.gold += amount;
             }),
 
             applyBattleDamage: (target, amount) => set((state) => {
@@ -467,7 +542,6 @@ export const useGameStore = create<GameState>()(
                 state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
-                state.itemScrollClaimed = false;
                 state.magicScrollUsed = false;
                 state.battleCount = 1;
                 state.globalEnemyHpDebuff = 0;
@@ -477,9 +551,7 @@ export const useGameStore = create<GameState>()(
 
             applyConjureMagic: (result) => set((state) => {
                 if (state.conjureMagicUsed) return;
-                const hasBook = state.keptSymbols.some(symbol => symbol?.name === 'book');
-                const multiplier = hasBook ? 2 : 1;
-                const magic = state.playerMagic * multiplier;
+                const magic = state.playerMagic;
                 switch (result) {
                     case 'two-hearts':
                         state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + magic);
@@ -501,10 +573,6 @@ export const useGameStore = create<GameState>()(
                 state.globalEnemyHpDebuff += amount;
             }),
 
-            healPlayer: (amount) => set((state) => {
-                state.playerHp = Math.min(calculateTotalMaxHp(state), state.playerHp + amount);
-            }),
-
             setHasSeenTutorial: (value) => set((state) => {
                 state.hasSeenTutorial = value;
             }),
@@ -516,7 +584,7 @@ export const useGameStore = create<GameState>()(
         })),
         {
             name: 'daily-rogue-storage',
-            version: 3,
+            version: 4,
             migrate: (persistedState: unknown, version) => {
                 if (!persistedState || typeof persistedState !== 'object') {
                     return persistedState as GameState;
@@ -535,6 +603,52 @@ export const useGameStore = create<GameState>()(
                 if (version < 3) {
                     if (!('rejectedLevelUpPerk' in state)) {
                         state.rejectedLevelUpPerk = null;
+                    }
+                }
+
+                if (version < 4) {
+                    const { grid, hadInvalidContent: gridHadInvalidContent } = sanitizePersistedGrid(state.grid);
+                    const { keptSymbols, hadInvalidContent: keptSymbolsHadInvalidContent } = sanitizePersistedKeptSymbols(state.keptSymbols);
+                    const { keptScrolls, hadInvalidContent: keptScrollsHadInvalidContent } = sanitizePersistedKeptScrolls(state.keptScrolls);
+                    const shouldResetRun = gridHadInvalidContent || keptSymbolsHadInvalidContent || keptScrollsHadInvalidContent;
+
+                    if (shouldResetRun) {
+                        state.grid = generateRandomSymbols();
+                        state.keptSymbols = [...INITIAL_KEPT_SYMBOLS];
+                        state.keptScrolls = [];
+                        state.unlockedSlots = { 3: false, 4: false, 5: false };
+                        state.levelUpPerks = [];
+                        state.gold = GAME_CONSTANTS.INITIAL_GOLD;
+                        state.moves = GAME_CONSTANTS.INITIAL_MOVES;
+                        state.playerHp = GAME_CONSTANTS.INITIAL_PLAYER_HP;
+                        state.playerMaxHp = GAME_CONSTANTS.INITIAL_PLAYER_HP;
+                        state.playerBaseAtk = GAME_CONSTANTS.INITIAL_PLAYER_ATK;
+                        state.playerMagic = GAME_CONSTANTS.INITIAL_PLAYER_MAGIC;
+                        state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
+                        state.isFirstEnemyAttack = true;
+                        state.conjureMagicUsed = false;
+                        state.magicScrollUsed = false;
+                        state.battleCount = 1;
+                        state.globalEnemyHpDebuff = 0;
+                        state.enemy1 = makeEnemy(BATTLE_ROUNDS[0].e1);
+                        state.enemy2 = makeEnemy(BATTLE_ROUNDS[0].e2!);
+                    } else {
+                        state.grid = grid;
+                        state.keptSymbols = keptSymbols;
+                        state.keptScrolls = keptScrolls;
+                    }
+
+                    const activeKeptScrolls = state.keptScrolls as SymbolName[];
+
+                    if (typeof state.playerHp === 'number' && typeof state.playerMaxHp === 'number' && typeof state.playerGear === 'number') {
+                        state.playerHp = Math.min(
+                            state.playerHp,
+                            calculateTotalMaxHp({
+                                playerMaxHp: state.playerMaxHp,
+                                keptScrolls: activeKeptScrolls,
+                                playerGear: state.playerGear,
+                            })
+                        );
                     }
                 }
 
@@ -560,9 +674,8 @@ export const selectCrossbowCount = (state: GameState) =>
     state.keptSymbols.filter(symbol => symbol?.name === 'crossbow').length;
 
 export const selectShuffleCost = (state: GameState) => {
-    const spadesCards = state.keptSymbols.filter(symbol => symbol?.name === 'spades-card');
-    const spadesDiscount = spadesCards.reduce((acc, symbol) => acc + (symbol?.isBoosted ? 2 : 1), 0);
-    return Math.max(0, GAME_CONSTANTS.SHUFFLE_COST - spadesDiscount);
+    void state;
+    return GAME_CONSTANTS.SHUFFLE_COST;
 };
 
 export const selectHasTwoFairyWands = (state: GameState) =>
@@ -579,13 +692,4 @@ export const selectBellCount = (state: GameState) => {
     const bells = state.keptSymbols.filter(symbol => symbol?.name === 'bell');
     if (bells.length === 0) return 0;
     return bells.some(b => b?.isBoosted) ? 2 : 1;
-};
-
-export const selectHasOcarina = (state: GameState) =>
-    state.keptSymbols.some(symbol => symbol?.name === 'ocarina');
-
-export const selectIsMusicScrollActive = (state: GameState) => {
-    if (!state.keptScrolls.includes('music-scroll')) return false;
-    const musicCount = state.keptSymbols.filter(symbol => symbol && SYMBOL_CATEGORIES[symbol.name] === 'Music').length;
-    return musicCount >= 2;
 };

@@ -64,8 +64,6 @@ function formatStatText(text: string, symbolName: string) {
             colorClass = "text-red-500";
         } else if (lower.includes('exp')) {
             colorClass = "text-green-500";
-        } else if (lower.includes('???') && symbolName === 'spades-card') {
-            colorClass = "text-[#e8d4b8]";
         }
 
         return colorClass ? <span key={i} className={colorClass}>{part}</span> : <span key={i}>{part}</span>;
