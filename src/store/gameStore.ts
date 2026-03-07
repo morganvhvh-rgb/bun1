@@ -440,12 +440,11 @@ export const useGameStore = create<GameState>()(
                         finalDamage = Math.max(0, finalDamage - helmetCount);
                     }
 
-                    if (state.isFirstEnemyAttack) {
-                        const hasShield = state.keptSymbols.some(symbol => symbol?.name === 'shield');
-                        if (hasShield) {
-                            state.playerGear = Math.max(0, state.playerGear - finalDamage);
-                            finalDamage = 0;
-                        }
+                    const hasShield = state.keptSymbols.some(symbol => symbol?.name === 'shield');
+                    if (hasShield && state.playerGear > 0 && finalDamage > 0) {
+                        const absorbedDamage = Math.min(state.playerGear, finalDamage);
+                        state.playerGear -= absorbedDamage;
+                        finalDamage -= absorbedDamage;
                     }
 
                     if (state.playerHp - finalDamage <= 0 && state.keptScrolls.includes('magic-scroll') && !state.magicScrollUsed) {

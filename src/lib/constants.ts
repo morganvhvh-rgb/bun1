@@ -284,7 +284,7 @@ export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "apple": "also heal when symbol is removed",
     "daggers": "first attack happens 3 times / doesnt stack",
     "relic-blade": "increase attack by current experience / doesnt stack",
-    "shield": "first enemy attack applies to gear instead of hp / doesnt stack",
+    "shield": "enemy attacks apply to gear instead of hp / doesnt stack",
     "knight-helmet": "if gear >3, all enemy attacks reduced by 1 / stacks",
     "crossbow": "+10 atk against flying enemies / stacks",
     "fairy-wand": "if 2 wands equipped, conjure magic before battle",
