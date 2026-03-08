@@ -427,7 +427,8 @@ export const useGameStore = create<GameState>()(
                             case 'brandy-bottle':
                                 for (let i = 0; i < foodMultiplier; i++) {
                                     state.playerHp = Math.max(0, state.playerHp - (isBoosted ? 20 : 10));
-                                    state.playerMaxHp += (isBoosted ? 10 : 5);
+                                    const bonusMaxHp = (isBoosted ? 10 : 5) + (state.levelUpPerks.length >= 2 ? (isBoosted ? 2 : 1) : 0);
+                                    state.playerMaxHp += bonusMaxHp;
                                 }
                                 break;
                             case 'axe':

@@ -285,6 +285,7 @@ export const CATEGORY_BADGE_THEME: Record<string, CategoryBadgeTheme> = {
 export const SYMBOL_EXTRA_EFFECTS: Partial<Record<SymbolName, string>> = {
     "apple": "also heal when symbol is removed",
     "crab-claw": "on equip, deal 1 damage to a random enemy",
+    "brandy-bottle": "if LVL 3+, gain an extra +1 Max HP",
     "daggers": "first attack happens 3 times",
     "relic-blade": "increase attack by current experience",
     "shield": "enemy attacks apply to gear instead of hp",

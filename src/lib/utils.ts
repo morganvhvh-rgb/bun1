@@ -61,6 +61,7 @@ export const getStatText = (
     areAllSlotsUnlocked: boolean = false
 ): string => {
     const expMultiplier = levelUpPerks.includes("nature_2x_exp") ? 2 : 1;
+    const isLevel3Plus = levelUpPerks.length >= 2;
 
     if (name === 'hood') return '';
 
@@ -68,6 +69,7 @@ export const getStatText = (
         if (name === 'clover') return `+${2 * expMultiplier} EXP +2 Magic`;
         if (name === 'pine-tree') return `+${4 * expMultiplier} EXP`;
         if (name === 'dead-tree') return `-${3 * expMultiplier} EXP +5 Magic`;
+        if (name === 'brandy-bottle') return isLevel3Plus ? "-10 HP & +6 Max HP" : "-10 HP & +5 Max HP";
         if (name === 'key' && hasSpecialScroll && areAllSlotsUnlocked) return '+16 gold';
         return SYMBOL_STATS[name] || "???";
     }
@@ -75,7 +77,7 @@ export const getStatText = (
     switch (name) {
         case 'apple': return "Heal 30 HP";
         case 'crab-claw': return "+6 Max HP +2 EXP";
-        case 'brandy-bottle': return "-20 HP & +10 Max HP";
+        case 'brandy-bottle': return isLevel3Plus ? "-20 HP & +12 Max HP" : "-20 HP & +10 Max HP";
         case 'clover': return `+${4 * expMultiplier} EXP +4 Magic`;
         case 'pine-tree': return `+${8 * expMultiplier} EXP`;
         case 'dead-tree': return `-${3 * expMultiplier} EXP +10 Magic`;

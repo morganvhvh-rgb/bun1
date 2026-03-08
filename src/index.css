@@ -126,20 +126,6 @@ textarea {
   }
 }
 
-@keyframes match-sparkle-halo {
-
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.86) rotate(0deg);
-  }
-
-  50% {
-    opacity: 0.78;
-    transform: scale(1.08) rotate(6deg);
-  }
-}
-
 @keyframes match-sparkle-twinkle {
   0% {
     opacity: 0;
@@ -160,21 +146,6 @@ textarea {
     opacity: 0;
     transform: translate(calc(-50% + var(--sparkle-drift-x, 0px)), calc(-50% + var(--sparkle-drift-y, 0px))) scale(0.45) rotate(48deg);
   }
-}
-
-.match-sparkle-halo {
-  position: absolute;
-  inset: 14%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 24%, transparent 58%),
-    radial-gradient(circle at 24% 30%, rgba(244, 114, 182, 0.3) 0%, transparent 38%),
-    radial-gradient(circle at 72% 28%, rgba(56, 189, 248, 0.28) 0%, transparent 36%),
-    radial-gradient(circle at 36% 78%, rgba(250, 204, 21, 0.26) 0%, transparent 42%),
-    radial-gradient(circle at 80% 70%, rgba(52, 211, 153, 0.22) 0%, transparent 38%);
-  filter: blur(10px);
-  mix-blend-mode: screen;
-  animation: match-sparkle-halo 2.4s ease-in-out infinite;
 }
 
 .match-sparkle {

@@ -78,7 +78,6 @@ function MatchSparkleCluster({ index }: { index: number }) {
 
     return (
         <div className="absolute inset-[-12%] z-20 pointer-events-none overflow-visible">
-            <span className="match-sparkle-halo" style={{ animationDelay: `${phaseOffset}s` }} />
             {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
                 const sparkleStyle = {
                     top: sparkle.top,
