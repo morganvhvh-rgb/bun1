@@ -4,7 +4,9 @@ import { immer } from 'zustand/middleware/immer';
 import type { GridSymbol, SymbolName, KeptSymbol } from '@/types/game';
 import type { LevelUpPerk } from '@/types/levelUp';
 import type { NextRunReward, NextRunBonuses } from '@/types/progression';
-import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS, ALL_LEVEL_UP_PERKS, EMPTY_NEXT_RUN_BONUSES, WAVE_REWARD_OPTIONS } from '@/lib/constants';
+import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS, ALL_LEVEL_UP_PERKS } from '@/lib/constants';
+import { getCompletedRunBattleCount, getNextBattleRound } from '@/lib/battleProgression';
+import { createEmptyNextRunBonuses, getRunStartStats, queueNextRunReward } from '@/lib/runBonuses';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
 interface GameState {
@@ -72,7 +74,6 @@ export interface SlideResult {
 
 const VALID_SCROLL_NAMES = new Set<string>(ALL_SCROLL_COLORS);
 const INITIAL_KEPT_SYMBOLS: (KeptSymbol | null)[] = [null, null, null, null, null, null];
-const createEmptyNextRunBonuses = (): NextRunBonuses => ({ ...EMPTY_NEXT_RUN_BONUSES });
 
 const getRandomBoardSymbol = (): SymbolName => {
     const randomIndex = Math.floor(Math.random() * SYMBOL_KEYS.length);
@@ -244,17 +245,10 @@ const makeEnemy = (e: { name: SymbolName; hp: number; atk: number; lvl: number; 
     isVisible: true as const,
 });
 
-const getStartingMaxHp = (bonuses: NextRunBonuses) =>
-    GAME_CONSTANTS.INITIAL_PLAYER_HP + bonuses.hp;
-
-const getStartingBaseAtk = (bonuses: NextRunBonuses) =>
-    GAME_CONSTANTS.INITIAL_PLAYER_ATK + bonuses.atk;
-
-const getStartingGold = (bonuses: NextRunBonuses) =>
-    GAME_CONSTANTS.INITIAL_GOLD + bonuses.gold;
+const initialRunStartStats = getRunStartStats(createEmptyNextRunBonuses());
 
 const resetRunState = (state: GameState, bonuses: NextRunBonuses) => {
-    const startingMaxHp = getStartingMaxHp(bonuses);
+    const startingStats = getRunStartStats(bonuses);
 
     state.grid = generateRandomSymbols();
     state.keptSymbols = [...INITIAL_KEPT_SYMBOLS];
@@ -262,11 +256,11 @@ const resetRunState = (state: GameState, bonuses: NextRunBonuses) => {
     state.unlockedSlots = { 3: false, 4: false, 5: false };
     state.levelUpPerks = [];
     state.hasSeenTutorial = false;
-    state.gold = getStartingGold(bonuses);
+    state.gold = startingStats.gold;
     state.moves = GAME_CONSTANTS.INITIAL_MOVES;
-    state.playerHp = startingMaxHp;
-    state.playerMaxHp = startingMaxHp;
-    state.playerBaseAtk = getStartingBaseAtk(bonuses);
+    state.playerHp = startingStats.playerHp;
+    state.playerMaxHp = startingStats.playerMaxHp;
+    state.playerBaseAtk = startingStats.playerBaseAtk;
     state.playerMagic = GAME_CONSTANTS.INITIAL_PLAYER_MAGIC;
     state.playerGear = GAME_CONSTANTS.INITIAL_PLAYER_GEAR;
     state.isFirstEnemyAttack = true;
@@ -289,13 +283,13 @@ export const useGameStore = create<GameState>()(
             hasSeenTutorial: false,
             queuedNextRunBonuses: createEmptyNextRunBonuses(),
 
-            gold: getStartingGold(EMPTY_NEXT_RUN_BONUSES),
+            gold: initialRunStartStats.gold,
             moves: GAME_CONSTANTS.INITIAL_MOVES,
 
             // Battle Stats
-            playerHp: getStartingMaxHp(EMPTY_NEXT_RUN_BONUSES),
-            playerMaxHp: getStartingMaxHp(EMPTY_NEXT_RUN_BONUSES),
-            playerBaseAtk: getStartingBaseAtk(EMPTY_NEXT_RUN_BONUSES),
+            playerHp: initialRunStartStats.playerHp,
+            playerMaxHp: initialRunStartStats.playerMaxHp,
+            playerBaseAtk: initialRunStartStats.playerBaseAtk,
             playerMagic: GAME_CONSTANTS.INITIAL_PLAYER_MAGIC,
             playerGear: GAME_CONSTANTS.INITIAL_PLAYER_GEAR,
             isFirstEnemyAttack: true,
@@ -566,8 +560,9 @@ export const useGameStore = create<GameState>()(
             }),
 
             resetBattleTarget: () => set((state) => {
-                if (state.battleCount >= GAME_CONSTANTS.MAX_BATTLES) {
-                    state.battleCount = GAME_CONSTANTS.MAX_BATTLES + 1;
+                const round = getNextBattleRound(state.battleCount, BATTLE_ROUNDS);
+                if (!round) {
+                    state.battleCount = getCompletedRunBattleCount(GAME_CONSTANTS.MAX_BATTLES);
                     return;
                 }
 
@@ -588,16 +583,11 @@ export const useGameStore = create<GameState>()(
                 state.isFirstEnemyAttack = true;
                 state.conjureMagicUsed = false;
 
-                // battleCount is 1-indexed; use it directly as the 0-indexed table offset
-                // (after battle 1 battleCount=1 → BATTLE_ROUNDS[1] = round 2, etc.)
-                const round = BATTLE_ROUNDS[state.battleCount];
-                if (round) {
-                    const d = state.globalEnemyHpDebuff;
-                    state.enemy1 = makeEnemy(round.e1, d);
-                    state.enemy2 = round.e2
-                        ? makeEnemy(round.e2, d)
-                        : { name: 'octopus', hp: 0, maxHp: 0, atk: 0, lvl: round.e1.lvl, type: '---', isVisible: false };
-                }
+                const d = state.globalEnemyHpDebuff;
+                state.enemy1 = makeEnemy(round.e1, d);
+                state.enemy2 = round.e2
+                    ? makeEnemy(round.e2, d)
+                    : { name: 'octopus', hp: 0, maxHp: 0, atk: 0, lvl: round.e1.lvl, type: '---', isVisible: false };
 
                 state.battleCount += 1;
             }),
@@ -637,10 +627,7 @@ export const useGameStore = create<GameState>()(
             }),
 
             queueNextRunBonus: (reward) => set((state) => {
-                const { bonuses } = WAVE_REWARD_OPTIONS[reward];
-                state.queuedNextRunBonuses.hp += bonuses.hp;
-                state.queuedNextRunBonuses.atk += bonuses.atk;
-                state.queuedNextRunBonuses.gold += bonuses.gold;
+                state.queuedNextRunBonuses = queueNextRunReward(state.queuedNextRunBonuses, reward);
             }),
 
         })),

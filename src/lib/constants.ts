@@ -327,10 +327,9 @@ export const GAME_CONSTANTS = {
     LEVEL_UP_GOLD_REWARD: 40,
 };
 
-export const EMPTY_NEXT_RUN_BONUSES: NextRunBonuses = {
-    hp: 0,
-    atk: 0,
-    gold: 0,
+type EnemyStatBonus = {
+    hp: number,
+    atk: number,
 };
 
 export const WAVE_REWARD_BATTLES = [4, 8] as const;
@@ -403,8 +402,31 @@ export interface BattleRound {
     e2: BattleRoundEntry | null; // null = solo battle (second enemy hidden)
 }
 
-// Ordered by battle index (0 = battle 1). Tune HP/ATK here; add specials via the special field.
-export const BATTLE_ROUNDS: BattleRound[] = [
+export const ENEMY_GLOBAL_STAT_BONUS = {
+    hp: 5,
+    atk: 1,
+} as const;
+
+export const applyEnemyStatBonus = (
+    rounds: BattleRound[],
+    bonus: EnemyStatBonus,
+): BattleRound[] =>
+    rounds.map((round) => ({
+        e1: {
+            ...round.e1,
+            hp: round.e1.hp + bonus.hp,
+            atk: round.e1.atk + bonus.atk,
+        },
+        e2: round.e2
+            ? {
+                ...round.e2,
+                hp: round.e2.hp + bonus.hp,
+                atk: round.e2.atk + bonus.atk,
+            }
+            : null,
+    }));
+
+const BASE_BATTLE_ROUNDS: BattleRound[] = [
     // ── Battle 1 ────────────────────────────────────────────────────────────
     {
         e1: { name: 'wyvern', hp: 40, atk: 8, lvl: 1, type: 'flying' },
@@ -451,3 +473,10 @@ export const BATTLE_ROUNDS: BattleRound[] = [
         e2: { name: 'fox', hp: 88, atk: 20, lvl: 3, type: 'evil' }
     },
 ];
+
+// Ordered by battle index (0 = battle 1). Tune per-round HP/ATK in BASE_BATTLE_ROUNDS,
+// then use ENEMY_GLOBAL_STAT_BONUS for broad balance passes across the full table.
+export const BATTLE_ROUNDS: BattleRound[] = applyEnemyStatBonus(
+    BASE_BATTLE_ROUNDS,
+    ENEMY_GLOBAL_STAT_BONUS,
+);

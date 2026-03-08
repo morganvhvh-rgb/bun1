@@ -20,6 +20,7 @@ import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridSymbol } from '@/types/game';
 import { WAVE_REWARD_BATTLES } from '@/lib/constants';
+import { getWaveRewardNumber } from '@/lib/battleProgression';
 
 export function GameShell() {
     const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
@@ -38,11 +39,7 @@ export function GameShell() {
         resetBattleSequence,
     } = useBattleSequence();
     const waveRewardNumber = isPostBattleScreen
-        ? battleCount === WAVE_REWARD_BATTLES[0]
-            ? 1
-            : battleCount === WAVE_REWARD_BATTLES[1]
-                ? 2
-                : null
+        ? getWaveRewardNumber(battleCount, WAVE_REWARD_BATTLES)
         : null;
 
     // Scroll flow

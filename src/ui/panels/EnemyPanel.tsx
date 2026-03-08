@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { useGameStore, selectHasTwoFairyWands } from '@/store/gameStore';
 import { Icon } from '../shared/Icon';
 import { SYMBOL_THEME, GAME_CONSTANTS, CATEGORY_TEXT_THEME } from '@/lib/constants';
+import { isRunComplete } from '@/lib/battleProgression';
 import { enemyIconVariants, hpVariants } from '../animations';
 import type { SymbolName } from '@/types/game';
 
@@ -93,8 +94,8 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
     const { enemy1, enemy2, battleCount, playerHp, conjureMagicUsed } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
-    const isRunComplete = playerHp > 0 && battleCount > GAME_CONSTANTS.MAX_BATTLES;
-    const isDisabled = playerHp === 0 || isRunComplete;
+    const hasClearedRun = playerHp > 0 && isRunComplete(battleCount, GAME_CONSTANTS.MAX_BATTLES);
+    const isDisabled = playerHp === 0 || hasClearedRun;
     const showBattleState = isBattleRunning || isDisabled;
 
     return (
@@ -108,7 +109,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
                                 Battle Cleared
                             </motion.div>
                         </div>
-                    ) : isRunComplete ? (
+                    ) : hasClearedRun ? (
                         <div className="w-full h-full flex items-center justify-center">
                             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1.5 text-emerald-400">
                                 Run Cleared
@@ -145,7 +146,7 @@ export function EnemyPanel({ enemy1Anim, enemy2Anim, isBattleRunning, isPostBatt
             >
                 <div className="relative z-10 w-full h-full flex items-center justify-center tracking-[0.2em] font-bold uppercase text-xs">
                     {isPostBattleScreen ? "NEXT ROUND"
-                        : showBattleState ? <span className="text-red-500 text-[11px]">{isRunComplete ? 'RUN CLEARED' : battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : `BATTLE ${battleCount}`}</span>
+                        : showBattleState ? <span className="text-red-500 text-[11px]">{hasClearedRun ? 'RUN CLEARED' : battleCount === 4 || battleCount === 8 ? 'BOSS BATTLE' : `BATTLE ${battleCount}`}</span>
                             : canConjureMagic ? <span className="text-pink-400 flex items-center gap-1 text-[11px]"><Icon name="fairy-wand" scale={1.2} tintColor="#f472b6" /> CONJURE</span>
                                 : <span className="text-red-400">ENGAGE</span>}
                 </div>

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount } from '@/store/gameStore';
-import { GAME_CONSTANTS } from '@/lib/constants';
+import { BATTLE_ROUNDS } from '@/lib/constants';
+import { getNextBattleRound } from '@/lib/battleProgression';
 
 type AnimStatus = 'idle' | 'attack' | 'hurt';
 
@@ -30,7 +31,7 @@ export function useBattleSequence() {
             runningRef.current = false;
             setIsBattleRunning(false);
 
-            if (battleCount >= GAME_CONSTANTS.MAX_BATTLES) {
+            if (!getNextBattleRound(battleCount, BATTLE_ROUNDS)) {
                 resetBattleTarget();
                 setIsPostBattleScreen(false);
                 return;

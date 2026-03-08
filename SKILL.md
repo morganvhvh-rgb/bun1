@@ -46,13 +46,21 @@ Follow this workflow in order for all feature work and refactors.
 
 ## 5) Keep enemy progression consistent
 
-- All 8 battle rounds live in `BATTLE_ROUNDS` in `src/lib/constants.ts`.
+- All battle rounds live in `BATTLE_ROUNDS` in `src/lib/constants.ts`.
 - Each entry is `{ e1, e2 }` with explicit `name`, `hp`, `atk`, `lvl`, `type` per enemy.
 - `e2: null` = solo boss battle (second enemy hidden).
+- Use the global enemy bonus helper in `src/lib/constants.ts` for broad stat passes before editing rows individually.
 - To tune stats: edit the row in `BATTLE_ROUNDS`. No store changes needed.
 - To add a round: append a new entry. Update `GAME_CONSTANTS.MAX_BATTLES` to match.
 - To add a special ability (e.g. self-heal, double-attack): set `special: 'self-heal'` on the entry, then handle it in `src/ui/hooks/useBattleSequence.ts`.
 - The `makeEnemy` helper in `gameStore.ts` converts a `BattleRoundEntry` into a full store enemy object — do not duplicate this logic.
+- When changing progression flow, review this checklist together:
+  - `BATTLE_ROUNDS`
+  - `GAME_CONSTANTS.MAX_BATTLES`
+  - `WAVE_REWARD_BATTLES`
+  - `src/lib/battleProgression.ts`
+  - `resetBattleTarget()` and `resetGame()` in `src/store/gameStore.ts`
+  - `persist.version` and `migrate` if progression state or rewards changed
 
 ## 6) UI and mobile constraints
 
@@ -79,6 +87,7 @@ Follow this workflow in order for all feature work and refactors.
 ## 9) Validate before handoff
 
 - For larger, more complex, or higher-risk changes, run:
+  - `bun run test`
   - `bun run lint`
   - `bun run build`
 - For small, low-risk changes (for example minor copy edits or narrowly scoped tweaks), this validation step can be skipped.
