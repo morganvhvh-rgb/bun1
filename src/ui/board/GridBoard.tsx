@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, getCoordinates, getStatText } from '@/lib/utils';
 import { Icon } from '../shared/Icon';
@@ -25,11 +26,12 @@ interface GridBoardProps {
 }
 
 const MATCH_SPARKLES = [
-    { top: '16%', left: '20%', size: 4, delay: 0, duration: 1.3 },
-    { top: '28%', left: '68%', size: 3, delay: 0.22, duration: 1.55 },
-    { top: '56%', left: '26%', size: 5, delay: 0.4, duration: 1.45 },
-    { top: '70%', left: '62%', size: 3, delay: 0.12, duration: 1.25 },
-    { top: '44%', left: '46%', size: 2, delay: 0.3, duration: 1.7 },
+    { top: '14%', left: '18%', size: 12, delay: 0, duration: 1.45, color: '#f472b6', glow: 'rgba(244, 114, 182, 0.6)', driftX: '-3px', driftY: '-6px' },
+    { top: '24%', left: '72%', size: 10, delay: 0.18, duration: 1.6, color: '#facc15', glow: 'rgba(250, 204, 21, 0.58)', driftX: '4px', driftY: '-5px' },
+    { top: '48%', left: '24%', size: 11, delay: 0.32, duration: 1.5, color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.58)', driftX: '-5px', driftY: '2px' },
+    { top: '68%', left: '64%', size: 9, delay: 0.08, duration: 1.35, color: '#34d399', glow: 'rgba(52, 211, 153, 0.54)', driftX: '3px', driftY: '5px' },
+    { top: '58%', left: '78%', size: 8, delay: 0.26, duration: 1.7, color: '#c084fc', glow: 'rgba(192, 132, 252, 0.55)', driftX: '6px', driftY: '1px' },
+    { top: '76%', left: '34%', size: 10, delay: 0.4, duration: 1.55, color: '#fb7185', glow: 'rgba(251, 113, 133, 0.56)', driftX: '-4px', driftY: '5px' },
 ];
 
 const EFFECT_COLOR: Record<string, { text: string; shadow: string }> = {
@@ -69,6 +71,32 @@ function formatStatText(text: string, symbolName: string) {
 
         return colorClass ? <span key={i} className={colorClass}>{part}</span> : <span key={i}>{part}</span>;
     });
+}
+
+function MatchSparkleCluster({ index }: { index: number }) {
+    const phaseOffset = (index % 4) * 0.08 + Math.floor(index / 4) * 0.06;
+
+    return (
+        <div className="absolute inset-[-12%] z-20 pointer-events-none overflow-visible">
+            <span className="match-sparkle-halo" style={{ animationDelay: `${phaseOffset}s` }} />
+            {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
+                const sparkleStyle = {
+                    top: sparkle.top,
+                    left: sparkle.left,
+                    width: sparkle.size,
+                    height: sparkle.size,
+                    animationDelay: `${sparkle.delay + phaseOffset}s`,
+                    animationDuration: `${sparkle.duration}s`,
+                    ['--sparkle-color' as string]: sparkle.color,
+                    ['--sparkle-glow' as string]: sparkle.glow,
+                    ['--sparkle-drift-x' as string]: sparkle.driftX,
+                    ['--sparkle-drift-y' as string]: sparkle.driftY,
+                } as CSSProperties;
+
+                return <span key={`sparkle-${sparkleIndex}`} className="match-sparkle" style={sparkleStyle} />;
+            })}
+        </div>
+    );
 }
 
 export function GridBoard({
@@ -160,26 +188,7 @@ export function GridBoard({
                                 }}
                             >
                                 {isSparklingMatch && (
-                                    <div className="absolute inset-[10%] z-20 pointer-events-none">
-                                        {MATCH_SPARKLES.map((sparkle, sparkleIndex) => {
-                                            const phaseOffset = (index % 4) * 0.08 + Math.floor(index / 4) * 0.06;
-                                            return (
-                                                <span
-                                                    key={`sparkle-${sparkleIndex}`}
-                                                    className="absolute rounded-full"
-                                                    style={{
-                                                        top: sparkle.top,
-                                                        left: sparkle.left,
-                                                        width: sparkle.size,
-                                                        height: sparkle.size,
-                                                        backgroundColor: 'rgba(254, 249, 195, 0.98)',
-                                                        boxShadow: '0 0 10px rgba(253, 224, 71, 0.95)',
-                                                        animation: `conjure-sparkle ${sparkle.duration}s ease-in-out ${sparkle.delay + phaseOffset}s infinite`,
-                                                    }}
-                                                />
-                                            );
-                                        })}
-                                    </div>
+                                    <MatchSparkleCluster index={index} />
                                 )}
                                 {isTarget && (
                                     <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none" style={{ transform: `rotate(${arrowRotation}deg)` }}>

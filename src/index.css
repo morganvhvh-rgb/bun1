@@ -125,3 +125,80 @@ textarea {
     transform: scale(1);
   }
 }
+
+@keyframes match-sparkle-halo {
+
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.86) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: scale(1.08) rotate(6deg);
+  }
+}
+
+@keyframes match-sparkle-twinkle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+  }
+
+  32% {
+    opacity: 0.92;
+    transform: translate(calc(-50% + var(--sparkle-drift-x, 0px)), calc(-50% + var(--sparkle-drift-y, 0px))) scale(1) rotate(18deg);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--sparkle-drift-x, 0px)), calc(-50% + var(--sparkle-drift-y, 0px))) scale(1.1) rotate(34deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--sparkle-drift-x, 0px)), calc(-50% + var(--sparkle-drift-y, 0px))) scale(0.45) rotate(48deg);
+  }
+}
+
+.match-sparkle-halo {
+  position: absolute;
+  inset: 14%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 24%, transparent 58%),
+    radial-gradient(circle at 24% 30%, rgba(244, 114, 182, 0.3) 0%, transparent 38%),
+    radial-gradient(circle at 72% 28%, rgba(56, 189, 248, 0.28) 0%, transparent 36%),
+    radial-gradient(circle at 36% 78%, rgba(250, 204, 21, 0.26) 0%, transparent 42%),
+    radial-gradient(circle at 80% 70%, rgba(52, 211, 153, 0.22) 0%, transparent 38%);
+  filter: blur(10px);
+  mix-blend-mode: screen;
+  animation: match-sparkle-halo 2.4s ease-in-out infinite;
+}
+
+.match-sparkle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  animation: match-sparkle-twinkle 1.5s ease-in-out infinite;
+}
+
+.match-sparkle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, var(--sparkle-color, #facc15) 48%, rgba(255, 255, 255, 0) 82%);
+  box-shadow: 0 0 12px var(--sparkle-glow, rgba(255, 255, 255, 0.45));
+}
+
+.match-sparkle::after {
+  content: '';
+  position: absolute;
+  inset: 32%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 8px var(--sparkle-glow, rgba(255, 255, 255, 0.45));
+}

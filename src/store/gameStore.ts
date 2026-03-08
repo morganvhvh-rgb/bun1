@@ -209,6 +209,26 @@ const addExperience = (state: { moves: number }, amount: number) => {
     state.moves = clampExperience(state.moves + amount);
 };
 
+const getDamageableEnemyTargets = (state: Pick<GameState, 'enemy1' | 'enemy2'>) => {
+    const targets: Array<'enemy1' | 'enemy2'> = [];
+    if (state.enemy1.isVisible && state.enemy1.hp > 0) targets.push('enemy1');
+    if (state.enemy2.isVisible && state.enemy2.hp > 0) targets.push('enemy2');
+    return targets;
+};
+
+const damageRandomEnemy = (state: Pick<GameState, 'enemy1' | 'enemy2'>, amount: number) => {
+    const targets = getDamageableEnemyTargets(state);
+    if (targets.length === 0) return;
+
+    const target = targets[Math.floor(Math.random() * targets.length)];
+    if (target === 'enemy1') {
+        state.enemy1.hp = Math.max(0, state.enemy1.hp - amount);
+        return;
+    }
+
+    state.enemy2.hp = Math.max(0, state.enemy2.hp - amount);
+};
+
 // Builds a full enemy state object from a BATTLE_ROUNDS entry.
 const makeEnemy = (e: { name: SymbolName; hp: number; atk: number; lvl: number; type: string }, debuff = 0) => ({
     name: e.name,
@@ -400,6 +420,9 @@ export const useGameStore = create<GameState>()(
                             case 'crab-claw':
                                 state.playerMaxHp += (isBoosted ? 6 : 3) * foodMultiplier;
                                 addExperience(state, (isBoosted ? 2 : 1) * foodMultiplier);
+                                for (let i = 0; i < foodMultiplier; i++) {
+                                    damageRandomEnemy(state, 1);
+                                }
                                 break;
                             case 'brandy-bottle':
                                 for (let i = 0; i < foodMultiplier; i++) {
