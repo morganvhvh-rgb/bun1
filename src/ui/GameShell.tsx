@@ -13,18 +13,18 @@ import { ScrollBuyModal } from './modals/ScrollBuyModal';
 import { ConjureModal } from './modals/ConjureModal';
 import { CoffeeModal } from './modals/CoffeeModal';
 import { TutorialModal } from './modals/TutorialModal';
-import { VictoryModal } from './modals/VictoryModal';
+import { WaveRewardModal } from './modals/WaveRewardModal';
 import { GameOverModal } from './modals/GameOverModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridSymbol } from '@/types/game';
+import { WAVE_REWARD_BATTLES } from '@/lib/constants';
 
 export function GameShell() {
     const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
-    const isVictory = battleCount > GAME_CONSTANTS.MAX_BATTLES && playerHp > 0;
     const isGameOver = playerHp === 0;
 
     const {
@@ -37,6 +37,13 @@ export function GameShell() {
         exitPostBattle,
         resetBattleSequence,
     } = useBattleSequence();
+    const waveRewardNumber = isPostBattleScreen
+        ? battleCount === WAVE_REWARD_BATTLES[0]
+            ? 1
+            : battleCount === WAVE_REWARD_BATTLES[1]
+                ? 2
+                : null
+        : null;
 
     // Scroll flow
     const scrollFlow = useScrollFlow();
@@ -171,7 +178,13 @@ export function GameShell() {
             <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
             <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
             <TutorialModal isOpen={!hasSeenTutorial} onClose={() => setHasSeenTutorial(true)} />
-            <VictoryModal isOpen={isVictory} onReset={handleReset} />
+            {waveRewardNumber !== null && (
+                <WaveRewardModal
+                    key={battleCount}
+                    waveNumber={waveRewardNumber}
+                    onContinue={exitPostBattle}
+                />
+            )}
             <GameOverModal isOpen={isGameOver} onReset={handleReset} />
         </div >
     );

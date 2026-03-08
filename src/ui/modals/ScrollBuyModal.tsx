@@ -60,7 +60,7 @@ export function ScrollBuyModal({
                                         const offsetFromCenter = i - centerIndex;
                                         const spacing = availableScrolls.length > 5 ? 26 : 35;
 
-                                        let xPos = offsetFromCenter * spacing;
+                                        const xPos = offsetFromCenter * spacing;
                                         const rotate = offsetFromCenter * 8;
                                         const archY = Math.pow(offsetFromCenter, 2) * 3;
                                         let yPos = 10 + archY;

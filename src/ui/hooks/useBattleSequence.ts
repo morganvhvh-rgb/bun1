@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useGameStore, selectTotalAttack, selectHasDaggers, selectCrossbowCount, selectAxeActive, selectBellCount } from '@/store/gameStore';
+import { GAME_CONSTANTS } from '@/lib/constants';
 
 type AnimStatus = 'idle' | 'attack' | 'hurt';
 
@@ -21,6 +22,22 @@ export function useBattleSequence() {
         setIsBattleRunning(true);
 
         const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+        const finishClearedBattle = async (postBattleDelay: number) => {
+            await delay(postBattleDelay);
+
+            const { battleCount, resetBattleTarget } = getSnap();
+
+            runningRef.current = false;
+            setIsBattleRunning(false);
+
+            if (battleCount >= GAME_CONSTANTS.MAX_BATTLES) {
+                resetBattleTarget();
+                setIsPostBattleScreen(false);
+                return;
+            }
+
+            setIsPostBattleScreen(true);
+        };
 
         const snap = getSnap();
         const pAtk = selectTotalAttack(snap);
@@ -45,10 +62,7 @@ export function useBattleSequence() {
             await delay(100);
             if (snap.enemy1.isVisible) setEnemyVisibility('enemy1', false);
             if (snap.enemy2.isVisible) setEnemyVisibility('enemy2', false);
-            await delay(300);
-            runningRef.current = false;
-            setIsBattleRunning(false);
-            setIsPostBattleScreen(true);
+            await finishClearedBattle(300);
             return;
         }
 
@@ -144,10 +158,7 @@ export function useBattleSequence() {
         }
 
         if (hp().e1 === 0 && hp().e2 === 0) {
-            await delay(600);
-            runningRef.current = false;
-            setIsBattleRunning(false);
-            setIsPostBattleScreen(true);
+            await finishClearedBattle(600);
             return;
         }
 

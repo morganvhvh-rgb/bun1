@@ -1,4 +1,5 @@
 import type { LevelUpPerk } from '@/types/levelUp';
+import type { NextRunReward, NextRunBonuses } from '@/types/progression';
 
 export const SYMBOL_MAP = {
     // Character
@@ -11,6 +12,7 @@ export const SYMBOL_MAP = {
     "hydra": "hydra",
     "spider-face": "spider-face",
     "eye-monster": "eye-monster",
+    "fox": "fox",
 
     // Food
     "apple": "apple",
@@ -109,6 +111,7 @@ export const SYMBOL_THEME: Record<SymbolName, string> = {
     "hydra": "#d4af37", // Gold (Enemy)
     "spider-face": "#581c87", // Dark Purple (Enemy)
     "eye-monster": "#84cc16", // Lime Green (Enemy)
+    "fox": "#b91c1c", // Crimson (Enemy)
 
     // Food (Red)
     "apple": CATEGORY_ACCENT_HEX.Food,
@@ -164,6 +167,7 @@ export const SYMBOL_STATS: Partial<Record<SymbolName, string>> = {
     "hydra": "Enemy",
     "spider-face": "Enemy",
     "eye-monster": "Enemy",
+    "fox": "Enemy",
 
     "apple": "Heal 15 HP",
     "crab-claw": "+3 Max HP +1 EXP",
@@ -208,6 +212,7 @@ export const SYMBOL_CATEGORIES: Record<SymbolName, string> = {
     "hydra": "Enemy",
     "spider-face": "Enemy",
     "eye-monster": "Enemy",
+    "fox": "Enemy",
 
     "apple": "Food",
     "crab-claw": "Food",
@@ -316,10 +321,31 @@ export const GAME_CONSTANTS = {
     EQUIP_SYMBOL_COST: 3,
     SCROLL_COST: 20,
     MAX_KEPT_SCROLLS: 6,
-    MAX_BATTLES: 8,
+    MAX_BATTLES: 9,
     LEVEL_UP_MOVES_REQUIRED: 10,
     LEVEL_UP_MAX_HP_BONUS: 10,
     LEVEL_UP_GOLD_REWARD: 40,
+};
+
+export const EMPTY_NEXT_RUN_BONUSES: NextRunBonuses = {
+    hp: 0,
+    atk: 0,
+    gold: 0,
+};
+
+export const WAVE_REWARD_BATTLES = [4, 8] as const;
+
+export const WAVE_REWARD_OPTIONS: Record<NextRunReward, { label: string; description: string; bonuses: NextRunBonuses }> = {
+    vitality: {
+        label: 'Start with +5 HP and +1 ATK',
+        description: 'Your next run will start with both bonuses.',
+        bonuses: { hp: 5, atk: 1, gold: 0 },
+    },
+    wealth: {
+        label: 'Start with 60 extra Gold',
+        description: 'Your next run will start with the extra gold.',
+        bonuses: { hp: 0, atk: 0, gold: 60 },
+    },
 };
 
 export const ALL_LEVEL_UP_PERKS: LevelUpPerk[] = [
@@ -418,5 +444,10 @@ export const BATTLE_ROUNDS: BattleRound[] = [
     {
         e1: { name: 'eye-monster', hp: 160, atk: 35, lvl: 2, type: 'flying / boss' },
         e2: null
+    },
+    // ── Battle 9 (LVL 3) ────────────────────────────────────────────────────
+    {
+        e1: { name: 'fox', hp: 88, atk: 20, lvl: 3, type: 'evil' },
+        e2: { name: 'fox', hp: 88, atk: 20, lvl: 3, type: 'evil' }
     },
 ];
