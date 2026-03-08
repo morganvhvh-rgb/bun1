@@ -9,7 +9,7 @@ interface WaveRewardModalProps {
 }
 
 export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
-    const addNextRunBonus = useGameStore((state) => state.addNextRunBonus);
+    const claimWaveReward = useGameStore((state) => state.claimWaveReward);
     const [selectedReward, setSelectedReward] = useState<NextRunReward | null>(null);
 
     const handleSelect = (reward: NextRunReward) => {
@@ -18,7 +18,7 @@ export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
 
     const handleContinue = () => {
         if (!selectedReward) return;
-        addNextRunBonus(selectedReward);
+        claimWaveReward(selectedReward);
         onContinue();
     };
 
@@ -36,7 +36,7 @@ export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
                         Wave Cleared
                     </span>
                     <p className="text-sm text-zinc-300">
-                        Choose your reward.
+                        Choose a reward. You gain it now, and your next run starts with it too.
                     </p>
                 </div>
 

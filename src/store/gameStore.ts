@@ -6,7 +6,7 @@ import type { LevelUpPerk } from '@/types/levelUp';
 import type { NextRunReward, NextRunBonuses } from '@/types/progression';
 import { SYMBOL_KEYS, SYMBOL_CATEGORIES, GAME_CONSTANTS, BATTLE_ROUNDS, ALL_SCROLL_COLORS, ALL_LEVEL_UP_PERKS } from '@/lib/constants';
 import { getCompletedRunBattleCount, getNextBattleRound } from '@/lib/battleProgression';
-import { createEmptyNextRunBonuses, getRunStartStats, addNextRunReward } from '@/lib/runBonuses';
+import { createEmptyNextRunBonuses, getRunStartStats, addNextRunReward, applyBonusesToCurrentRun, getRewardBonuses } from '@/lib/runBonuses';
 import { getRunResetContext } from '@/lib/runReset';
 import { getCoordinates, getIndex } from '@/lib/utils';
 
@@ -20,7 +20,7 @@ interface GameState {
     // Progression
     levelUpPerks: LevelUpPerk[];
     hasSeenTutorial: boolean;
-    savedNextRunBonuses: NextRunBonuses;
+    pendingNextRunBonuses: NextRunBonuses;
 
     // Stats & Resources
     gold: number;
@@ -51,11 +51,11 @@ interface GameState {
     addKeptScroll: (name: SymbolName) => void;
     spendGold: (amount: number) => void;
     resetBattleTarget: () => void;
-    restartRun: () => void;
+    restartRun: () => NextRunBonuses;
     hardResetGame: () => void;
     incrementEnemyDebuff: (amount: number) => void;
     setHasSeenTutorial: (value: boolean) => void;
-    addNextRunBonus: (reward: NextRunReward) => void;
+    claimWaveReward: (reward: NextRunReward) => void;
 
     // Battle updates
     applyBattleDamage: (target: 'player' | 'enemy1' | 'enemy2', amount: number) => void;
@@ -297,7 +297,7 @@ export const useGameStore = create<GameState>()(
             unlockedSlots: { 3: false, 4: false, 5: false },
             levelUpPerks: [],
             hasSeenTutorial: false,
-            savedNextRunBonuses: createEmptyNextRunBonuses(),
+            pendingNextRunBonuses: createEmptyNextRunBonuses(),
 
             gold: initialRunStartStats.gold,
             moves: GAME_CONSTANTS.INITIAL_MOVES,
@@ -608,16 +608,21 @@ export const useGameStore = create<GameState>()(
                 state.battleCount += 1;
             }),
 
-            restartRun: () => set((state) => {
-                const resetContext = getRunResetContext(state.savedNextRunBonuses, state.hasSeenTutorial, 'retry');
-                resetRunState(state, resetContext.bonusesToApply, { hasSeenTutorial: resetContext.hasSeenTutorial });
-                state.savedNextRunBonuses = resetContext.savedBonuses;
-            }),
+            restartRun: () => {
+                let startingBonuses = createEmptyNextRunBonuses();
+                set((state) => {
+                    const resetContext = getRunResetContext(state.pendingNextRunBonuses, state.hasSeenTutorial, 'retry');
+                    startingBonuses = resetContext.bonusesToApply;
+                    resetRunState(state, resetContext.bonusesToApply, { hasSeenTutorial: resetContext.hasSeenTutorial });
+                    state.pendingNextRunBonuses = resetContext.remainingBonuses;
+                });
+                return startingBonuses;
+            },
 
             hardResetGame: () => set((state) => {
-                const resetContext = getRunResetContext(state.savedNextRunBonuses, state.hasSeenTutorial, 'hard-reset');
+                const resetContext = getRunResetContext(state.pendingNextRunBonuses, state.hasSeenTutorial, 'hard-reset');
                 resetRunState(state, resetContext.bonusesToApply, { hasSeenTutorial: resetContext.hasSeenTutorial });
-                state.savedNextRunBonuses = resetContext.savedBonuses;
+                state.pendingNextRunBonuses = resetContext.remainingBonuses;
             }),
 
             applyConjureMagic: (result) => set((state) => {
@@ -648,14 +653,16 @@ export const useGameStore = create<GameState>()(
                 state.hasSeenTutorial = value;
             }),
 
-            addNextRunBonus: (reward) => set((state) => {
-                state.savedNextRunBonuses = addNextRunReward(state.savedNextRunBonuses, reward);
+            claimWaveReward: (reward) => set((state) => {
+                const rewardBonuses = getRewardBonuses(reward);
+                applyBonusesToCurrentRun(state, rewardBonuses);
+                state.pendingNextRunBonuses = addNextRunReward(state.pendingNextRunBonuses, reward);
             }),
 
         })),
         {
             name: 'daily-rogue-storage',
-            version: 7,
+            version: 8,
             migrate: (persistedState: unknown, version) => {
                 if (!persistedState || typeof persistedState !== 'object') {
                     return persistedState as GameState;
@@ -709,12 +716,15 @@ export const useGameStore = create<GameState>()(
                 }
 
                 if (version < 6) {
-                    state.savedNextRunBonuses = createEmptyNextRunBonuses();
-                } else if (version < 7) {
-                    state.savedNextRunBonuses = sanitizePersistedNextRunBonuses(state.queuedNextRunBonuses);
+                    state.pendingNextRunBonuses = createEmptyNextRunBonuses();
+                } else if (version < 8) {
+                    state.pendingNextRunBonuses = sanitizePersistedNextRunBonuses(
+                        state.savedNextRunBonuses ?? state.queuedNextRunBonuses
+                    );
+                    delete state.savedNextRunBonuses;
                     delete state.queuedNextRunBonuses;
                 } else {
-                    state.savedNextRunBonuses = sanitizePersistedNextRunBonuses(state.savedNextRunBonuses);
+                    state.pendingNextRunBonuses = sanitizePersistedNextRunBonuses(state.pendingNextRunBonuses);
                 }
 
                 return state as unknown as GameState;

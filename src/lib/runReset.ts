@@ -5,7 +5,7 @@ export type RunResetMode = 'retry' | 'hard-reset';
 
 export interface RunResetContext {
     bonusesToApply: NextRunBonuses;
-    savedBonuses: NextRunBonuses;
+    remainingBonuses: NextRunBonuses;
     hasSeenTutorial: boolean;
 }
 
@@ -17,14 +17,14 @@ export const getRunResetContext = (
     if (mode === 'retry') {
         return {
             bonusesToApply: { ...savedBonuses },
-            savedBonuses: { ...savedBonuses },
+            remainingBonuses: createEmptyNextRunBonuses(),
             hasSeenTutorial,
         };
     }
 
     return {
         bonusesToApply: createEmptyNextRunBonuses(),
-        savedBonuses: createEmptyNextRunBonuses(),
+        remainingBonuses: createEmptyNextRunBonuses(),
         hasSeenTutorial: false,
     };
 };

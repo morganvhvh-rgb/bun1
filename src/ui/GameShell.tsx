@@ -15,12 +15,15 @@ import { CoffeeModal } from './modals/CoffeeModal';
 import { TutorialModal } from './modals/TutorialModal';
 import { WaveRewardModal } from './modals/WaveRewardModal';
 import { GameOverModal } from './modals/GameOverModal';
+import { RunStartModal } from './modals/RunStartModal';
 import { useBattleSequence } from './hooks/useBattleSequence';
 import { useGridInteraction } from './hooks/useGridInteraction';
 import { useScrollFlow } from './hooks/useScrollFlow';
 import type { GridSymbol } from '@/types/game';
+import type { NextRunBonuses } from '@/types/progression';
 import { WAVE_REWARD_BATTLES } from '@/lib/constants';
 import { getWaveRewardNumber } from '@/lib/battleProgression';
+import { createEmptyNextRunBonuses } from '@/lib/runBonuses';
 
 export function GameShell() {
     const { restartRun, hardResetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
@@ -52,6 +55,9 @@ export function GameShell() {
     const [isConjureMagicOpen, setIsConjureMagicOpen] = useState(false);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
     const [isCoffeeOpen, setIsCoffeeOpen] = useState(false);
+    const [isRunStartOpen, setIsRunStartOpen] = useState(false);
+    const [suppressTutorial, setSuppressTutorial] = useState(false);
+    const [runStartBonuses, setRunStartBonuses] = useState<NextRunBonuses>(createEmptyNextRunBonuses());
     const todayLabel = new Date().toLocaleDateString(undefined, {
         weekday: 'long',
         month: 'long',
@@ -66,14 +72,20 @@ export function GameShell() {
 
     const handleTryAgain = () => {
         if (isBattleRunning) return;
-        restartRun();
+        const startingBonuses = restartRun();
         resetUiState();
+        setRunStartBonuses(startingBonuses);
+        setIsRunStartOpen(true);
+        setSuppressTutorial(true);
     };
 
     const handleHardReset = () => {
         if (isBattleRunning) return;
         hardResetGame();
         resetUiState();
+        setRunStartBonuses(createEmptyNextRunBonuses());
+        setIsRunStartOpen(false);
+        setSuppressTutorial(false);
     };
 
     const handleEngage = () => {
@@ -184,7 +196,8 @@ export function GameShell() {
             </AnimatePresence>
             <CoffeeModal isOpen={isCoffeeOpen} onClose={() => setIsCoffeeOpen(false)} />
             <CharacterModal isOpen={isCharacterModalOpen} onClose={() => setIsCharacterModalOpen(false)} />
-            <TutorialModal isOpen={!hasSeenTutorial} onClose={() => setHasSeenTutorial(true)} />
+            <TutorialModal isOpen={!hasSeenTutorial && !suppressTutorial} onClose={() => setHasSeenTutorial(true)} />
+            <RunStartModal isOpen={isRunStartOpen} bonuses={runStartBonuses} onClose={() => setIsRunStartOpen(false)} />
             {waveRewardNumber !== null && (
                 <WaveRewardModal
                     key={battleCount}
