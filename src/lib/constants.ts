@@ -337,13 +337,13 @@ export const WAVE_REWARD_BATTLES = [4, 8] as const;
 
 export const WAVE_REWARD_OPTIONS: Record<NextRunReward, { label: string; description: string; bonuses: NextRunBonuses }> = {
     vitality: {
-        label: 'Start with +5 HP and +1 ATK',
-        description: 'Your next run will start with both bonuses.',
+        label: '+5 HP and +1 ATK',
+        description: 'Your next run will also start with this reward.',
         bonuses: { hp: 5, atk: 1, gold: 0 },
     },
     wealth: {
-        label: 'Start with 60 extra Gold',
-        description: 'Your next run will start with the extra gold.',
+        label: '60 extra Gold',
+        description: 'Your next run will also start with this reward.',
         bonuses: { hp: 0, atk: 0, gold: 60 },
     },
 };

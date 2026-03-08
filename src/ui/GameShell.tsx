@@ -181,7 +181,6 @@ export function GameShell() {
             {waveRewardNumber !== null && (
                 <WaveRewardModal
                     key={battleCount}
-                    waveNumber={waveRewardNumber}
                     onContinue={exitPostBattle}
                 />
             )}

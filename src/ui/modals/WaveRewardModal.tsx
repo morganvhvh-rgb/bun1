@@ -5,20 +5,21 @@ import { useGameStore } from '@/store/gameStore';
 import type { NextRunReward } from '@/types/progression';
 
 interface WaveRewardModalProps {
-    waveNumber: 1 | 2;
     onContinue: () => void;
 }
 
-export function WaveRewardModal({ waveNumber, onContinue }: WaveRewardModalProps) {
+export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
     const queueNextRunBonus = useGameStore((state) => state.queueNextRunBonus);
     const [selectedReward, setSelectedReward] = useState<NextRunReward | null>(null);
 
-    const waveLabel = waveNumber === 1 ? 'first' : 'second';
-
     const handleSelect = (reward: NextRunReward) => {
-        if (selectedReward) return;
-        queueNextRunBonus(reward);
         setSelectedReward(reward);
+    };
+
+    const handleContinue = () => {
+        if (!selectedReward) return;
+        queueNextRunBonus(selectedReward);
+        onContinue();
     };
 
     return (
@@ -34,39 +35,42 @@ export function WaveRewardModal({ waveNumber, onContinue }: WaveRewardModalProps
                     <span className="text-[11px] font-bold tracking-[0.35em] uppercase text-emerald-400/70">
                         Wave Cleared
                     </span>
-                    <h2 className="text-2xl font-black tracking-[0.18em] uppercase text-[#e8d4b8]">
-                        The {waveLabel} wave has been defeated
-                    </h2>
                     <p className="text-sm text-zinc-300">
-                        Choose your reward. Your next run will also start with this benefit.
+                        Choose your reward.
                     </p>
                 </div>
 
                 <div className="mt-6 grid gap-3">
                     {Object.entries(WAVE_REWARD_OPTIONS).map(([reward, option]) => {
                         const isSelected = selectedReward === reward;
-                        const isLocked = selectedReward !== null && !isSelected;
 
                         return (
                             <button
                                 key={reward}
                                 type="button"
                                 onClick={() => handleSelect(reward as NextRunReward)}
-                                disabled={isLocked || isSelected}
+                                aria-pressed={isSelected}
                                 className={[
-                                    'w-full border px-4 py-4 text-left transition-colors',
+                                    'w-full min-h-[92px] border border-zinc-800 px-4 py-4 text-left transition-colors',
                                     isSelected
-                                        ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-100'
-                                        : 'border-zinc-800 bg-zinc-950 text-[#e8d4b8] hover:bg-zinc-900',
-                                    isLocked ? 'opacity-50 cursor-not-allowed' : '',
+                                        ? 'bg-emerald-500/10 text-emerald-100 ring-1 ring-emerald-500/50'
+                                        : 'bg-zinc-950 text-[#e8d4b8] hover:bg-zinc-900',
                                 ].join(' ')}
                             >
                                 <div className="flex items-center justify-between gap-4">
                                     <span className="text-sm font-bold uppercase tracking-[0.15em]">
                                         {option.label}
                                     </span>
-                                    <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-300">
-                                        {isSelected ? 'Selected' : 'Choose'}
+                                    <span className={[
+                                        'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors',
+                                        isSelected
+                                            ? 'border-emerald-300 bg-emerald-300'
+                                            : 'border-zinc-600 bg-transparent',
+                                    ].join(' ')}>
+                                        <span className={[
+                                            'h-2 w-2 rounded-full transition-colors',
+                                            isSelected ? 'bg-black' : 'bg-transparent',
+                                        ].join(' ')} />
                                     </span>
                                 </div>
                                 <p className="mt-2 text-xs uppercase tracking-[0.18em] text-zinc-500">
@@ -79,7 +83,7 @@ export function WaveRewardModal({ waveNumber, onContinue }: WaveRewardModalProps
 
                 <button
                     type="button"
-                    onClick={onContinue}
+                    onClick={handleContinue}
                     disabled={selectedReward === null}
                     className="mt-6 py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border transition-colors bg-black text-[#e8d4b8] border-zinc-800 enabled:hover:bg-zinc-900 disabled:text-zinc-600 disabled:border-zinc-900 disabled:cursor-not-allowed"
                 >
