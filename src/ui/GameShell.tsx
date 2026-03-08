@@ -23,7 +23,7 @@ import { WAVE_REWARD_BATTLES } from '@/lib/constants';
 import { getWaveRewardNumber } from '@/lib/battleProgression';
 
 export function GameShell() {
-    const { resetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
+    const { restartRun, hardResetGame, gold, applyConjureMagic, playerHp, conjureMagicUsed, levelUpPerks, keptScrolls, unlockedSlots, hasSeenTutorial, setHasSeenTutorial, battleCount } = useGameStore();
     const hasTwoFairyWands = useGameStore(selectHasTwoFairyWands);
     const canConjureMagic = hasTwoFairyWands && !conjureMagicUsed;
     const isGameOver = playerHp === 0;
@@ -58,12 +58,22 @@ export function GameShell() {
         day: 'numeric',
     });
 
-    const handleReset = () => {
-        if (isBattleRunning) return;
-        resetGame();
+    const resetUiState = () => {
         resetBattleSequence();
         grid.resetInteractionState();
         grid.setSpinKey(prev => prev + 1);
+    };
+
+    const handleTryAgain = () => {
+        if (isBattleRunning) return;
+        restartRun();
+        resetUiState();
+    };
+
+    const handleHardReset = () => {
+        if (isBattleRunning) return;
+        hardResetGame();
+        resetUiState();
     };
 
     const handleEngage = () => {
@@ -144,7 +154,7 @@ export function GameShell() {
                             onShuffle={grid.handleShuffle}
                             onScrollsOpen={() => scrollFlow.setIsScrollWindowOpen(true)}
                             onCoffeeOpen={() => setIsCoffeeOpen(true)}
-                            onReset={handleReset}
+                            onReset={handleHardReset}
                         />
                     </div>
 
@@ -181,7 +191,7 @@ export function GameShell() {
                     onContinue={exitPostBattle}
                 />
             )}
-            <GameOverModal isOpen={isGameOver} onReset={handleReset} />
+            <GameOverModal isOpen={isGameOver} onTryAgain={handleTryAgain} />
         </div >
     );
 }

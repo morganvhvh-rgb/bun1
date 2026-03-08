@@ -2,10 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 interface GameOverModalProps {
     isOpen: boolean;
-    onReset: () => void;
+    onTryAgain: () => void;
 }
 
-export function GameOverModal({ isOpen, onReset }: GameOverModalProps) {
+export function GameOverModal({ isOpen, onTryAgain }: GameOverModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -29,7 +29,7 @@ export function GameOverModal({ isOpen, onReset }: GameOverModalProps) {
                     </div>
 
                     <button
-                        onClick={onReset}
+                        onClick={onTryAgain}
                         className="mt-6 py-3 px-6 w-full font-bold uppercase tracking-widest text-sm border transition-colors bg-black text-[#e8d4b8] border-zinc-800 hover:bg-zinc-900"
                     >
                         Try Again

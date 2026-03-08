@@ -7,7 +7,7 @@ export const createEmptyNextRunBonuses = (): NextRunBonuses => ({
     gold: 0,
 });
 
-export const queueNextRunReward = (
+export const addNextRunReward = (
     current: NextRunBonuses,
     reward: NextRunReward,
 ): NextRunBonuses => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { getRunStartStats, createEmptyNextRunBonuses, queueNextRunReward } from './runBonuses';
+import { getRunStartStats, createEmptyNextRunBonuses, addNextRunReward } from './runBonuses';
 
 describe('run bonuses', () => {
     it('starts empty', () => {
@@ -7,8 +7,8 @@ describe('run bonuses', () => {
     });
 
     it('queues rewards cumulatively', () => {
-        const afterVitality = queueNextRunReward(createEmptyNextRunBonuses(), 'vitality');
-        const afterWealth = queueNextRunReward(afterVitality, 'wealth');
+        const afterVitality = addNextRunReward(createEmptyNextRunBonuses(), 'vitality');
+        const afterWealth = addNextRunReward(afterVitality, 'wealth');
 
         expect(afterWealth).toEqual({ hp: 5, atk: 1, gold: 60 });
     });

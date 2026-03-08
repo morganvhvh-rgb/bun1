@@ -9,7 +9,7 @@ interface WaveRewardModalProps {
 }
 
 export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
-    const queueNextRunBonus = useGameStore((state) => state.queueNextRunBonus);
+    const addNextRunBonus = useGameStore((state) => state.addNextRunBonus);
     const [selectedReward, setSelectedReward] = useState<NextRunReward | null>(null);
 
     const handleSelect = (reward: NextRunReward) => {
@@ -18,7 +18,7 @@ export function WaveRewardModal({ onContinue }: WaveRewardModalProps) {
 
     const handleContinue = () => {
         if (!selectedReward) return;
-        queueNextRunBonus(selectedReward);
+        addNextRunBonus(selectedReward);
         onContinue();
     };
 
